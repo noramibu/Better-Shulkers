@@ -1,12 +1,12 @@
 package me.noramibu.mixin.v1_21;
 
+import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ShulkerMaterialAccessor;
-import me.noramibu.mixin.annotation.MCVer;
 import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@MCVer(min = "1.21")
+@IfMinecraftVersion(minVersion = "1.21")
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin implements ShulkerMaterialAccessor {
 
