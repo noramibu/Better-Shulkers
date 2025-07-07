@@ -1,16 +1,14 @@
 {
 	"required": true,
 	"package": "me.noramibu.mixin",
-	"compatibilityLevel": "JAVA_17",
-	"plugin": "me.noramibu.mixin.BetterShulkersMixinPlugin",
+	"compatibilityLevel": "JAVA_21",
+	"plugin": "com.moulberry.mixinconstraints.ConstraintsMixinPlugin",
 	"mixins": [
-		"v1_21.BlockMixin",
-		"v1_21.ItemEntityMixin",
-		"v1_21.ShulkerBoxBlockEntityMixin",
-		"v1_21.ShulkerBoxBlockEntityNbtMixin",
-		"v1_21.ShulkerBoxBlockMixin",
-		"v1_21_5.ItemMixin",
-		"v1_21_6.ShulkerBoxBlockEntityNbtMixin"
+		"qpcrummer.ContainerComponentAccessor",
+		"qpcrummer.ServerPlayerEntityMixin",
+		"qpcrummer.ShulkerBoxBlockMixin",
+		"qpcrummer.ShulkerBoxEntityMixin",
+		"qpcrummer.ShulkerBoxScreenHandlerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

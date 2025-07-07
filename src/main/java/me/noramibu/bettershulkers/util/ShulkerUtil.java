@@ -1,6 +1,6 @@
 package me.noramibu.bettershulkers.util;
 
-import net.minecraft.block.ShulkerBoxBlock;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.component.Component;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
@@ -8,6 +8,7 @@ import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.BlockItem;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.Item;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
@@ -24,7 +25,7 @@ public class ShulkerUtil {
     public static final String MATERIAL_PREFIX = "Material: ";
 
     public static boolean isShulkerBox(ItemStack stack) {
-        return stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof ShulkerBoxBlock;
+        return stack.isIn(ConventionalItemTags.SHULKER_BOXES);
     }
 
     public static void setShulkerMaterial(ItemStack shulkerBox, String materialId) {
