@@ -7,13 +7,9 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class BetterShulkersRecipes {
-    public static RecipeSerializer<ShulkerUpgradeRecipe> SHULKER_UPGRADE_SERIALIZER;
+    public static final RecipeSerializer<ShulkerUpgradeRecipe> SHULKER_UPGRADE_SERIALIZER = new ShulkerUpgradeRecipe.Serializer(ShulkerUpgradeRecipe::new);
 
     public static void register() {
-        SHULKER_UPGRADE_SERIALIZER = Registry.register(
-                Registries.RECIPE_SERIALIZER,
-                Identifier.of(BetterShulkers.MOD_ID, "crafting_special_shulkerupgrade"),
-                new ShulkerUpgradeRecipe.Serializer()
-        );
+        Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(BetterShulkers.MOD_ID, "shulker_upgrade"), SHULKER_UPGRADE_SERIALIZER);
     }
 } 

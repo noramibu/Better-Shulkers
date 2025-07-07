@@ -23,12 +23,9 @@
 		"better-shulkers.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.14",
+		"fabricloader": "*",
 		"minecraft": ">=1.21 <1.22",
 		"java": ">=21",
 		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }
