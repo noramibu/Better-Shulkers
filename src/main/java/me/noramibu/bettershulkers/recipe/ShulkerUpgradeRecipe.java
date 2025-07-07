@@ -91,6 +91,7 @@ public class ShulkerUpgradeRecipe implements CraftingRecipe {
         return CraftingRecipeCategory.MISC;
     }
 
+    /*
     public static class Serializer implements RecipeSerializer<ShulkerUpgradeRecipe> {
         public static final MapCodec<ShulkerUpgradeRecipe> CODEC = MapCodec.unit(ShulkerUpgradeRecipe::new);
         public static final PacketCodec<RegistryByteBuf, ShulkerUpgradeRecipe> PACKET_CODEC = PacketCodec.unit(new ShulkerUpgradeRecipe());
@@ -105,4 +106,6 @@ public class ShulkerUpgradeRecipe implements CraftingRecipe {
             return PACKET_CODEC;
         }
     }
+
+     */
 } 

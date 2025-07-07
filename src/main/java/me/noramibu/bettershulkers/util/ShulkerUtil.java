@@ -6,10 +6,15 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.BlockItem;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -119,5 +124,32 @@ public class ShulkerUtil {
 
     public static String getItemId(ItemStack stack) {
         return Registries.ITEM.getId(stack.getItem()).toString();
+    }
+
+    /**
+     * Gets the material from the Shulker Box's NBT data.
+     * @param shulker ItemStack of the Shulker Box
+     * @return Item that is the material if present, else null
+     */
+    @Nullable
+    public static Item getMaterialFromShulker(ItemStack shulker) {
+        NbtComponent component = shulker.get(DataComponentTypes.CUSTOM_DATA);
+        String materialId = component.copyNbt().getString(MATERIAL_PREFIX);
+        if (materialId.isEmpty()) {
+            return null;
+        }
+        return Registries.ITEM.get(Identifier.of(materialId));
+    }
+
+    /**
+     * Sets the material for a Shulker Box
+     * @param shulker ItemStack of the Shulker Box
+     * @param material ItemStack of the material to collect
+     */
+    public static void setMaterialForShulker(ItemStack shulker, ItemStack material) {
+        NbtComponent component = shulker.get(DataComponentTypes.CUSTOM_DATA);
+        component.apply((nbtCompound -> {
+            nbtCompound.put(MATERIAL_PREFIX, NbtString.of(getItemId(material)));
+        }));
     }
 } 
