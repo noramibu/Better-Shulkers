@@ -87,11 +87,6 @@ public class ShulkerUpgradeRecipeV2 extends SpecialCraftingRecipe implements Pol
     }
 
     @Override
-    public RecipeType<?> getType() {
-        return BetterShulkersRecipes.SHULKER_UPGRADE_RECIPE_TYPE;
-    }
-
-    @Override
     public CraftingRecipeCategory getCategory() {
         return CraftingRecipeCategory.MISC;
     }
