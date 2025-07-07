@@ -36,39 +36,36 @@ public abstract class ItemEntityMixin {
 
         for (int i = 0; i < playerInventory.size(); i++) {
             ItemStack inventoryStack = playerInventory.getStack(i);
-            if (ShulkerUtil.isShulkerBox(inventoryStack)) {
-                Item shulkerMaterial = ShulkerUtil.getMaterialFromShulker(inventoryStack);
-                if (shulkerMaterial != null &&
-                        itemStack.isOf(shulkerMaterial) &&
-                        ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
-                    int originalCount = itemStack.getCount();
-                    ShulkerUtil.addToShulker(inventoryStack, itemStack);
-                    playerInventory.setStack(i, inventoryStack);
+            if (ShulkerUtil.isShulkerBox(inventoryStack) &&
+                    ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
+                int originalCount = itemStack.getCount();
+                ShulkerUtil.addToShulker(inventoryStack, itemStack);
+                playerInventory.setStack(i, inventoryStack);
 
-                    if (player.currentScreenHandler instanceof ShulkerBoxScreenHandler screenHandler) {
-                        Inventory screenInventory = ((ShulkerBoxScreenHandlerAccessor)screenHandler).getInventory();
-                        if (screenInventory instanceof ForceInventory forceInventory && forceInventory.forced()) {
-                            DefaultedList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
-                            forceInventory.setInventory(updatedList);
-                            screenHandler.sendContentUpdates();
-                        }
-                    }
+                if (player.currentScreenHandler instanceof ShulkerBoxScreenHandler screenHandler) {
+                    Inventory screenInventory = ((ShulkerBoxScreenHandlerAccessor)screenHandler).getInventory();
 
-                    if (itemStack.isEmpty()) {
-                        player.sendPickup(self, originalCount);
-                        player.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                        self.discard();
-                        ci.cancel();
-                    } else {
-                        int pickedUpCount = originalCount - itemStack.getCount();
-                        if (pickedUpCount > 0) {
-                            player.sendPickup(self, pickedUpCount);
-                        }
+                    if (((ForceInventory)screenInventory).forced()) {
+                        DefaultedList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
+                        ((ForceInventory)screenInventory).setInventory(updatedList);
+                        screenHandler.sendContentUpdates();
                     }
                 }
-                if (ci.isCancelled()) {
-                    break;
+
+                if (itemStack.isEmpty()) {
+                    player.sendPickup(self, originalCount);
+                    player.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                    self.discard();
+                    ci.cancel();
+                } else {
+                    int pickedUpCount = originalCount - itemStack.getCount();
+                    if (pickedUpCount > 0) {
+                        player.sendPickup(self, pickedUpCount);
+                    }
                 }
+            }
+            if (ci.isCancelled()) {
+                break;
             }
         }
     }

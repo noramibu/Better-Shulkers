@@ -34,10 +34,13 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Scre
 
     @Inject(method = "onClosed", at = @At("HEAD"))
     private void checkIfShulkerIsHeld(PlayerEntity player, CallbackInfo ci) {
-        if (player instanceof ServerPlayerEntity serverPlayer && ((ShulkerViewer)serverPlayer).getViewedStack().isEmpty()) {
-            ItemStack stack = this.getCursorStack();
-            if (!stack.isEmpty()) {
-                ((ShulkerViewer)serverPlayer).setViewing(stack);
+        if (player instanceof ServerPlayerEntity serverPlayer) {
+            ItemStack viewedStack = ((ShulkerViewer)serverPlayer).getViewedStack();
+            if (viewedStack != null && viewedStack.isEmpty()) {
+                ItemStack stack = this.getCursorStack();
+                if (!stack.isEmpty()) {
+                    ((ShulkerViewer)serverPlayer).setViewing(stack);
+                }
             }
         }
     }

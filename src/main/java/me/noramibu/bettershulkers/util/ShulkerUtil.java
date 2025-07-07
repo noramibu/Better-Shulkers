@@ -4,7 +4,6 @@ import me.noramibu.bettershulkers.BetterShulkers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.Component;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.component.type.LoreComponent;
@@ -45,58 +44,21 @@ public class ShulkerUtil {
     }
 
     public static boolean canBeAddedToShulker(ItemStack shulkerStack, ItemStack itemToAdd) {
-        ContainerComponent container = null;
-        for (Component<?> component : shulkerStack.getComponents()) {
-            if (component.type() == DataComponentTypes.CONTAINER) {
-                if (component.value() instanceof ContainerComponent foundContainer) {
-                    container = foundContainer;
-                }
-                break;
-            }
-        }
+        Item shulkerMaterial = getMaterialFromShulker(shulkerStack);
+        return itemToAdd.isOf(shulkerMaterial);
+    }
 
-        if (container == null) {
-            return true;
-        }
-
-        DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
-        container.copyTo(inventory);
-
-        ItemStack toAdd = itemToAdd.copy();
-        for (int i = 0; i < inventory.size() && !toAdd.isEmpty(); i++) {
-            ItemStack slot = inventory.get(i);
-            if (slot.isEmpty()) {
-                return true;
-            }
-            if (ItemStack.areItemsAndComponentsEqual(slot, toAdd)) {
-                int space = slot.getMaxCount() - slot.getCount();
-                if (space >= toAdd.getCount()) {
-                    return true;
-                }
-            }
+    private static boolean canFit(ItemStack slot, ItemStack itemStack) {
+        if (ItemStack.areItemsAndComponentsEqual(slot, itemStack)) {
+            return slot.getMaxCount() != slot.getCount();
         }
         return false;
     }
 
     public static void addToShulker(ItemStack shulkerStack, ItemStack itemToAdd) {
-        if (itemToAdd.isEmpty() || !canBeAddedToShulker(shulkerStack, itemToAdd)) {
-            return;
-        }
-
+        ContainerComponent container = shulkerStack.get(DataComponentTypes.CONTAINER);
         DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
-        ContainerComponent container = null;
-        for (Component<?> component : shulkerStack.getComponents()) {
-            if (component.type() == DataComponentTypes.CONTAINER) {
-                if (component.value() instanceof ContainerComponent foundContainer) {
-                    container = foundContainer;
-                }
-                break;
-            }
-        }
-        
-        if (container != null) {
-            container.copyTo(inventory);
-        }
+        container.copyTo(inventory);
 
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack slot = inventory.get(i);
@@ -104,7 +66,7 @@ public class ShulkerUtil {
                 inventory.set(i, itemToAdd.copy());
                 itemToAdd.setCount(0);
                 break;
-            } else if (ItemStack.areItemsAndComponentsEqual(slot, itemToAdd) && slot.getCount() < slot.getMaxCount()) {
+            } else if (canFit(slot, itemToAdd)) {
                 int toAdd = Math.min(itemToAdd.getCount(), slot.getMaxCount() - slot.getCount());
                 slot.increment(toAdd);
                 itemToAdd.decrement(toAdd);
