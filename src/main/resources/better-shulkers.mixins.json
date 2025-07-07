@@ -6,15 +6,11 @@
 	"mixins": [
 		"v1_21.ShulkerBoxBlockMixin",
 		"v1_21.ShulkerBoxBlockEntityMixin",
-		"v1_21.ShulkerBoxBlockEntityNbtMixin",
-		"v1_21.BlockMixin",
 		"v1_21.ItemEntityMixin",
 		"v1_21.ContainerComponentAccessor",
 		"v1_21.ServerPlayerEntityMixin",
 		"v1_21.ShulkerBoxScreenHandlerRemoteInteractionMixin",
-		"v1_21.ShulkerBoxScreenHandlerAccessor",
-		"v1_21_5.ItemMixin",
-		"v1_21_6.ShulkerBoxBlockEntityNbtMixin"
+		"v1_21.ShulkerBoxScreenHandlerAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

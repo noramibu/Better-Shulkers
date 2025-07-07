@@ -8,6 +8,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ShulkerBoxScreenHandler;
 import net.minecraft.sound.SoundEvents;
@@ -30,46 +31,41 @@ public abstract class ItemEntityMixin {
             cancellable = true
     )
     private void onBeforeInsertStack(PlayerEntity player, CallbackInfo ci, @Local(ordinal = 0) ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return;
-        }
-
-        String targetMaterialId = ShulkerUtil.getItemId(itemStack);
         PlayerInventory playerInventory = player.getInventory();
         ItemEntity self = (ItemEntity) (Object) this;
 
         for (int i = 0; i < playerInventory.size(); i++) {
             ItemStack inventoryStack = playerInventory.getStack(i);
             if (ShulkerUtil.isShulkerBox(inventoryStack)) {
-                final int slot = i;
-                ShulkerUtil.getShulkerMaterial(inventoryStack).ifPresent(materialId -> {
-                    if (materialId.equals(targetMaterialId) && ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
-                        int originalCount = itemStack.getCount();
-                        ShulkerUtil.addToShulker(inventoryStack, itemStack);
-                        playerInventory.setStack(slot, inventoryStack);
+                Item shulkerMaterial = ShulkerUtil.getMaterialFromShulker(inventoryStack);
+                if (shulkerMaterial != null &&
+                        itemStack.isOf(shulkerMaterial) &&
+                        ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
+                    int originalCount = itemStack.getCount();
+                    ShulkerUtil.addToShulker(inventoryStack, itemStack);
+                    playerInventory.setStack(i, inventoryStack);
 
-                        if (player.currentScreenHandler instanceof ShulkerBoxScreenHandler screenHandler) {
-                            Inventory screenInventory = ((ShulkerBoxScreenHandlerAccessor)screenHandler).getInventory();
-                            if (screenInventory instanceof ForceInventory forceInventory && forceInventory.forced()) {
-                                DefaultedList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
-                                forceInventory.setInventory(updatedList);
-                                screenHandler.sendContentUpdates();
-                            }
-                        }
-
-                        if (itemStack.isEmpty()) {
-                            player.sendPickup(self, originalCount);
-                            player.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                            self.discard();
-                            ci.cancel();
-                        } else {
-                            int pickedUpCount = originalCount - itemStack.getCount();
-                            if (pickedUpCount > 0) {
-                                player.sendPickup(self, pickedUpCount);
-                            }
+                    if (player.currentScreenHandler instanceof ShulkerBoxScreenHandler screenHandler) {
+                        Inventory screenInventory = ((ShulkerBoxScreenHandlerAccessor)screenHandler).getInventory();
+                        if (screenInventory instanceof ForceInventory forceInventory && forceInventory.forced()) {
+                            DefaultedList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
+                            forceInventory.setInventory(updatedList);
+                            screenHandler.sendContentUpdates();
                         }
                     }
-                });
+
+                    if (itemStack.isEmpty()) {
+                        player.sendPickup(self, originalCount);
+                        player.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                        self.discard();
+                        ci.cancel();
+                    } else {
+                        int pickedUpCount = originalCount - itemStack.getCount();
+                        if (pickedUpCount > 0) {
+                            player.sendPickup(self, pickedUpCount);
+                        }
+                    }
+                }
                 if (ci.isCancelled()) {
                     break;
                 }

@@ -4,13 +4,15 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.lucko.fabric.api.permissions.v0.Permissions;
-import me.noramibu.bettershulkers.accessor.ShulkerMaterialAccessor;
 import me.noramibu.bettershulkers.config.Config;
 import me.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.ItemStackArgument;
 import net.minecraft.command.argument.ItemStackArgumentType;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,7 +22,7 @@ import net.minecraft.util.hit.HitResult;
 
 public class ShulkerCommand {
 
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
         dispatcher.register(CommandManager.literal("shulker")
                 .then(CommandManager.literal("set")
                         .requires(source -> {
@@ -63,9 +65,9 @@ public class ShulkerCommand {
             BlockHitResult blockHit = (BlockHitResult) hit;
             BlockEntity blockEntity = player.getWorld().getBlockEntity(blockHit.getBlockPos());
 
-            if (blockEntity instanceof ShulkerMaterialAccessor accessor) {
-                String material = accessor.getMaterial();
-                if (material != null && !material.isEmpty()) {
+            if (blockEntity instanceof ShulkerBoxBlockEntity) {
+                Item material = ShulkerUtil.getMaterialFromShulkerBlock(blockEntity);
+                if (material != null) {
                     player.sendMessage(Text.literal("Shulker material: " + material), false);
                     return 1;
                 } else {
@@ -83,10 +85,11 @@ public class ShulkerCommand {
         ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
         var mainHandStack = player.getMainHandStack();
         ItemStackArgument itemStackArgument = ItemStackArgumentType.getItemStackArgument(context, "material");
+        ItemStack materialStack = itemStackArgument.createStack(1, false);
         String materialId = ShulkerUtil.getItemId(itemStackArgument.createStack(1, false));
 
         if (ShulkerUtil.isShulkerBox(mainHandStack)) {
-            ShulkerUtil.setShulkerMaterial(mainHandStack, materialId);
+            ShulkerUtil.setMaterialForShulker(mainHandStack, materialStack);
             player.sendMessage(Text.literal("Shulker box material set to: " + materialId), false);
             return 1;
         } else {

@@ -34,14 +34,16 @@ public class BetterShulkers implements ModInitializer {
 	public void onInitialize() {
 		Config.init();
 		BetterShulkersRecipes.register();
-		CommandRegistrationCallback.EVENT.register(ShulkerCommand::register);
+		CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
+			ShulkerCommand.register(commandDispatcher, commandRegistryAccess);
+		});
 
 		// Add custom component to shulkers
 		Identifier latePhase = Identifier.of(MOD_ID, "late");
 		DefaultItemComponentEvents.MODIFY.addPhaseOrdering(Event.DEFAULT_PHASE, latePhase);
 
 		DefaultItemComponentEvents.MODIFY.register(latePhase, context -> {
-			context.modify(item -> ShulkerUtil.isShulkerBox(item.getDefaultStack()), (builder, item) -> {
+			context.modify(ShulkerUtil::earlyIsShulkerBox, (builder, item) -> {
 				NbtCompound compound = new NbtCompound();
 				compound.put(MATERIAL_PATH, NbtString.of(""));
 				NbtComponent component = NbtComponent.of(compound);

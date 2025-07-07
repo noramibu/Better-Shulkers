@@ -5,13 +5,13 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ForceInventory;
 import me.noramibu.bettershulkers.accessor.RemoteInventory;
-import me.noramibu.bettershulkers.accessor.ShulkerMaterialAccessor;
 import me.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
@@ -29,14 +29,12 @@ public abstract class ShulkerBoxBlockMixin implements RemoteInventory {
     private List<ItemStack> onGetDroppedStacks(List<ItemStack> original, @Local(argsOnly = true) LootContextParameterSet.Builder builder) {
         BlockEntity blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
 
-        if (blockEntity instanceof ShulkerMaterialAccessor accessor) {
-            String material = accessor.getMaterial();
-            if (material != null && !material.isEmpty()) {
-                for (ItemStack stack : original) {
-                    if (ShulkerUtil.isShulkerBox(stack)) {
-                        ShulkerUtil.setShulkerMaterial(stack, material);
-                        break;
-                    }
+        Item material = ShulkerUtil.getMaterialFromShulkerBlock(blockEntity);
+        if (material != null) {
+            for (ItemStack stack : original) {
+                if (ShulkerUtil.isShulkerBox(stack)) {
+                    ShulkerUtil.setMaterialForShulker(stack, material.getDefaultStack());
+                    break;
                 }
             }
         }

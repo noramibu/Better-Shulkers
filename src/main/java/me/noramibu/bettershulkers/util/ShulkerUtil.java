@@ -1,12 +1,15 @@
 package me.noramibu.bettershulkers.util;
 
+import me.noramibu.bettershulkers.BetterShulkers;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.Component;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.component.type.LoreComponent;
-import net.minecraft.item.BlockItem;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
 import net.minecraft.item.ItemStack;
@@ -18,7 +21,6 @@ import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ShulkerUtil {
 
@@ -28,25 +30,8 @@ public class ShulkerUtil {
         return stack.isIn(ConventionalItemTags.SHULKER_BOXES);
     }
 
-    public static void setShulkerMaterial(ItemStack shulkerBox, String materialId) {
-        shulkerBox.set(DataComponentTypes.LORE, new LoreComponent(List.of(Text.literal(MATERIAL_PREFIX + materialId))));
-    }
-
-    public static Optional<String> getShulkerMaterial(ItemStack shulkerBox) {
-        for (Component<?> component : shulkerBox.getComponents()) {
-            if (component.type() == DataComponentTypes.LORE) {
-                if (component.value() instanceof LoreComponent lore) {
-                    for (Text line : lore.lines()) {
-                        String lineStr = line.getString();
-                        if (lineStr.startsWith(MATERIAL_PREFIX)) {
-                            return Optional.of(lineStr.substring(MATERIAL_PREFIX.length()));
-                        }
-                    }
-                }
-                break;
-            }
-        }
-        return Optional.empty();
+    public static boolean earlyIsShulkerBox(Item item) {
+        return item instanceof BlockItem blockItem && blockItem.getBlock() instanceof ShulkerBoxBlock;
     }
 
     public static DefaultedList<ItemStack> getInventoryFromShulker(ItemStack stack) {
@@ -137,6 +122,10 @@ public class ShulkerUtil {
         return Registries.ITEM.getId(stack.getItem()).toString();
     }
 
+    public static Item getItemFromId(String id) {
+        return Registries.ITEM.get(Identifier.of(id));
+    }
+
     /**
      * Gets the material from the Shulker Box's NBT data.
      * @param shulker ItemStack of the Shulker Box
@@ -144,12 +133,27 @@ public class ShulkerUtil {
      */
     @Nullable
     public static Item getMaterialFromShulker(ItemStack shulker) {
-        NbtComponent component = shulker.get(DataComponentTypes.CUSTOM_DATA);
-        String materialId = component.copyNbt().getString(MATERIAL_PREFIX);
+        var nbt = shulker.get(DataComponentTypes.CUSTOM_DATA).copyNbt();
+        String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH);
         if (materialId.isEmpty()) {
             return null;
         }
-        return Registries.ITEM.get(Identifier.of(materialId));
+        return getItemFromId(materialId);
+    }
+
+    /**
+     * Gets the material from the Shulker Box's NBT data.
+     * @param shulker BlockEntity that is the shulker box
+     * @return Item that is the material if present, else null
+     */
+    @Nullable
+    public static Item getMaterialFromShulkerBlock(BlockEntity shulker) {
+        var nbt = shulker.getComponents().get(DataComponentTypes.CUSTOM_DATA).copyNbt();
+        String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH);
+        if (materialId.isEmpty()) {
+            return null;
+        }
+        return getItemFromId(materialId);
     }
 
     /**
@@ -158,9 +162,13 @@ public class ShulkerUtil {
      * @param material ItemStack of the material to collect
      */
     public static void setMaterialForShulker(ItemStack shulker, ItemStack material) {
-        NbtComponent component = shulker.get(DataComponentTypes.CUSTOM_DATA);
-        component.apply((nbtCompound -> {
-            nbtCompound.put(MATERIAL_PREFIX, NbtString.of(getItemId(material)));
-        }));
+        var nbt = shulker.get(DataComponentTypes.CUSTOM_DATA).copyNbt();
+        nbt.put(BetterShulkers.MATERIAL_PATH, NbtString.of(getItemId(material)));
+        shulker.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(nbt));
+        setShulkerMaterialLore(shulker, material.getItem());
+    }
+
+    private static void setShulkerMaterialLore(ItemStack shulkerBox, Item material) {
+        shulkerBox.set(DataComponentTypes.LORE, new LoreComponent(List.of(Text.literal(MATERIAL_PREFIX + material.toString()))));
     }
 } 

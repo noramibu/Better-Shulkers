@@ -2,7 +2,6 @@ package me.noramibu.mixin.v1_21;
 
 import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ForceInventory;
-import me.noramibu.bettershulkers.accessor.ShulkerMaterialAccessor;
 import me.noramibu.bettershulkers.accessor.ShulkerViewer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -26,10 +25,7 @@ import java.util.List;
 
 @IfMinecraftVersion(minVersion = "1.21")
 @Mixin(ShulkerBoxBlockEntity.class)
-public abstract class ShulkerBoxBlockEntityMixin extends LootableContainerBlockEntity implements ShulkerMaterialAccessor, ForceInventory {
-
-    @Unique
-    private String material;
+public abstract class ShulkerBoxBlockEntityMixin extends LootableContainerBlockEntity implements ForceInventory {
 
     @Shadow
     private DefaultedList<ItemStack> inventory;
@@ -38,16 +34,6 @@ public abstract class ShulkerBoxBlockEntityMixin extends LootableContainerBlockE
 
     protected ShulkerBoxBlockEntityMixin(net.minecraft.block.entity.BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
-    }
-
-    @Override
-    public void setMaterial(String material) {
-        this.material = material;
-    }
-
-    @Override
-    public String getMaterial() {
-        return this.material;
     }
 
     @Override
@@ -76,7 +62,6 @@ public abstract class ShulkerBoxBlockEntityMixin extends LootableContainerBlockE
     private void removeWhenClosed(PlayerEntity player, CallbackInfo ci) {
         if (this.forced()) {
             if (player instanceof ServerPlayerEntity serverPlayer) {
-                System.out.println(((ShulkerViewer)serverPlayer).getViewedStack());
                 int smallestSize = this.getSmallestListIndex();
                 if (smallestSize != -1) {
                     DefaultedList<ItemStack> newInventory = DefaultedList.ofSize(smallestSize + 1, ItemStack.EMPTY);
