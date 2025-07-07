@@ -1,7 +1,7 @@
 package me.noramibu.mixin.v1_21;
 
+import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ShulkerMaterialAccessor;
-import me.noramibu.mixin.annotation.MCVer;
 import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@MCVer(min = "1.21", max = "1.21.5")
+@IfMinecraftVersion(minVersion = "1.21", maxVersion = "1.21.5")
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityNbtMixin {
 

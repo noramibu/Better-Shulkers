@@ -1,9 +1,8 @@
 package me.noramibu.mixin.v1_21;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.util.ShulkerUtil;
-import me.noramibu.mixin.annotation.MCVer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,9 +12,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@MCVer(min = "1.21", max = "1.21.7")
+@IfMinecraftVersion(minVersion = "1.21")
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
 
@@ -25,10 +23,9 @@ public abstract class ItemEntityMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/entity/player/PlayerInventory;insertStack(Lnet/minecraft/item/ItemStack;)Z"
             ),
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILHARD
+            cancellable = true
     )
-    private void onBeforeInsertStack(PlayerEntity player, CallbackInfo ci, ItemStack itemStack) {
+    private void onBeforeInsertStack(PlayerEntity player, CallbackInfo ci, @Local(ordinal = 0) ItemStack itemStack) {
         if (itemStack.isEmpty()) {
             return;
         }
@@ -48,8 +45,7 @@ public abstract class ItemEntityMixin {
                         playerInventory.setStack(slot, inventoryStack);
 
                         if (itemStack.isEmpty()) {
-                            int pickedUpCount = originalCount;
-                            player.sendPickup(self, pickedUpCount);
+                            player.sendPickup(self, originalCount);
                             player.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                             self.discard();
                             ci.cancel();
