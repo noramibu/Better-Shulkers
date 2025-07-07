@@ -3,15 +3,15 @@
 	"id": "better-shulkers",
 	"version": "${version}",
 	"name": "Better Shulkers",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A server-side mod that adds a bunch of features to shulkers.",
 	"authors": [
-		"Me!"
+		"noramibu",
+		"QPCrummer"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/noramibu/Better-Shulkers/"
 	},
-	"license": "CC0-1.0",
+	"license": "LGPL-3.0",
 	"icon": "assets/better-shulkers/icon.png",
 	"environment": "*",
 	"entrypoints": {

@@ -15,9 +15,6 @@ import net.minecraft.component.type.NbtComponent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.util.Identifier;
-import me.noramibu.bettershulkers.util.ShulkerUtil;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.item.BlockItem;
@@ -36,7 +33,7 @@ public class BetterShulkers implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		Config.init();
-		//BetterShulkersRecipes.register();
+		BetterShulkersRecipes.register();
 		CommandRegistrationCallback.EVENT.register(ShulkerCommand::register);
 
 		// Add custom component to shulkers

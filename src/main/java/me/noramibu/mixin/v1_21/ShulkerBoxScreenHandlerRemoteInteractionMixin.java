@@ -1,7 +1,8 @@
-package me.noramibu.mixin.qpcrummer;
+package me.noramibu.mixin.v1_21;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ShulkerViewer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -16,9 +17,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@IfMinecraftVersion(minVersion = "1.21")
 @Mixin(ShulkerBoxScreenHandler.class)
-public abstract class ShulkerBoxScreenHandlerMixin extends ScreenHandler {
-    protected ShulkerBoxScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId) {
+public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends ScreenHandler {
+    protected ShulkerBoxScreenHandlerRemoteInteractionMixin(@Nullable ScreenHandlerType<?> type, int syncId) {
         super(type, syncId);
     }
 
@@ -39,4 +41,4 @@ public abstract class ShulkerBoxScreenHandlerMixin extends ScreenHandler {
             }
         }
     }
-}
+} 

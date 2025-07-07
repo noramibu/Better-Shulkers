@@ -5,6 +5,9 @@ build/
 out/
 classes/
 
+# minecraft
+eula.txt
+
 # eclipse
 
 *.launch
@@ -31,6 +34,7 @@ bin/
 # fabric
 
 run/
+remappedSrc/
 
 # java
 

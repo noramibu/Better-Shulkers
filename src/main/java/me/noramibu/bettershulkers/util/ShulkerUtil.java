@@ -49,6 +49,16 @@ public class ShulkerUtil {
         return Optional.empty();
     }
 
+    public static DefaultedList<ItemStack> getInventoryFromShulker(ItemStack stack) {
+        ContainerComponent component = stack.get(DataComponentTypes.CONTAINER);
+        if (component == null) {
+            return DefaultedList.of();
+        }
+        DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
+        component.copyTo(inventory);
+        return inventory;
+    }
+
     public static boolean canBeAddedToShulker(ItemStack shulkerStack, ItemStack itemToAdd) {
         ContainerComponent container = null;
         for (Component<?> component : shulkerStack.getComponents()) {

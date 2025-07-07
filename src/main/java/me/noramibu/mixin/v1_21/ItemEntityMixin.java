@@ -2,12 +2,16 @@ package me.noramibu.mixin.v1_21;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
+import me.noramibu.bettershulkers.accessor.ForceInventory;
 import me.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ShulkerBoxScreenHandler;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -43,6 +47,15 @@ public abstract class ItemEntityMixin {
                         int originalCount = itemStack.getCount();
                         ShulkerUtil.addToShulker(inventoryStack, itemStack);
                         playerInventory.setStack(slot, inventoryStack);
+
+                        if (player.currentScreenHandler instanceof ShulkerBoxScreenHandler screenHandler) {
+                            Inventory screenInventory = ((ShulkerBoxScreenHandlerAccessor)screenHandler).getInventory();
+                            if (screenInventory instanceof ForceInventory forceInventory && forceInventory.forced()) {
+                                DefaultedList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
+                                forceInventory.setInventory(updatedList);
+                                screenHandler.sendContentUpdates();
+                            }
+                        }
 
                         if (itemStack.isEmpty()) {
                             player.sendPickup(self, originalCount);
