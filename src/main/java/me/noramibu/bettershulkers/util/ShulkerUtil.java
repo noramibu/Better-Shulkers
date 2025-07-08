@@ -110,7 +110,11 @@ public class ShulkerUtil {
      */
     @Nullable
     public static Item getMaterialFromShulkerBlock(BlockEntity shulker) {
-        var nbt = shulker.getComponents().get(DataComponentTypes.CUSTOM_DATA).copyNbt();
+        var component = shulker.getComponents().get(DataComponentTypes.CUSTOM_DATA);
+        if (component == null) {
+            return null;
+        }
+        var nbt = component.copyNbt();
         String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH);
         if (materialId.isEmpty()) {
             return null;

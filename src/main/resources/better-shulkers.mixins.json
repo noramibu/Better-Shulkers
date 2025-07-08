@@ -4,13 +4,15 @@
 	"compatibilityLevel": "JAVA_21",
 	"plugin": "com.moulberry.mixinconstraints.ConstraintsMixinPlugin",
 	"mixins": [
-		"v1_21.ShulkerBoxBlockMixin",
-		"v1_21.ShulkerBoxBlockEntityMixin",
-		"v1_21.ItemEntityMixin",
 		"v1_21.ContainerComponentAccessor",
+		"v1_21.DisplayEntityAccessor",
+		"v1_21.ItemDisplayEntityInvoker",
+		"v1_21.ItemEntityMixin",
 		"v1_21.ServerPlayerEntityMixin",
-		"v1_21.ShulkerBoxScreenHandlerRemoteInteractionMixin",
-		"v1_21.ShulkerBoxScreenHandlerAccessor"
+		"v1_21.ShulkerBoxBlockEntityMixin",
+		"v1_21.ShulkerBoxBlockMixin",
+		"v1_21.ShulkerBoxScreenHandlerAccessor",
+		"v1_21.ShulkerBoxScreenHandlerRemoteInteractionMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

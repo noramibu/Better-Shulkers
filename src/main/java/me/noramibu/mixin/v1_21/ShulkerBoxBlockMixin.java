@@ -4,19 +4,23 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ForceInventory;
+import me.noramibu.bettershulkers.accessor.MaterialDisplay;
 import me.noramibu.bettershulkers.accessor.RemoteInventory;
 import me.noramibu.bettershulkers.util.ShulkerUtil;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -24,7 +28,11 @@ import java.util.List;
 
 @IfMinecraftVersion(minVersion = "1.21")
 @Mixin(ShulkerBoxBlock.class)
-public abstract class ShulkerBoxBlockMixin implements RemoteInventory {
+public abstract class ShulkerBoxBlockMixin extends BlockWithEntity implements RemoteInventory {
+    protected ShulkerBoxBlockMixin(Settings settings) {
+        super(settings);
+    }
+
     @ModifyReturnValue(method = "getDroppedStacks", at = @At("RETURN"))
     private List<ItemStack> onGetDroppedStacks(List<ItemStack> original, @Local(argsOnly = true) LootContextParameterSet.Builder builder) {
         BlockEntity blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
@@ -55,4 +63,11 @@ public abstract class ShulkerBoxBlockMixin implements RemoteInventory {
         ((ForceInventory)blockEntity).setForced();
         player.openHandledScreen(blockEntity);
     }
-} 
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        ShulkerBoxBlockEntity blockEntity = (ShulkerBoxBlockEntity) world.getBlockEntity(pos);
+        ((MaterialDisplay)blockEntity).createDisplay(itemStack);
+        super.onPlaced(world, pos, state, placer, itemStack);
+    }
+}
