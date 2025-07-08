@@ -45,7 +45,7 @@ public abstract class ItemEntityMixin {
                 if (player.currentScreenHandler instanceof ShulkerBoxScreenHandler screenHandler) {
                     Inventory screenInventory = ((ShulkerBoxScreenHandlerAccessor)screenHandler).getInventory();
 
-                    if (((ForceInventory)screenInventory).forced()) {
+                    if (((ForceInventory)screenInventory).forced() && ((ShulkerViewer)player).getViewedStack() == inventoryStack) {
                         DefaultedList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
                         ((ForceInventory)screenInventory).setInventory(updatedList);
                         screenHandler.sendContentUpdates();
