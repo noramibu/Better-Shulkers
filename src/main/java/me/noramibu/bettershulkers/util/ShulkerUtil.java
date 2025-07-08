@@ -96,7 +96,7 @@ public class ShulkerUtil {
     @Nullable
     public static Item getMaterialFromShulker(ItemStack shulker) {
         var nbt = shulker.get(DataComponentTypes.CUSTOM_DATA).copyNbt();
-        String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH);
+        String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH).get();
         if (materialId.isEmpty()) {
             return null;
         }
@@ -115,7 +115,7 @@ public class ShulkerUtil {
             return null;
         }
         var nbt = component.copyNbt();
-        String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH);
+        String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH).get();
         if (materialId.isEmpty()) {
             return null;
         }

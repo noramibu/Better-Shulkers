@@ -3,7 +3,7 @@
 	"id": "better-shulkers",
 	"version": "${version}",
 	"name": "Better Shulkers",
-	"description": "A server-side mod that adds a bunch of features to shulkers.",
+	"description": "A server-side mod that adds many features to shulkers.",
 	"authors": [
 		"noramibu",
 		"QPCrummer"
@@ -24,7 +24,7 @@
 	],
 	"depends": {
 		"fabricloader": "*",
-		"minecraft": ">=1.21 <1.22",
+		"minecraft": ">=1.21.7",
 		"java": ">=21",
 		"fabric-api": "*"
 	}

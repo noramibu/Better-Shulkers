@@ -1,6 +1,5 @@
-package me.noramibu.mixin.v1_21;
+package me.noramibu.bettershulkers.mixin;
 
-import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ForceInventory;
 import me.noramibu.bettershulkers.accessor.MaterialDisplay;
 import me.noramibu.bettershulkers.accessor.ShulkerViewer;
@@ -10,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.entity.Entity;
@@ -19,8 +17,8 @@ import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +34,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@IfMinecraftVersion(minVersion = "1.21")
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin extends LootableContainerBlockEntity implements ForceInventory, MaterialDisplay {
 
@@ -163,14 +160,8 @@ public abstract class ShulkerBoxBlockEntityMixin extends LootableContainerBlockE
             this.display.refreshPositionAndAngles(positionOfShulker.x, positionOfShulker.y + heightOffset, positionOfShulker.z, yaw, pitch);
             this.display.setNoGravity(true);
             ((ItemDisplayEntityInvoker) this.display).invokeSetItemStack(material.getDefaultStack());
-            ((ItemDisplayEntityInvoker) this.display).invokeSetTransformationMode(ModelTransformationMode.FIXED);
+            ((ItemDisplayEntityInvoker) this.display).invokeSetTransformationMode(ItemDisplayContext.FIXED);
             ((DisplayEntityAccessor) this.display).invokeSetBillboardMode(DisplayEntity.BillboardMode.FIXED);
-
-            NbtCompound nbt = new NbtCompound();
-            this.display.writeNbt(nbt);
-            nbt.putBoolean("PersistenceRequired", true);
-            this.display.readNbt(nbt);
-
             this.getWorld().spawnEntity(this.display);
         }
     }

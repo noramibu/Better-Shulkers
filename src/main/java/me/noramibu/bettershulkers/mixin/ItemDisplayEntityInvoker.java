@@ -1,7 +1,7 @@
-package me.noramibu.mixin.v1_21;
+package me.noramibu.bettershulkers.mixin;
 
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.entity.decoration.DisplayEntity;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -11,7 +11,7 @@ public interface ItemDisplayEntityInvoker {
     @Invoker("setItemStack")
     void invokeSetItemStack(ItemStack stack);
 
-    @Invoker("setTransformationMode")
-    void invokeSetTransformationMode(ModelTransformationMode mode);
+    @Invoker("setItemDisplayContext")
+    void invokeSetTransformationMode(ItemDisplayContext mode);
 
 }

@@ -1,13 +1,11 @@
 package me.noramibu.bettershulkers.config;
 
 import com.moandjiezana.toml.Toml;
-import com.moandjiezana.toml.TomlWriter;
+import me.noramibu.bettershulkers.BetterShulkers;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Config {
     private static File file;
@@ -45,7 +43,7 @@ public class Config {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            BetterShulkers.LOGGER.error("Failed to create config: ", e);
         }
     }
 

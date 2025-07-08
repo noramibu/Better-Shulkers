@@ -1,7 +1,6 @@
-package me.noramibu.mixin.v1_21;
+package me.noramibu.bettershulkers.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ForceInventory;
 import me.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.entity.ItemEntity;
@@ -17,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@IfMinecraftVersion(minVersion = "1.21")
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
 

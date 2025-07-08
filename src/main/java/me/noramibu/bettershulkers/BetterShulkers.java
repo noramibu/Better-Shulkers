@@ -14,13 +14,13 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.TypedActionResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +61,7 @@ public class BetterShulkers implements ModInitializer {
 					((RemoteInventory)shulker).openInventory((ServerPlayerEntity) playerEntity, stack);
 				}
 			}
-            return TypedActionResult.pass(stack);
+            return ActionResult.PASS;
         }));
 	}
 } 

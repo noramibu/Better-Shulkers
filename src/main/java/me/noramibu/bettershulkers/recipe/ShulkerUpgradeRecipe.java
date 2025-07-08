@@ -1,6 +1,5 @@
 package me.noramibu.bettershulkers.recipe;
 
-import eu.pb4.polymer.core.api.item.PolymerRecipe;
 import eu.pb4.polymer.core.api.utils.PolymerObject;
 import me.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.item.Item;
@@ -12,11 +11,9 @@ import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.recipe.input.CraftingRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
-public class ShulkerUpgradeRecipe extends SpecialCraftingRecipe implements PolymerRecipe {
+public class ShulkerUpgradeRecipe extends SpecialCraftingRecipe {
 
     public ShulkerUpgradeRecipe(CraftingRecipeCategory category) {
         super(category);
@@ -26,7 +23,7 @@ public class ShulkerUpgradeRecipe extends SpecialCraftingRecipe implements Polym
     public boolean matches(CraftingRecipeInput input, World world) {
         // Prevent OutOfBoundsException
         // Also acts as a super quick escape path
-        if (input.getSize() != 9) {
+        if (input.getWidth() != 3 && input.getHeight() != 3) {
             return false;
         }
 
@@ -67,16 +64,6 @@ public class ShulkerUpgradeRecipe extends SpecialCraftingRecipe implements Polym
     }
 
     @Override
-    public boolean fits(int width, int height) {
-        return width > 2 && height > 2;
-    }
-
-    @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
-        return Items.SHULKER_BOX.getDefaultStack();
-    }
-
-    @Override
     public boolean showNotification() {
         return true;
     }
@@ -87,7 +74,7 @@ public class ShulkerUpgradeRecipe extends SpecialCraftingRecipe implements Polym
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends SpecialCraftingRecipe> getSerializer() {
         return BetterShulkersRecipes.SHULKER_UPGRADE_SERIALIZER;
     }
 
@@ -96,10 +83,6 @@ public class ShulkerUpgradeRecipe extends SpecialCraftingRecipe implements Polym
         return CraftingRecipeCategory.MISC;
     }
 
-    @Override
-    public @Nullable Recipe<?> getPolymerReplacement(ServerPlayerEntity player) {
-        return PolymerRecipe.createCraftingRecipe(this);
-    }
 
     public static class Serializer extends SpecialRecipeSerializer<ShulkerUpgradeRecipe> implements PolymerObject {
 

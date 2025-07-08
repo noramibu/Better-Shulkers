@@ -1,4 +1,4 @@
-package me.noramibu.mixin.v1_21;
+package me.noramibu.bettershulkers.mixin;
 
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.decoration.DisplayEntity;
@@ -15,26 +15,6 @@ public interface DisplayEntityAccessor {
         throw new AssertionError();
     }
 
-    @Accessor("BRIGHTNESS")
-    static TrackedData<Vector3f> getBrightness() {
-        throw new AssertionError();
-    }
-
-    @Invoker
-    void invokeSetViewRange(float viewRange);
-
-    @Invoker
-    void invokeSetDisplayWidth(float width);
-
-    @Invoker
-    void invokeSetDisplayHeight(float height);
-
     @Invoker
     void invokeSetBillboardMode(DisplayEntity.BillboardMode mode);
-
-    @Invoker
-    void invokeSetStartInterpolation(int startInterpolation);
-
-    @Invoker
-    void invokeSetInterpolationDuration(int interpolationDuration);
 }

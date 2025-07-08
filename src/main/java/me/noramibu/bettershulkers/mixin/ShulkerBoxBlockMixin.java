@@ -1,8 +1,7 @@
-package me.noramibu.mixin.v1_21;
+package me.noramibu.bettershulkers.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 import me.noramibu.bettershulkers.accessor.ForceInventory;
 import me.noramibu.bettershulkers.accessor.MaterialDisplay;
 import me.noramibu.bettershulkers.accessor.RemoteInventory;
@@ -14,8 +13,8 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
+import net.minecraft.loot.context.LootWorldContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.List;
 
-@IfMinecraftVersion(minVersion = "1.21")
 @Mixin(ShulkerBoxBlock.class)
 public abstract class ShulkerBoxBlockMixin extends BlockWithEntity implements RemoteInventory {
     protected ShulkerBoxBlockMixin(Settings settings) {
@@ -34,7 +32,7 @@ public abstract class ShulkerBoxBlockMixin extends BlockWithEntity implements Re
     }
 
     @ModifyReturnValue(method = "getDroppedStacks", at = @At("RETURN"))
-    private List<ItemStack> onGetDroppedStacks(List<ItemStack> original, @Local(argsOnly = true) LootContextParameterSet.Builder builder) {
+    private List<ItemStack> onGetDroppedStacks(List<ItemStack> original, @Local(argsOnly = true) LootWorldContext.Builder builder) {
         BlockEntity blockEntity = builder.get(LootContextParameters.BLOCK_ENTITY);
 
         Item material = ShulkerUtil.getMaterialFromShulkerBlock(blockEntity);
