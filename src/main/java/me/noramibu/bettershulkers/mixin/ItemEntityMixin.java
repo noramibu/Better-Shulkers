@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import me.noramibu.bettershulkers.accessor.ForceInventory;
 import me.noramibu.bettershulkers.accessor.ShulkerViewer;
 import me.noramibu.bettershulkers.util.ShulkerUtil;
-import me.noramibu.mixin.v1_21.ShulkerBoxScreenHandlerAccessor;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
