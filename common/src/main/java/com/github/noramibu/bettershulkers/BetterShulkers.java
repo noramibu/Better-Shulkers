@@ -1,4 +1,4 @@
-package com.github.noramibuu.bettershulkers;
+package com.github.noramibu.bettershulkers;
 
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.InteractionEvent;

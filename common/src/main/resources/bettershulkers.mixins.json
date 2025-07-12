@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.github.noramibuu.bettershulkers.mixin",
+  "package": "com.github.noramibu.bettershulkers.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
