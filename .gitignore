@@ -6,3 +6,5 @@
 /fabric/.gradle
 /fabric/build
 /neoforge/.gradle
+/.architectury-transformer
+/neoforge/build

@@ -1,6 +1,6 @@
-package com.github.noramibuu.bettershulkers.fabric;
+package com.github.noramibu.bettershulkers.fabric;
 
-import com.github.noramibuu.bettershulkers.BetterShulkers;
+import com.github.noramibu.bettershulkers.BetterShulkers;
 import net.fabricmc.api.ModInitializer;
 
 public final class BetterShulkersFabric implements ModInitializer {

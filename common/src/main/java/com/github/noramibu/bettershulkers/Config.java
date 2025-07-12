@@ -1,4 +1,4 @@
-package com.github.noramibuu.bettershulkers;
+package com.github.noramibu.bettershulkers;
 
 import com.moandjiezana.toml.Toml;
 import net.fabricmc.loader.api.FabricLoader;
