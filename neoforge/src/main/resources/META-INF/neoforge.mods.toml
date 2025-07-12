@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[0,)"
+license = "MIT"
+
+[[mods]]
+modId = "better-shulkers"
+version = "${version}"
+displayName = "Better Shulkers"
+authors = "noramibu, QPCrummer"
+description = '''
+A server-side mod that adds many features to shulkers.
+'''
+logoFile = "META-INF/icon.png"
+
+[[dependencies.better-shulkers]]
+modId = "neoforge"
+type = "required"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.better-shulkers]]
+modId = "minecraft"
+type = "required"
+versionRange = "%mcVer%"
+ordering = "NONE"
+side = "BOTH"
+
+
+[[mixins]]
+config = "bettershulkers.mixins.json"
