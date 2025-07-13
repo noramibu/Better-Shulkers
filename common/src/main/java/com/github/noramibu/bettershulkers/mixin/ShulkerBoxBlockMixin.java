@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -62,6 +63,7 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
         }
         ((ForceInventory)blockEntity).setInventory(inventory);
         ((ForceInventory)blockEntity).setForced();
+        player.playSound(SoundEvents.SHULKER_BOX_OPEN, 1.0F, 1.0F);
         player.openMenu(blockEntity);
     }
 
