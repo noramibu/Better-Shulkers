@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ShulkerUtils {
+public class ShulkerUtil {
     public static final String MATERIAL_PREFIX = "Material: ";
 
     public static boolean isShulkerBox(ItemStack stack) {

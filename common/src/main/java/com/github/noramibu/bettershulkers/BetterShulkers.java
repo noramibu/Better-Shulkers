@@ -1,5 +1,6 @@
 package com.github.noramibu.bettershulkers;
 
+import com.github.noramibu.bettershulkers.command.ShulkerCommand;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ public final class BetterShulkers {
         Config.init();
         // TODO Recipes
         CommandRegistrationEvent.EVENT.register((commandDispatcher, commandBuildContext, commandSelection) -> {
-            // TODO ShulkerCommand
+            ShulkerCommand.register(commandDispatcher, commandBuildContext);
         });
 
         // TODO Item Component Modification
