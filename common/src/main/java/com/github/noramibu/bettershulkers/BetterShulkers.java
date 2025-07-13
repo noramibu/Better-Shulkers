@@ -4,6 +4,7 @@ import com.github.noramibu.bettershulkers.command.ShulkerCommand;
 import com.github.noramibu.bettershulkers.event.ComponentModificationEvent;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
 import com.github.noramibu.bettershulkers.util.DataComponentEntry;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
@@ -27,7 +28,7 @@ public final class BetterShulkers {
 
     public static void init() {
         Config.init();
-        // TODO Recipes
+        BetterShulkersRecipes.register();
 
         CommandRegistrationEvent.EVENT.register((commandDispatcher, commandBuildContext, commandSelection) -> {
             ShulkerCommand.register(commandDispatcher, commandBuildContext);
