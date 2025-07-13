@@ -6,6 +6,8 @@
   "client": [
   ],
   "mixins": [
+    "DisplayEntityAccessor",
+    "ShulkerBoxScreenHandlerRemoteInteractionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
