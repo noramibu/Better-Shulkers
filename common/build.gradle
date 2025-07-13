@@ -11,5 +11,5 @@ dependencies {
     // Do NOT use other classes from Fabric Loader.
     modImplementation "net.fabricmc:fabric-loader:$project.fabric_loader_version"
     modImplementation "dev.architectury:architectury:$project.architectury_api_version"
-    modCompileOnly "com.moandjiezana.toml:toml4j:0.7.2"
+    compileOnly"com.moandjiezana.toml:toml4j:0.7.2"
 }
