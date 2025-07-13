@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ServerPlayerMixin extends Player implements ShulkerViewer {
 
     public ServerPlayerMixin(Level world, GameProfile profile) {
-        super(world, profile);
+        super(world, null, 1.0f, profile);
     }
 
     private ItemStack viewingForcedShulker;

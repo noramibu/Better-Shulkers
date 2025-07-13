@@ -94,7 +94,14 @@ public class ShulkerUtil {
     @Nullable
     public static Item getMaterialFromShulker(ItemStack shulker) {
         var nbt = shulker.get(DataComponents.CUSTOM_DATA).copyTag();
+        /*\ >=1.21.5
         String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH).get();
+        \END */
+
+        //: <=1.21.4
+        String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH).toString();
+        //: END
+
         if (materialId.isEmpty()) {
             return null;
         }
@@ -113,7 +120,15 @@ public class ShulkerUtil {
             return null;
         }
         var nbt = component.copyTag();
+
+        /*\ >=1.21.5
         String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH).get();
+        \END */
+
+        //: <=1.21.4
+        String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH).toString();
+        //: END
+
         if (materialId.isEmpty()) {
             return null;
         }
