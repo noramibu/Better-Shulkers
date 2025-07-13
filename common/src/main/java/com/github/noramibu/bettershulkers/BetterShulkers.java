@@ -22,7 +22,7 @@ public final class BetterShulkers {
     public static void init() {
         Config.init();
         // TODO Recipes
-        
+
         CommandRegistrationEvent.EVENT.register((commandDispatcher, commandBuildContext, commandSelection) -> {
             ShulkerCommand.register(commandDispatcher, commandBuildContext);
         });

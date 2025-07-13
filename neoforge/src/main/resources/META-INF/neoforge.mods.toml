@@ -26,6 +26,12 @@ versionRange = "%mcVer%"
 ordering = "NONE"
 side = "BOTH"
 
+[[dependencies.better-shulkers]]
+modId = "architectury"
+type = "required"
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"
 
 [[mixins]]
 config = "bettershulkers.mixins.json"

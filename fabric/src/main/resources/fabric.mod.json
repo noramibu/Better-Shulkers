@@ -26,6 +26,7 @@
     "fabricloader": "*",
     "minecraft": "%mcVer%",
     "java": ">=21",
-    "fabric-api": "*"
+    "fabric-api": "*",
+    "architectury": "*"
   }
 }
