@@ -32,7 +32,10 @@ repositories {
 }
 
 dependencies {
-    neoForge "net.neoforged:neoforge:$rootProject.neoforge_version"
+    minecraft "net.minecraft:minecraft:$project.minecraft_version"
+    mappings loom.officialMojangMappings()
+
+    neoForge "net.neoforged:neoforge:$project.neoforge_version"
     forgeRuntimeLibrary(implementation include("com.moandjiezana.toml:toml4j:0.7.2"))
 
 

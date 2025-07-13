@@ -1,3 +1,8 @@
+import com.github.tatercertified.MCBuildConfig
+import com.github.tatercertified.utils.DependencyBuilder
+import com.github.tatercertified.utils.MCGradleBuilder
+import java.nio.file.Paths
+
 buildscript() {
     repositories {
         maven {
@@ -5,7 +10,7 @@ buildscript() {
         }
     }
     dependencies {
-        classpath 'com.github.Tater-Certified:MultiMCGradle:1.0.0-beta.3'
+        classpath 'com.github.Tater-Certified:MultiMCGradle:1.0.0-beta.4'
     }
 }
 
@@ -29,7 +34,6 @@ allprojects {
 subprojects {
     apply plugin: 'dev.architectury.loom'
     apply plugin: 'architectury-plugin'
-    apply plugin: 'maven-publish'
 
     base {
         // Set up a suffixed format for the mod jar names, e.g. `example-fabric`.
@@ -38,11 +42,6 @@ subprojects {
 
     repositories {
         mavenCentral()
-    }
-
-    dependencies {
-        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
-        mappings loom.officialMojangMappings()
     }
 
     java {
@@ -58,22 +57,76 @@ subprojects {
     tasks.withType(JavaCompile).configureEach {
         it.options.release = 21
     }
+}
 
-    // Configure Maven publishing.
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                artifactId = base.archivesName.get()
-                from components.java
-            }
-        }
-
-        // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-        repositories {
-            // Add repositories to publish to here.
-            // Notice: This block does NOT have the same function as the block in the top level.
-            // The repositories here will be used for publishing your artifact, not for
-            // retrieving dependencies.
-        }
-    }
+multimc {
+    // If future Minecraft versions should be supported (default: false)
+    futureCompatible = true
+    // Path where jars should be placed
+    outputDir = Paths.get("output")
+    // The name of a variable in gradle.properties
+    modConfigFileRelativePath = "modConfig"
+    // The loader name and where the subproject directory is located
+    loaderSpecificPaths = ["fabric": Paths.get("fabric"), "neoforge": Paths.get("neoforge")]
+    // The paths to the common code subprojects
+    commonDirs = [Paths.get("common")]
+    // Specifies how to handle gradle properties between versions
+    gradleConfig = new MCBuildConfig((MCGradleBuilder builder) -> {
+        builder.mcVer("1.21.0", (DependencyBuilder depBuilder) -> {
+            depBuilder.dep("architectury_api_version", "13.0.8") // https://modrinth.com/mod/architectury-api/versions
+            depBuilder.dep("minecraft_version", "1.21")
+            depBuilder.dep("fabric_permission_version", "0.3.1") // https://modrinth.com/mod/fabric-permissions-api/versions
+            depBuilder.dep("fabric_api_version", "0.102.0+1.21") // https://fabricmc.net/develop/
+            depBuilder.dep("neoforge_version", "21.0.167")       // https://neoforged.net/
+        })
+        builder.mcVer("1.21.1", (DependencyBuilder depBuilder) -> {
+            depBuilder.depCopy("architectury_api_version", "1.21.0")
+            depBuilder.dep("minecraft_version", "1.21.1")
+            depBuilder.depCopy("fabric_permission_version", "1.21.0")
+            depBuilder.dep("fabric_api_version", "0.116.4+1.21.1")
+            depBuilder.dep("neoforge_version", "21.1.192")
+        })
+        builder.mcVer("1.21.2", (DependencyBuilder depBuilder) -> {
+            depBuilder.dep("architectury_api_version", "14.0.4")
+            depBuilder.dep("minecraft_version", "1.21.2")
+            depBuilder.dep("fabric_permission_version", "0.3.2")
+            depBuilder.dep("fabric_api_version", "0.106.1+1.21.2")
+            depBuilder.dep("neoforge_version", "21.2.1-beta")
+        })
+        builder.mcVer("1.21.3", (DependencyBuilder depBuilder) -> {
+            depBuilder.depCopy("architectury_api_version", "1.21.2")
+            depBuilder.dep("minecraft_version", "1.21.3")
+            depBuilder.dep("fabric_permission_version", "0.3.3")
+            depBuilder.dep("fabric_api_version", "0.114.1+1.21.3")
+            depBuilder.dep("neoforge_version", "21.3.86")
+        })
+        builder.mcVer("1.21.4", (DependencyBuilder depBuilder) -> {
+            depBuilder.dep("architectury_api_version", "16.1.4")
+            depBuilder.dep("minecraft_version", "1.21.4")
+            depBuilder.depCopy("fabric_permission_version", "1.21.3")
+            depBuilder.dep("fabric_api_version", "0.119.3+1.21.4")
+            depBuilder.dep("neoforge_version", "21.4.147")
+        })
+        builder.mcVer("1.21.5", (DependencyBuilder depBuilder) -> {
+            depBuilder.dep("architectury_api_version", "13.0.5")
+            depBuilder.dep("minecraft_version", "1.21.5")
+            depBuilder.depCopy("fabric_permission_version", "1.21.3")
+            depBuilder.dep("fabric_api_version", "0.128.1+1.21.5")
+            depBuilder.dep("neoforge_version", "21.5.87")
+        })
+        builder.mcVer("1.21.6", (DependencyBuilder depBuilder) -> {
+            depBuilder.dep("architectury_api_version", "17.0.6")
+            depBuilder.dep("minecraft_version", "1.21.6")
+            depBuilder.dep("fabric_permission_version", "0.4.0")
+            depBuilder.dep("fabric_api_version", "0.128.2+1.21.6")
+            depBuilder.dep("neoforge_version", "21.6.20-beta")
+        })
+        builder.mcVer("1.21.7", (DependencyBuilder depBuilder) -> {
+            depBuilder.depCopy("architectury_api_version", "1.21.7")
+            depBuilder.dep("minecraft_version", "1.21.7")
+            depBuilder.depCopy("fabric_permission_version", "1.21.6")
+            depBuilder.dep("fabric_api_version", "0.129.0+1.21.7")
+            depBuilder.dep("neoforge_version", "21.7.20-beta")
+        })
+    })
 }
