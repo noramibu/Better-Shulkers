@@ -10,7 +10,7 @@ buildscript() {
         }
     }
     dependencies {
-        classpath 'com.github.Tater-Certified:MultiMCGradle:1.0.0-beta.6'
+        classpath 'com.github.Tater-Certified:MultiMCGradle:1.0.0-beta.10'
     }
 }
 
@@ -60,6 +60,7 @@ subprojects {
 }
 
 multimc {
+    currentMinecraftVer = "1.21.7"
     // If future Minecraft versions should be supported (default: false)
     futureCompatible = true
     // Path where jars should be placed
@@ -122,7 +123,7 @@ multimc {
             depBuilder.dep("neoforge_version", "21.6.20-beta")
         })
         builder.mcVer("1.21.7", (DependencyBuilder depBuilder) -> {
-            depBuilder.depCopy("architectury_api_version", "1.21.7")
+            depBuilder.depCopy("architectury_api_version", "1.21.6")
             depBuilder.dep("minecraft_version", "1.21.7")
             depBuilder.depCopy("fabric_permission_version", "1.21.6")
             depBuilder.dep("fabric_api_version", "0.129.0+1.21.7")
