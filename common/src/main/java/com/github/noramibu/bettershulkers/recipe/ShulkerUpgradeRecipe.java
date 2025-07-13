@@ -22,7 +22,7 @@ public class ShulkerUpgradeRecipe extends CustomRecipe {
     public boolean matches(CraftingInput input, Level world) {
         // Prevent OutOfBoundsException
         // Also acts as a super quick escape path
-        if (input.width() != 3 && input.height() != 3) {
+        if (input.width() != 3 || input.height() != 3) {
             return false;
         }
 
