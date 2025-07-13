@@ -6,8 +6,10 @@
   "client": [
   ],
   "mixins": [
+    "BuiltInRegistriesMixin",
     "ContainerComponentAccessor",
     "DisplayEntityAccessor",
+    "ItemAccessor",
     "ItemDisplayInvoker",
     "ItemEntityMixin",
     "ServerPlayerMixin",
