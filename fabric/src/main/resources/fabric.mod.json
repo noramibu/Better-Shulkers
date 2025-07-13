@@ -16,7 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.github.noramibuu.bettershulkers.fabric.BetterShulkersFabric"
+      "com.github.noramibu.bettershulkers.fabric.BetterShulkersFabric"
     ]
   },
   "mixins": [
