@@ -5,7 +5,6 @@ import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -52,7 +51,6 @@ public abstract class ItemEntityMixin {
 
                 if (itemStack.isEmpty()) {
                     player.take(self, originalCount);
-                    player.playSound(SoundEvents.ITEM_PICKUP, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
                     self.discard();
                     ci.cancel();
                 } else {

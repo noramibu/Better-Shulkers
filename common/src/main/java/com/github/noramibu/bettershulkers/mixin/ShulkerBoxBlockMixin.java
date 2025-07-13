@@ -63,7 +63,7 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
         }
         ((ForceInventory)blockEntity).setInventory(inventory);
         ((ForceInventory)blockEntity).setForced();
-        player.playSound(SoundEvents.SHULKER_BOX_OPEN, 1.0F, 1.0F);
+        player.level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
         player.openMenu(blockEntity);
     }
 
