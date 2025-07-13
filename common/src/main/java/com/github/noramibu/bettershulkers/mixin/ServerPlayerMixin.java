@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -21,8 +20,6 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
     public ServerPlayerMixin(Level world, GameProfile profile) {
         super(world, profile);
     }
-
-    @Shadow public abstract void closeHandledScreen();
 
     private ItemStack viewingForcedShulker;
 
@@ -41,12 +38,12 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
         return this.viewingForcedShulker;
     }
 
-    @Inject(method = "dropItem", at = @At("HEAD"))
+    @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"))
     private void checkIfItemIsViewedShulker(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
         // The itemstack becomes empty if it has been dropped
         if (this.viewingForcedShulker != null && this.viewingForcedShulker.isEmpty()) {
             // Close UI
-            this.closeHandledScreen();
+            this.closeContainer();
             this.viewingForcedShulker = null;
         }
     }

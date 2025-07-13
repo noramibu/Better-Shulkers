@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(ItemContainerContents.class)
 public interface ContainerComponentAccessor {
-    @Accessor("stacks")
+    @Accessor("items")
     NonNullList<ItemStack> getStacks();
 }

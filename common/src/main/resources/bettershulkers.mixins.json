@@ -6,7 +6,14 @@
   "client": [
   ],
   "mixins": [
+    "ContainerComponentAccessor",
     "DisplayEntityAccessor",
+    "ItemDisplayInvoker",
+    "ItemEntityMixin",
+    "ServerPlayerMixin",
+    "ShulkerBoxBlockEntityMixin",
+    "ShulkerBoxBlockMixin",
+    "ShulkerBoxMenuHandlerAccessor",
     "ShulkerBoxScreenHandlerRemoteInteractionMixin"
   ],
   "injectors": {

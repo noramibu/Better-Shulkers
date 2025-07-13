@@ -37,8 +37,7 @@ import java.util.List;
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ForceInventory, MaterialDisplay {
 
-    @Shadow
-    private NonNullList<ItemStack> inventory;
+    @Shadow private NonNullList<ItemStack> itemStacks;
     @Unique
     private boolean forced;
     @Unique
@@ -50,7 +49,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
 
     @Override
     public void setInventory(NonNullList<ItemStack> inventory) {
-        this.inventory = inventory;
+        this.itemStacks = inventory;
     }
 
     @Override
@@ -78,7 +77,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
                 if (smallestSize != -1) {
                     NonNullList<ItemStack> newInventory = NonNullList.withSize(smallestSize + 1, ItemStack.EMPTY);
                     for (int i = 0; i <= smallestSize; i++) {
-                        newInventory.set(i, this.inventory.get(i));
+                        newInventory.set(i, this.itemStacks.get(i));
                     }
                     ((ShulkerViewer)serverPlayer).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
                 } else {
@@ -95,7 +94,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     private int getSmallestListIndex() {
         int lastIndex = -1;
         for (int i = 0; i < 27; i++) {
-            if (this.inventory.get(i) != ItemStack.EMPTY) {
+            if (this.itemStacks.get(i) != ItemStack.EMPTY) {
                 lastIndex = i;
             }
         }
@@ -131,7 +130,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     private void createDisplay(Item material) {
         if (material != null) {
             this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, this.getLevel());
-            Vec3 positionOfShulker = pos.toCenterPos();
+            Vec3 positionOfShulker = this.worldPosition.getCenter();
 
             float pitch = 0.0F;
             float yaw = 0.0F;
@@ -157,11 +156,11 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
                 heightOffset = 0.5F;
             }
 
-            this.display.refreshPositionAndAngles(positionOfShulker.x, positionOfShulker.y + heightOffset, positionOfShulker.z, yaw, pitch);
+            this.display.snapTo(positionOfShulker.x, positionOfShulker.y + heightOffset, positionOfShulker.z, yaw, pitch);
             this.display.setNoGravity(true);
-            ((ItemDisplayEntityInvoker) this.display).invokeSetItemStack(material.getDefaultInstance());
-            ((ItemDisplayEntityInvoker) this.display).invokeSetTransformationMode(ItemDisplayContext.FIXED);
-            ((DisplayEntityAccessor) this.display).invokeSetBillboardMode(DisplayEntity.BillboardMode.FIXED);
+            ((ItemDisplayInvoker) this.display).invokeSetItemStack(material.getDefaultInstance());
+            ((ItemDisplayInvoker) this.display).invokeSetTransformationMode(ItemDisplayContext.FIXED);
+            ((DisplayEntityAccessor) this.display).invokeSetBillboardConstraints(Display.BillboardConstraints.FIXED);
             this.getLevel().addFreshEntity(this.display);
         }
     }

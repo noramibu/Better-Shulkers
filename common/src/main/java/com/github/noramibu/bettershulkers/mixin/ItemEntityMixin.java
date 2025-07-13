@@ -6,6 +6,7 @@ import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +24,7 @@ public abstract class ItemEntityMixin {
             method = "playerTouch",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerInventory;insertStack(Lnet/minecraft/item/ItemStack;)Z"
+                    target = "Lnet/minecraft/world/entity/player/Inventory;add(Lnet/minecraft/world/item/ItemStack;)Z"
             ),
             cancellable = true
     )
@@ -40,7 +41,7 @@ public abstract class ItemEntityMixin {
                 playerInventory.setItem(i, inventoryStack);
 
                 if (player.containerMenu instanceof ShulkerBoxMenu menuHandler) {
-                    Inventory screenInventory = ((ShulkerBoxMenuHandlerAccessor)menuHandler).getInventory();
+                    Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)menuHandler).getInventory();
 
                     if (((ForceInventory)screenInventory).forced() && ((ShulkerViewer)player).getViewedStack() == inventoryStack) {
                         NonNullList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
