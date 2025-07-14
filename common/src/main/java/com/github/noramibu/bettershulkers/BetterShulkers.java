@@ -10,6 +10,7 @@ import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 /*\ 1.21.5
 import dev.architectury.event.CompoundEventResult;
 \END */
+import dev.architectury.event.CompoundEventResult;
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import net.minecraft.core.component.DataComponents;
@@ -58,7 +59,10 @@ public final class BetterShulkers {
                     ((RemoteInventory)shulker).openInventory((ServerPlayer) player, stack);
                 }
             }
-            /*\ <=1.21.4
+            /*\ <=1.21.1
+            return CompoundEventResult.pass();
+            \END */
+            /*\ 1.21.4
             return InteractionResult.PASS;
             \END */
             /*\ 1.21.5

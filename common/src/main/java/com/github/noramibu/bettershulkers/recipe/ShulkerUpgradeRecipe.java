@@ -2,15 +2,15 @@ package com.github.noramibu.bettershulkers.recipe;
 
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.HolderLookup;
+//: >=1.21.2
+import net.minecraft.network.FriendlyByteBuf;
+//: END
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class ShulkerUpgradeRecipe extends CustomRecipe {
@@ -62,6 +62,13 @@ public class ShulkerUpgradeRecipe extends CustomRecipe {
         return shulkerStack;
     }
 
+    /*\ <=1.21.1
+    @Override
+    public boolean canCraftInDimensions(int width, int height) {
+        return width > 2 && height > 2;
+    }
+    \END */
+
     @Override
     public boolean showNotification() {
         return true;
@@ -82,10 +89,23 @@ public class ShulkerUpgradeRecipe extends CustomRecipe {
         return CraftingBookCategory.MISC;
     }
 
-
+    //: >=1.21.2
     public static class Serializer extends CustomRecipe.Serializer<ShulkerUpgradeRecipe> {
 
         public Serializer(CustomRecipe.Serializer.Factory<ShulkerUpgradeRecipe> factory) {
+            super(factory);
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, ShulkerUpgradeRecipe> streamCodec() {
+            return null;
+        }
+    }
+    //: END
+
+    public static class Serializer extends SimpleCraftingRecipeSerializer<ShulkerUpgradeRecipe> {
+
+        public Serializer(Factory<ShulkerUpgradeRecipe> factory) {
             super(factory);
         }
 

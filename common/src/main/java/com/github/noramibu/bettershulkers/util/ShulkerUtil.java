@@ -83,7 +83,12 @@ public class ShulkerUtil {
     }
 
     public static Item getItemFromId(String id) {
+        /*\ <=1.21.1
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(id));
+        \END */
+        //: >=1.21.2
         return BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(id));
+        //: END
     }
 
     /**
