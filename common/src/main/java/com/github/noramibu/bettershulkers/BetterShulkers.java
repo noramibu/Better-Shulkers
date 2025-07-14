@@ -7,13 +7,21 @@ import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
 import com.github.noramibu.bettershulkers.util.DataComponentEntry;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
+/*\ 1.21.5
+import dev.architectury.event.CompoundEventResult;
+\END */
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.InteractionEvent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerPlayer;
+//: >=1.21.6
 import net.minecraft.world.InteractionResult;
+//: END
+/*\ <=1.21.4
+import net.minecraft.world.InteractionResult;
+\END */
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
@@ -50,7 +58,15 @@ public final class BetterShulkers {
                     ((RemoteInventory)shulker).openInventory((ServerPlayer) player, stack);
                 }
             }
+            /*\ <=1.21.4
             return InteractionResult.PASS;
+            \END */
+            /*\ 1.21.5
+            return CompoundEventResult.pass();
+            \END */
+            //: >=1.21.6
+            return InteractionResult.PASS;
+            //: END
         });
     }
 }

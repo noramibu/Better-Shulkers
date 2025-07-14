@@ -161,7 +161,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
             //: END
 
             /*\ <=1.21.4
-            this.display.setPosRaw(positionOfShulker.x, positionOfShulker.y + heightOffset, positionOfShulker.z);
+            this.display.moveTo(positionOfShulker.x, positionOfShulker.y + heightOffset, positionOfShulker.z, yaw, pitch);
             \END */
 
             this.display.setNoGravity(true);
