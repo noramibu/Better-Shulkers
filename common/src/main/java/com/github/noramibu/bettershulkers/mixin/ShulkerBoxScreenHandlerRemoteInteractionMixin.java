@@ -4,6 +4,7 @@ import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -34,10 +35,19 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
     private void checkIfShulkerIsHeld(Player player, CallbackInfo ci) {
         if (player instanceof ServerPlayer serverPlayer) {
             ItemStack viewedStack = ((ShulkerViewer)serverPlayer).getViewedStack();
-            if (viewedStack != null && viewedStack.isEmpty()) {
-                ItemStack stack = this.getCarried();
-                if (!stack.isEmpty()) {
-                    ((ShulkerViewer)serverPlayer).setViewing(stack);
+            if (viewedStack != null) {
+                //: >=1.21.6
+                player.level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
+                //: END
+
+                /*\ <=1.21.5
+                player.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
+                \END */
+                if (viewedStack.isEmpty()) {
+                    ItemStack stack = this.getCarried();
+                    if (!stack.isEmpty()) {
+                        ((ShulkerViewer)serverPlayer).setViewing(stack);
+                    }
                 }
             }
         }
