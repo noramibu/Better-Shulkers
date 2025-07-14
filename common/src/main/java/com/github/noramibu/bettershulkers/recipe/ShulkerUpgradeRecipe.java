@@ -103,6 +103,7 @@ public class ShulkerUpgradeRecipe extends CustomRecipe {
     }
     //: END
 
+    /*\ <=1.21.1
     public static class Serializer extends SimpleCraftingRecipeSerializer<ShulkerUpgradeRecipe> {
 
         public Serializer(Factory<ShulkerUpgradeRecipe> factory) {
@@ -114,4 +115,5 @@ public class ShulkerUpgradeRecipe extends CustomRecipe {
             return null;
         }
     }
+    \END */
 }
