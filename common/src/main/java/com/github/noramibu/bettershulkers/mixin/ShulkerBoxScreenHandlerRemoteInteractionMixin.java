@@ -37,11 +37,11 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
             ItemStack viewedStack = ((ShulkerViewer)serverPlayer).getViewedStack();
             if (viewedStack != null) {
                 //: >=1.21.6
-                player.level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
+                serverPlayer.level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
                 //: END
 
                 /*\ <=1.21.5
-                player.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
+                serverPlayer.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
                 \END */
                 if (viewedStack.isEmpty()) {
                     ItemStack stack = this.getCarried();

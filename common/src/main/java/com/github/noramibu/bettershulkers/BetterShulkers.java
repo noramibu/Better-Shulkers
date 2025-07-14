@@ -13,8 +13,8 @@ import dev.architectury.event.events.common.InteractionEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerPlayer;
-//: 1.21.2 - 1.21.4 || >=1.21.6
 import net.minecraft.sounds.SoundEvents;
+//: 1.21.2 - 1.21.4 || >=1.21.6
 import net.minecraft.world.InteractionResult;
 //: END
 import net.minecraft.world.item.BlockItem;
@@ -44,11 +44,11 @@ public final class BetterShulkers {
                     ((ShulkerViewer) player).setViewing(stack);
 
                     //: >=1.21.6
-                    player.level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                    ((ServerPlayer)player).level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
                     //: END
 
                     /*\ <=1.21.5
-                    player.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                    ((ServerPlayer)player).serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
                     \END */
 
                     ((RemoteInventory)shulker).openInventory((ServerPlayer) player, stack);

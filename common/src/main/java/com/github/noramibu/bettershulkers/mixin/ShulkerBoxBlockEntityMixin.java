@@ -5,6 +5,7 @@ import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,6 +40,7 @@ import java.util.List;
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ForceInventory, MaterialDisplay {
 
     @Shadow private NonNullList<ItemStack> itemStacks;
+    @Shadow private ShulkerBoxBlockEntity.AnimationStatus animationStatus;
     @Unique
     private boolean forced;
     @Unique
@@ -131,38 +134,47 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         if (material != null) {
             this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, this.getLevel());
             Vec3 positionOfShulker = this.worldPosition.getCenter();
+            Direction rotation = this.getBlockState().getValue(BlockStateProperties.FACING);
+            Object[] adjustmentData = getFacingModifiers(material);
+            float directionOffset = (float) adjustmentData[0];
+            float pitch = (float) adjustmentData[1];
+            float yaw = (float) adjustmentData[2];
+            Vec3 minorAdjustment = (Vec3) adjustmentData[3];
 
-            float pitch = 0.0F;
-            float yaw = 0.0F;
-            float heightOffset = 0.3F;
-            if (material instanceof BlockItem blockItem) {
-                Block block = blockItem.getBlock();
-                if (!(block instanceof BaseEntityBlock)) {
-                    double blockHeight = block.defaultBlockState().getShape(this.getLevel(), null).bounds().getYsize();
-                    if (blockHeight == 0.5) {
-                        pitch = 90.0F;
-                        positionOfShulker = positionOfShulker.add(0, 0, 0.05);
-                    } else {
-                        heightOffset += (float) (1 - blockHeight) / 2F;
-                    }
-                } else {
-                    pitch = -90.0F;
-                    yaw = 180.0F;
+            switch (rotation) {
+                case DOWN -> {
+                    Vec3 adjustedPos = positionOfShulker.subtract(0, directionOffset, 0).subtract(minorAdjustment);
+                    pitch += 180.0F;
+                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
                 }
-            } else {
-                pitch = 90.0F;
-                this.display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.8F, 0.8F, 1.0F));
-                positionOfShulker = positionOfShulker.add(-0.02F, 0, 0.02F);
-                heightOffset = 0.5F;
+                case UP -> {
+                    Vec3 adjustedPos = positionOfShulker.add(0, directionOffset, 0).add(minorAdjustment);
+                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
+                }
+                case NORTH -> {
+                    Vec3 adjustedPos = positionOfShulker.subtract(0, 0, directionOffset).add(minorAdjustment.x, minorAdjustment.z, minorAdjustment.y);
+                    pitch += 90.0F;
+                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
+                }
+                case SOUTH -> {
+                    Vec3 adjustedPos = positionOfShulker.add(0, 0, directionOffset).add(minorAdjustment.x, minorAdjustment.z, -minorAdjustment.y);
+                    pitch += 90.0F;
+                    yaw += 180.0F;
+                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
+                }
+                case WEST -> {
+                    Vec3 adjustedPos = positionOfShulker.subtract(directionOffset, 0, 0).add(minorAdjustment.y, minorAdjustment.x, minorAdjustment.z);
+                    pitch += 90.0F;
+                    yaw -= 90.0F;
+                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
+                }
+                case EAST -> {
+                    Vec3 adjustedPos = positionOfShulker.add(directionOffset, 0, 0).add(-minorAdjustment.y, minorAdjustment.x, minorAdjustment.z);
+                    pitch += 90.0F;
+                    yaw += 90.0F;
+                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
+                }
             }
-
-            //: >=1.21.5
-            this.display.snapTo(positionOfShulker.x, positionOfShulker.y + heightOffset, positionOfShulker.z, yaw, pitch);
-            //: END
-
-            /*\ <=1.21.4
-            this.display.moveTo(positionOfShulker.x, positionOfShulker.y + heightOffset, positionOfShulker.z, yaw, pitch);
-            \END */
 
             this.display.setNoGravity(true);
             ((ItemDisplayInvoker) this.display).invokeSetItemStack(material.getDefaultInstance());
@@ -170,6 +182,44 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
             ((DisplayEntityAccessor) this.display).invokeSetBillboardConstraints(Display.BillboardConstraints.FIXED);
             this.getLevel().addFreshEntity(this.display);
         }
+    }
+
+    private Object[] getFacingModifiers(Item material) {
+        float directionOffset = 0.3F;
+        float pitch = 0.0F;
+        float yaw = 0.0F;
+        Vec3 minorPosAdjustment = new Vec3(0, 0, 0);
+        if (material instanceof BlockItem blockItem) {
+            Block block = blockItem.getBlock();
+            if (!(block instanceof BaseEntityBlock)) {
+                double blockHeight = block.defaultBlockState().getShape(this.getLevel(), null).bounds().getYsize();
+                if (blockHeight == 0.5) {
+                    pitch = 90.0F;
+                    minorPosAdjustment = new Vec3(0, 0, 0.05);
+                } else {
+                    directionOffset += (float) (1 - blockHeight) / 2F;
+                }
+            } else {
+                pitch = -90.0F;
+                yaw = 180.0F;
+            }
+        } else {
+            pitch = 90.0F;
+            this.display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.8F, 0.8F, 1.0F));
+            minorPosAdjustment = new Vec3(-0.02F, 0, 0.02F);
+            directionOffset = 0.5F;
+        }
+        return new Object[] {directionOffset, pitch, yaw, minorPosAdjustment};
+    }
+
+    private void setDisplayPos(double x, double y, double z, float yaw, float pitch) {
+        //: >=1.21.5
+        this.display.snapTo(x, y, z, yaw, pitch);
+        //: END
+
+        /*\ <=1.21.4
+        this.display.moveTo(x, y, z, yaw, pitch);
+        \END */
     }
 
     @Override
