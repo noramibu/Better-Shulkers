@@ -1,7 +1,7 @@
 package com.github.noramibu.bettershulkers;
 
 import com.moandjiezana.toml.Toml;
-import net.fabricmc.loader.api.FabricLoader;
+import dev.architectury.platform.Platform;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,8 @@ public class Config {
     public static boolean REQUIRE_PERMISSION_FOR_COMMAND;
 
     public static void init() {
-        file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "bettershulkers.toml");
+
+        file = new File(Platform.getConfigFolder().toFile(), "bettershulkers.toml");
 
         if (!file.exists()) {
             create();
