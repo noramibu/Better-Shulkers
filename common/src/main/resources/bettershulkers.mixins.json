@@ -11,6 +11,7 @@
     "ItemAccessor",
     "ItemDisplayInvoker",
     "ItemEntityMixin",
+    "RecipeFilterMixin",
     "ServerPlayerMixin",
     "ShulkerBoxBlockEntityMixin",
     "ShulkerBoxBlockMixin",
