@@ -1,18 +1,15 @@
 package com.github.noramibu.bettershulkers;
 
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
-import com.github.noramibu.bettershulkers.event.ComponentModificationEvent;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
-import com.github.noramibu.bettershulkers.util.DataComponentEntry;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 /*\ <=1.21.1 || 1.21.5
 import dev.architectury.event.CompoundEventResult;
 \END */
 import dev.architectury.event.events.common.CommandRegistrationEvent;
 import dev.architectury.event.events.common.InteractionEvent;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,17 +30,9 @@ public final class BetterShulkers {
 
     public static void init() {
         Config.init();
-        BetterShulkersRecipes.register();
 
         CommandRegistrationEvent.EVENT.register((commandDispatcher, commandBuildContext, commandSelection) -> {
             ShulkerCommand.register(commandDispatcher, commandBuildContext);
-        });
-
-        ComponentModificationEvent.COMPONENT_MODIFICATION_EVENT.register(componentModificationEvent -> {
-            CompoundTag compound = new CompoundTag();
-            compound.put(MATERIAL_PATH, StringTag.valueOf(""));
-            CustomData component = CustomData.of(compound);
-            componentModificationEvent.modify(ShulkerUtil::earlyIsShulkerBox, new DataComponentEntry(DataComponents.CUSTOM_DATA, component));
         });
 
         InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
@@ -62,5 +51,19 @@ public final class BetterShulkers {
             return InteractionResult.PASS;
             //: END
         });
+    }
+
+    /**
+     * Gets the default custom components to store the resource for a shulker
+     * @return CustomData instance for resources
+     */
+    public static CustomData getShulkerCustomData() {
+        CompoundTag compound = new CompoundTag();
+        compound.put(MATERIAL_PATH, StringTag.valueOf(""));
+        return CustomData.of(compound);
+    }
+
+    public static void register() {
+        BetterShulkersRecipes.register();
     }
 }
