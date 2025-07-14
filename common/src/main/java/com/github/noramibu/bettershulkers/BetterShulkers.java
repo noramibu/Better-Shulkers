@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class BetterShulkers {
-    public static final String MOD_ID = "better-shulkers";
+    public static final String MOD_ID = "bettershulkers";
     public static final String MATERIAL_PATH = "material";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 

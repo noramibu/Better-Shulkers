@@ -3,7 +3,7 @@ loaderVersion = "[0,)"
 license = "MIT"
 
 [[mods]]
-modId = "better-shulkers"
+modId = "bettershulkers"
 version = "${version}"
 displayName = "Better Shulkers"
 authors = "noramibu, QPCrummer"
@@ -12,21 +12,21 @@ A server-side mod that adds many features to shulkers.
 '''
 logoFile = "META-INF/icon.png"
 
-[[dependencies.better-shulkers]]
+[[dependencies.bettershulkers]]
 modId = "neoforge"
 type = "required"
 versionRange = "[0,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.better-shulkers]]
+[[dependencies.bettershulkers]]
 modId = "minecraft"
 type = "required"
 versionRange = "%mcVer%"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.better-shulkers]]
+[[dependencies.bettershulkers]]
 modId = "architectury"
 type = "required"
 versionRange = "[0,)"

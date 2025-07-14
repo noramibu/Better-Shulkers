@@ -13,7 +13,7 @@ public class Config {
     public static boolean REQUIRE_PERMISSION_FOR_COMMAND;
 
     public static void init() {
-        file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "better-shulkers.toml");
+        file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "bettershulkers.toml");
 
         if (!file.exists()) {
             create();

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "better-shulkers",
+  "id": "bettershulkers",
   "version": "${version}",
   "name": "Better Shulkers",
   "description": "A server-side mod that adds many features to shulkers.",
@@ -12,7 +12,7 @@
     "homepage": ""
   },
   "license": "MIT",
-  "icon": "assets/better-shulkers/icon.png",
+  "icon": "assets/bettershulkers/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
