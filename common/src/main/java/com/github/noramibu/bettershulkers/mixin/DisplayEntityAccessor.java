@@ -14,6 +14,11 @@ public interface DisplayEntityAccessor {
         throw new AssertionError();
     }
 
+    @Accessor("DATA_BRIGHTNESS_OVERRIDE_ID")
+    static EntityDataAccessor<Integer> getBrightness() {
+        throw new AssertionError();
+    }
+
     @Invoker
     void invokeSetBillboardConstraints(Display.BillboardConstraints mode);
 }

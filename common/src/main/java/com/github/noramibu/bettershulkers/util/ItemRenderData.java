@@ -1,17 +1,9 @@
 package com.github.noramibu.bettershulkers.util;
 
 import com.github.noramibu.bettershulkers.mixin.DisplayEntityAccessor;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Display;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Vector3f;
 
 /**
@@ -21,38 +13,11 @@ import org.joml.Vector3f;
  * @param defaultPitch The pitch for a shulker facing up
  */
 public record ItemRenderData(Vec3 posOffset, float defaultYaw, float defaultPitch) {
-    public static ItemRenderData getRenderData(Item item, Level level, Display.ItemDisplay display) {
-        Vec3 posOffset;
-        if (item instanceof BlockItem blockItem) {
-            Block block = blockItem.getBlock();
-            double blockHeight = block.defaultBlockState().getShape(level, BlockPos.ZERO).bounds().getYsize();
-            if (block instanceof BaseEntityBlock) {
-                // Type: Block Entity
-                posOffset = new Vec3(0, 0.3, 0);
-            } else if (block.hasDynamicShape() || blockHeight > 1) {
-                // Type: Item
-                display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.8F, 0.8F, 1.0F));
-                posOffset = new Vec3(0F, 0.5, -0.15F);
-            } else {
-                VoxelShape shape = block.defaultBlockState().getShape(level, BlockPos.ZERO, CollisionContext.empty());
-                if (Block.isShapeFullBlock(shape)) {
-                    // Type: Full
-                    posOffset = new Vec3(0, 0.3, 0);
-                } else if (Block.isFaceFull(shape, Direction.DOWN) || Block.isFaceFull(shape, Direction.UP)) {
-                    // Type: Slab/Stair
-                    posOffset = new Vec3(0, 0.3, 0);
-                } else {
-                    // Type: Partial Block
-                    display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.8F, 0.8F, 1.0F));
-                    posOffset = new Vec3(0F, 0.5, 0F);
-                }
-            }
-        } else {
-            // Type: Item
-            display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.8F, 0.8F, 1.0F));
-            posOffset = new Vec3(0F, 0.5, 0F);
-        }
-        return new ItemRenderData(posOffset, 180.0F, -90.0F); // These are magic values; Some may say, "magic numbers"
+    public static ItemRenderData getRenderData(Display.ItemDisplay display) {
+        display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.75F, 0.75F, 0.001F));
+        Vec3 posOffset = new Vec3(0F, 0.501, 0F);
+        display.getEntityData().set(DisplayEntityAccessor.getBrightness(), 255);
+        return new ItemRenderData(posOffset, 0.0F, -90.0F); // These are magic values; Some may say, "magic numbers"
     }
 
     /**
@@ -82,8 +47,8 @@ public record ItemRenderData(Vec3 posOffset, float defaultYaw, float defaultPitc
      */
     public static float transformPitchFromTop(float topPitch, Direction to) {
         return switch (to) {
-            case DOWN -> topPitch + 180;
-            case UP -> topPitch;
+            case UP                       -> topPitch + 180;
+            case DOWN                     -> topPitch;
             case NORTH, SOUTH, EAST, WEST -> topPitch + 90;
         };
     }
@@ -96,10 +61,10 @@ public record ItemRenderData(Vec3 posOffset, float defaultYaw, float defaultPitc
      */
     public static float transformYawFromTop(float topYaw, Direction to) {
         return switch (to) {
-            case UP, DOWN, NORTH -> topYaw;
-            case SOUTH -> topYaw - 180;
-            case WEST -> topYaw - 90;
-            case EAST -> topYaw + 90;
+            case UP, DOWN, SOUTH -> topYaw - 180;
+            case NORTH           -> topYaw;
+            case WEST            -> topYaw - 90;
+            case EAST            -> topYaw + 90;
         };
     }
 }

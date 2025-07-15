@@ -133,7 +133,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
             Vec3 positionOfShulker = this.worldPosition.getCenter();
             Direction rotation = this.getBlockState().getValue(BlockStateProperties.FACING);
 
-            ItemRenderData renderData = ItemRenderData.getRenderData(material, this.getLevel(), this.display);
+            ItemRenderData renderData = ItemRenderData.getRenderData(this.display);
             Vec3 positionOffset = renderData.posOffset();
             float pitch = renderData.defaultPitch();
             float yaw = renderData.defaultYaw();
@@ -147,7 +147,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
 
             this.display.setNoGravity(true);
             ((ItemDisplayInvoker) this.display).invokeSetItemStack(material.getDefaultInstance());
-            ((ItemDisplayInvoker) this.display).invokeSetTransformationMode(ItemDisplayContext.FIXED);
+            ((ItemDisplayInvoker) this.display).invokeSetTransformationMode(ItemDisplayContext.GUI);
             ((DisplayEntityAccessor) this.display).invokeSetBillboardConstraints(Display.BillboardConstraints.FIXED);
             this.getLevel().addFreshEntity(this.display);
         }
