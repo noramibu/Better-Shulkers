@@ -3,6 +3,7 @@ package com.github.noramibu.bettershulkers.mixin;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.util.ItemRenderData;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,20 +14,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.Display;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -135,46 +132,18 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
             this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, this.getLevel());
             Vec3 positionOfShulker = this.worldPosition.getCenter();
             Direction rotation = this.getBlockState().getValue(BlockStateProperties.FACING);
-            Object[] adjustmentData = getFacingModifiers(material);
-            float directionOffset = (float) adjustmentData[0];
-            float pitch = (float) adjustmentData[1];
-            float yaw = (float) adjustmentData[2];
-            Vec3 minorAdjustment = (Vec3) adjustmentData[3];
 
-            switch (rotation) {
-                case DOWN -> {
-                    Vec3 adjustedPos = positionOfShulker.subtract(0, directionOffset, 0).subtract(minorAdjustment);
-                    pitch += 180.0F;
-                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
-                }
-                case UP -> {
-                    Vec3 adjustedPos = positionOfShulker.add(0, directionOffset, 0).add(minorAdjustment);
-                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
-                }
-                case NORTH -> {
-                    Vec3 adjustedPos = positionOfShulker.subtract(0, 0, directionOffset).add(minorAdjustment.x, minorAdjustment.z, minorAdjustment.y);
-                    pitch += 90.0F;
-                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
-                }
-                case SOUTH -> {
-                    Vec3 adjustedPos = positionOfShulker.add(0, 0, directionOffset).add(minorAdjustment.x, minorAdjustment.z, -minorAdjustment.y);
-                    pitch += 90.0F;
-                    yaw += 180.0F;
-                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
-                }
-                case WEST -> {
-                    Vec3 adjustedPos = positionOfShulker.subtract(directionOffset, 0, 0).add(minorAdjustment.y, minorAdjustment.x, minorAdjustment.z);
-                    pitch += 90.0F;
-                    yaw -= 90.0F;
-                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
-                }
-                case EAST -> {
-                    Vec3 adjustedPos = positionOfShulker.add(directionOffset, 0, 0).add(-minorAdjustment.y, minorAdjustment.x, minorAdjustment.z);
-                    pitch += 90.0F;
-                    yaw += 90.0F;
-                    setDisplayPos(adjustedPos.x, adjustedPos.y, adjustedPos.z, yaw, pitch);
-                }
-            }
+            ItemRenderData renderData = ItemRenderData.getRenderData(material, this.getLevel(), this.display);
+            Vec3 positionOffset = renderData.posOffset();
+            float pitch = renderData.defaultPitch();
+            float yaw = renderData.defaultYaw();
+
+            Vec3 modifiedPositionOffset = ItemRenderData.transformFromTop(positionOffset, rotation);
+
+            Vec3 finalPos = positionOfShulker.add(modifiedPositionOffset);
+            float finalYaw = ItemRenderData.transformYawFromTop(yaw, rotation);
+            float finalPitch = ItemRenderData.transformPitchFromTop(pitch, rotation);
+            setDisplayPos(finalPos, finalYaw, finalPitch);
 
             this.display.setNoGravity(true);
             ((ItemDisplayInvoker) this.display).invokeSetItemStack(material.getDefaultInstance());
@@ -184,41 +153,13 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         }
     }
 
-    private Object[] getFacingModifiers(Item material) {
-        float directionOffset = 0.3F;
-        float pitch = 0.0F;
-        float yaw = 0.0F;
-        Vec3 minorPosAdjustment = new Vec3(0, 0, 0);
-        if (material instanceof BlockItem blockItem) {
-            Block block = blockItem.getBlock();
-            if (!(block instanceof BaseEntityBlock)) {
-                double blockHeight = block.defaultBlockState().getShape(this.getLevel(), null).bounds().getYsize();
-                if (blockHeight == 0.5) {
-                    pitch = 90.0F;
-                    minorPosAdjustment = new Vec3(0, 0, 0.05);
-                } else {
-                    directionOffset += (float) (1 - blockHeight) / 2F;
-                }
-            } else {
-                pitch = -90.0F;
-                yaw = 180.0F;
-            }
-        } else {
-            pitch = 90.0F;
-            this.display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.8F, 0.8F, 1.0F));
-            minorPosAdjustment = new Vec3(-0.02F, 0, 0.02F);
-            directionOffset = 0.5F;
-        }
-        return new Object[] {directionOffset, pitch, yaw, minorPosAdjustment};
-    }
-
-    private void setDisplayPos(double x, double y, double z, float yaw, float pitch) {
+    private void setDisplayPos(Vec3 pos, float yaw, float pitch) {
         //: >=1.21.5
-        this.display.snapTo(x, y, z, yaw, pitch);
+        this.display.snapTo(pos.x, pos.y, pos.z, yaw, pitch);
         //: END
 
         /*\ <=1.21.4
-        this.display.moveTo(x, y, z, yaw, pitch);
+        this.display.moveTo(pos.x, pos.y, pos.z, yaw, pitch);
         \END */
     }
 
