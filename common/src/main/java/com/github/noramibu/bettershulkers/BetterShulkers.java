@@ -2,7 +2,6 @@ package com.github.noramibu.bettershulkers;
 
 import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
-import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
