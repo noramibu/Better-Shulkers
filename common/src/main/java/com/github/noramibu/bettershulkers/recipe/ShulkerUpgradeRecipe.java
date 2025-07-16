@@ -1,5 +1,6 @@
 package com.github.noramibu.bettershulkers.recipe;
 
+import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.HolderLookup;
 //: >=1.21.2
@@ -20,6 +21,9 @@ public class ShulkerUpgradeRecipe extends CustomRecipe {
 
     @Override
     public boolean matches(CraftingInput input, Level world) {
+        if (!Config.ADD_RECIPE_FOR_PICKABLE_SHULKER) {
+            return false;
+        }
         // Prevent OutOfBoundsException
         // Also acts as a super quick escape path
         if (input.width() != 3 || input.height() != 3) {

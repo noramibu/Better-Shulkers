@@ -1,5 +1,6 @@
 package com.github.noramibu.bettershulkers.mixin;
 
+import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
@@ -28,6 +29,9 @@ public abstract class ItemEntityMixin {
             cancellable = true
     )
     private void onBeforeInsertStack(Player player, CallbackInfo ci, @Local(ordinal = 0) ItemStack itemStack) {
+        if (Config.DISABLE_PICKUP_FEATURE_OF_SHULKERS) {
+            return;
+        }
         Inventory playerInventory = player.getInventory();
         ItemEntity self = (ItemEntity) (Object) this;
 

@@ -1,5 +1,6 @@
 package com.github.noramibu.bettershulkers.mixin;
 
+import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
@@ -36,6 +37,9 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
 
     @ModifyReturnValue(method = "getDrops", at = @At("RETURN"))
     private List<ItemStack> onGetDrops(List<ItemStack> original, @Local(argsOnly = true) LootParams.Builder builder) {
+        if (Config.DISABLE_PICKUP_FEATURE_OF_SHULKERS) {
+            return original;
+        }
         BlockEntity blockEntity = builder.getParameter(LootContextParams.BLOCK_ENTITY);
 
         Item material = ShulkerUtil.getMaterialFromShulkerBlock(blockEntity);
