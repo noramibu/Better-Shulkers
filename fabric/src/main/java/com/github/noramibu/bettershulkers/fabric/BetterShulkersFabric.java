@@ -8,6 +8,9 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.minecraft.core.component.DataComponents;
 
+/**
+ * The entrypoint for Fabric
+ */
 public final class BetterShulkersFabric implements ModInitializer {
     @Override
     public void onInitialize() {

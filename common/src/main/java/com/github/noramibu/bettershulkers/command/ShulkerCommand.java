@@ -15,7 +15,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Helpful commands for handling shulker boxes with materials
+ */
 public class ShulkerCommand {
+    /**
+     * Registers Better Shulker's commands
+     * @param dispatcher {@link  CommandDispatcher} instance from event
+     * @param registryAccess {@link CommandBuildContext} instance from event
+     */
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext registryAccess) {
         dispatcher.register(Commands.literal("shulker")
                 .then(Commands.literal("set")

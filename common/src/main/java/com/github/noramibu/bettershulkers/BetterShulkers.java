@@ -26,10 +26,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class BetterShulkers {
+    /**
+     * Better Shulkers mod identifier
+     */
     public static final String MOD_ID = "bettershulkers";
+    /**
+     * The NBT path for a shulker box's material
+     */
     public static final String MATERIAL_PATH = "material";
+    /**
+     * The {@link Logger} for Better Shulkers
+     */
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+    /**
+     * The initiation code for Better Shulkers
+     */
     public static void init() {
         Config.init();
 
@@ -85,6 +97,9 @@ public final class BetterShulkers {
         return CustomData.of(compound);
     }
 
+    /**
+     * Registers data for Better Shulkers
+     */
     public static void register() {
         BetterShulkersRecipes.register();
     }

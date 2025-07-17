@@ -8,7 +8,7 @@ import org.joml.Vector3f;
 
 /**
  * How specific types of items should render with an ItemDisplay entity
- * @param posOffset The offset from the center of the Shulkerbox
+ * @param posOffset The offset from the center of the shulker box
  * @param defaultYaw The yaw for a shulker facing up
  * @param defaultPitch The pitch for a shulker facing up
  */
@@ -30,12 +30,12 @@ public record ItemRenderData(Vec3 posOffset, float defaultYaw, float defaultPitc
         double x = topPos.x(), y = topPos.y(), z = topPos.z();
 
         return switch (to) {
-            case UP     -> new Vec3(x, y, z);
-            case DOWN   -> new Vec3(x, -y, -z);
-            case SOUTH  -> new Vec3(x, z, y);
-            case NORTH  -> new Vec3(-x, z, -y);
-            case WEST   -> new Vec3(-y, z, -x);
-            case EAST   -> new Vec3(y, z, x);
+            case UP -> new Vec3(x, y, z);
+            case DOWN -> new Vec3(x, -y, -z);
+            case SOUTH -> new Vec3(x, z, y);
+            case NORTH -> new Vec3(-x, z, -y);
+            case WEST -> new Vec3(-y, z, -x);
+            case EAST -> new Vec3(y, z, x);
         };
     }
 
@@ -47,8 +47,8 @@ public record ItemRenderData(Vec3 posOffset, float defaultYaw, float defaultPitc
      */
     public static float transformPitchFromTop(float topPitch, Direction to) {
         return switch (to) {
-            case UP                       -> topPitch + 180;
-            case DOWN                     -> topPitch;
+            case UP -> topPitch + 180;
+            case DOWN -> topPitch;
             case NORTH, SOUTH, EAST, WEST -> topPitch + 90;
         };
     }
@@ -62,9 +62,9 @@ public record ItemRenderData(Vec3 posOffset, float defaultYaw, float defaultPitc
     public static float transformYawFromTop(float topYaw, Direction to) {
         return switch (to) {
             case UP, DOWN, SOUTH -> topYaw - 180;
-            case NORTH           -> topYaw;
-            case WEST            -> topYaw - 90;
-            case EAST            -> topYaw + 90;
+            case NORTH -> topYaw;
+            case WEST  -> topYaw - 90;
+            case EAST  -> topYaw + 90;
         };
     }
 }

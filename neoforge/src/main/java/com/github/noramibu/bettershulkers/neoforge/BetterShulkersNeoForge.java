@@ -14,6 +14,9 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 
+/**
+ * The entrypoint for NeoForge
+ */
 @Mod(BetterShulkers.MOD_ID)
 public final class BetterShulkersNeoForge {
 

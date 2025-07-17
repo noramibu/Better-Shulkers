@@ -6,6 +6,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.server.permission.PermissionAPI;
 
+/**
+ * The abstraction layer for NeoForge
+ */
 public class NeoForgeAbstraction implements PlatformAbstraction {
     @Override
     public boolean isShulkerBox(ItemStack stack) {

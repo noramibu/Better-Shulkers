@@ -14,6 +14,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
+/**
+ * The custom material-assigning recipe
+ */
 public class ShulkerUpgradeRecipe extends CustomRecipe {
     public ShulkerUpgradeRecipe(CraftingBookCategory craftingBookCategory) {
         super(craftingBookCategory);

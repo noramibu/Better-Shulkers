@@ -128,9 +128,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         super.setLevel(world);
         if (!world.isClientSide()) {
             Item material = ShulkerUtil.getMaterialFromShulkerBlock(this);
-            if (material != null) {
-                this.createDisplay(material);
-            }
+            this.createDisplay(material);
         }
     }
 

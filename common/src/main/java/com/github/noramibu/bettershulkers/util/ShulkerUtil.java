@@ -20,17 +20,39 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * Utilities for Better Shulker
+ */
 public class ShulkerUtil {
+    /**
+     * The Lore prefix for a shulker box that has a material
+     */
     public static final String MATERIAL_PREFIX = "Material: ";
 
+    /**
+     * If an item is a shulker box
+     * @param stack Item to check
+     * @return If an item is a shulker box
+     */
     public static boolean isShulkerBox(ItemStack stack) {
         return AbstractionManager.ABSTRACTION.isShulkerBox(stack);
     }
 
+    /**
+     * If an item is a shulker box.<p>
+     * Only use this if a check is needed before item tags are instantiated
+     * @param item Item to check
+     * @return If an item is a shulker box
+     */
     public static boolean earlyIsShulkerBox(Item item) {
         return item instanceof BlockItem blockItem && blockItem.getBlock() instanceof ShulkerBoxBlock;
     }
 
+    /**
+     * Gets the inventory of a shulker box
+     * @param stack Shulker box item
+     * @return A list of all items in the shulker's inventory
+     */
     public static NonNullList<ItemStack> getInventoryFromShulker(ItemStack stack) {
         ItemContainerContents component = stack.get(DataComponents.CONTAINER);
         if (component == null) {
@@ -41,6 +63,12 @@ public class ShulkerUtil {
         return inventory;
     }
 
+    /**
+     * If an item can be added to a shulker box
+     * @param shulkerStack The shulker box item
+     * @param itemToAdd The item to try and insert into the shulker box
+     * @return If the item to insert and the shulker box's resource match
+     */
     public static boolean canBeAddedToShulker(ItemStack shulkerStack, ItemStack itemToAdd) {
         Item shulkerMaterial = getMaterialFromShulker(shulkerStack);
         return itemToAdd.is(shulkerMaterial);
@@ -53,6 +81,11 @@ public class ShulkerUtil {
         return false;
     }
 
+    /**
+     * Adds the item to the shulker box
+     * @param shulkerStack The shulker box item
+     * @param itemToAdd The item to be inserted
+     */
     public static void addToShulker(ItemStack shulkerStack, ItemStack itemToAdd) {
         ItemContainerContents container = shulkerStack.get(DataComponents.CONTAINER);
         NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
@@ -78,10 +111,20 @@ public class ShulkerUtil {
         shulkerStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(inventory));
     }
 
+    /**
+     * Gets an id from an item
+     * @param stack The item to get the id from
+     * @return Minecraft id from the Registry
+     */
     public static String getItemId(ItemStack stack) {
         return BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
     }
 
+    /**
+     * Gets an item from an id
+     * @param id The id to get an item from
+     * @return Item instance of the id from the Registry
+     */
     public static Item getItemFromId(String id) {
         /*\ <=1.21.1
         return BuiltInRegistries.ITEM.get(ResourceLocation.parse(id));

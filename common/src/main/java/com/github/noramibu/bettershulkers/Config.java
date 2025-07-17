@@ -6,6 +6,9 @@ import dev.architectury.platform.Platform;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Better Shulker's config
+ */
 public final class Config {
     private static File file;
     private static Toml toml;
@@ -16,6 +19,10 @@ public final class Config {
     public static boolean ADD_RECIPE_FOR_PICKABLE_SHULKER;
     public static boolean DISABLE_PICKUP_FEATURE_OF_SHULKERS;
 
+    /**
+     * Instantiates the config from a saved file, or creates a new one if one is not present.
+     * The values from the config file are then loaded
+     */
     public static void init() {
         file = new File(Platform.getConfigFolder().toFile(), "bettershulkers.toml");
 
@@ -26,6 +33,9 @@ public final class Config {
         load();
     }
 
+    /**
+     * Reloads the config
+     */
     public static void reload() {
         load();
     }

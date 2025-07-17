@@ -6,6 +6,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.world.item.ItemStack;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 
+/**
+ * Abstraction layer for Fabric
+ */
 public class FabricAbstraction implements PlatformAbstraction {
     @Override
     public boolean isShulkerBox(ItemStack stack) {

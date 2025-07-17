@@ -6,6 +6,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
+/**
+ * Creates the custom shulker material-assigning recipe
+ */
 public class BetterShulkersRecipes {
     public static final RecipeSerializer<ShulkerUpgradeRecipe> SHULKER_UPGRADE_SERIALIZER = new ShulkerUpgradeRecipe.Serializer(ShulkerUpgradeRecipe::new);
 
