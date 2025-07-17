@@ -12,32 +12,37 @@ public class Animation {
     private final float height;
     private final float startHeight;
     private final float heightOffset;
+    private final float finalJump;
 
-    public Animation(int duration, float startingRotation, float endingRotation, float startingHeight, float endingHeight, float heightOffset) {
+    public Animation(int duration, float startingRotation, float endingRotation, float startingHeight, float endingHeight, float heightOffset, float finalJump) {
         this.duration = duration;
         this.startHeight = startingHeight;
         this.startRotation = startingRotation;
         this.rotation = (endingRotation - startingRotation) / duration;
         this.height = (endingHeight - startingHeight) / duration;
         this.heightOffset = heightOffset;
+        this.finalJump = finalJump;
     }
 
     public boolean tick(Display display) {
         ticks++;
         execute(display);
-        return ticks == this.duration;
+        return this.finalJump == 0 ? ticks == this.duration : ticks == this.duration + 1;
     }
 
     public void execute(Display display) {
         display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), 0);
         display.getEntityData().set(DisplayEntityAccessor.getTransInterpolationDuration(), 2);
         DisplayEntityInterpolater interpolater = new DisplayEntityInterpolater();
-        if (this.ticks != this.duration) {
+        if (this.ticks < this.duration) {
             interpolater.moveVertical(startHeight + (height * ticks) - heightOffset);
-        } else {
+            interpolater.roll((startRotation + rotation * ticks) * Mth.DEG_TO_RAD);
+        } else if (this.ticks == this.duration){
             interpolater.moveVertical(startHeight + (height * ticks));
+            interpolater.roll((startRotation + rotation * ticks) * Mth.DEG_TO_RAD);
+        } else if (this.ticks == this.duration + 1) {
+            interpolater.moveVertical(startHeight + (height * (ticks - 1)) + finalJump);
         }
-        interpolater.roll((startRotation + rotation * ticks) * Mth.DEG_TO_RAD);
         interpolater.build((Display.ItemDisplay) display);
         display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), -1);
     }

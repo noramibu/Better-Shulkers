@@ -93,8 +93,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
 
         // Item Display animation
         if (this.display != null) {
-            Animation animation = new Animation(10, 270F, 0F, -0.4987F, 0F, 0.025F);
-            animation.execute(this.display);
+            Animation animation = new Animation(10, 270F, 0F, -0.4987F, -0.01F, 0.015F, 0.01F);
             ((UpdatingAnimation)this.display).addAnimation(animation);
         }
     }
@@ -118,7 +117,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
 
         // Item Display animation
         if (this.display != null) {
-            Animation animation = new Animation(10, 0F,270F, 0F,-0.4987F, 0F);
+            Animation animation = new Animation(10, 0F,270F, 0F,-0.4987F, 0F, 0F);
             animation.execute(this.display);
             ((UpdatingAnimation)this.display).addAnimation(animation);
         }
