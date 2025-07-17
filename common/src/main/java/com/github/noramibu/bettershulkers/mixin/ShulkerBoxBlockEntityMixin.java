@@ -3,7 +3,8 @@ package com.github.noramibu.bettershulkers.mixin;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
-import com.github.noramibu.bettershulkers.util.DisplayEntityInterpolater;
+import com.github.noramibu.bettershulkers.interfaces.UpdatingAnimation;
+import com.github.noramibu.bettershulkers.util.Animation;
 import com.github.noramibu.bettershulkers.util.ItemRenderData;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
@@ -92,11 +93,9 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
 
         // Item Display animation
         if (this.display != null) {
-            this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), 0);
-            this.display.getEntityData().set(DisplayEntityAccessor.getTransInterpolationDuration(), 10);
-            DisplayEntityInterpolater interpolater = new DisplayEntityInterpolater();
-            interpolater.moveVertical(0F).roll(0).build(this.display);
-            this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), 1);
+            Animation animation = new Animation(10, 270F, 0F, -0.4987F, 0F, 0.025F);
+            animation.execute(this.display);
+            ((UpdatingAnimation)this.display).addAnimation(animation);
         }
     }
 
@@ -119,11 +118,9 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
 
         // Item Display animation
         if (this.display != null) {
-            this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), 0);
-            this.display.getEntityData().set(DisplayEntityAccessor.getTransInterpolationDuration(), 10);
-            DisplayEntityInterpolater interpolater = new DisplayEntityInterpolater();
-            interpolater.moveVertical(-0.4987F).roll((float) -Math.PI).build(this.display);
-            this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), -1);
+            Animation animation = new Animation(10, 0F,270F, 0F,-0.4987F, 0F);
+            animation.execute(this.display);
+            ((UpdatingAnimation)this.display).addAnimation(animation);
         }
     }
 
