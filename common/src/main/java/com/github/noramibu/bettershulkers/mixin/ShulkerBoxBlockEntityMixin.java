@@ -3,6 +3,7 @@ package com.github.noramibu.bettershulkers.mixin;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.util.DisplayEntityInterpolater;
 import com.github.noramibu.bettershulkers.util.ItemRenderData;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -39,7 +39,6 @@ import java.util.List;
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ForceInventory, MaterialDisplay {
 
     @Shadow private NonNullList<ItemStack> itemStacks;
-    @Shadow @Final public static float MAX_LID_ROTATION;
     @Unique
     private boolean forced;
     @Unique
@@ -95,10 +94,9 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         if (this.display != null) {
             this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), 0);
             this.display.getEntityData().set(DisplayEntityAccessor.getTransInterpolationDuration(), 10);
-            this.display.getEntityData().set(DisplayEntityAccessor.getTranslation(), new Vector3f(0, 0, 0));
-            //this.display.getEntityData().set(DisplayEntityAccessor.getLeftRotation(), new Quaternionf(0, 0, -4, -1));
-            //this.display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.075F, 0.075F, 0.001F));
-            this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), -1);
+            DisplayEntityInterpolater interpolater = new DisplayEntityInterpolater();
+            interpolater.moveVertical(0F).roll(0).build(this.display);
+            this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), 1);
         }
     }
 
@@ -123,9 +121,8 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         if (this.display != null) {
             this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), 0);
             this.display.getEntityData().set(DisplayEntityAccessor.getTransInterpolationDuration(), 10);
-            this.display.getEntityData().set(DisplayEntityAccessor.getTranslation(), new Vector3f(0, 0, -0.5F));
-            //this.display.getEntityData().set(DisplayEntityAccessor.getLeftRotation(), new Quaternionf(0, 0, 4, -1));
-            //this.display.getEntityData().set(DisplayEntityAccessor.getScale(), new Vector3f(0.075F, 0.075F, 0.001F));
+            DisplayEntityInterpolater interpolater = new DisplayEntityInterpolater();
+            interpolater.moveVertical(-0.4987F).roll((float) -Math.PI).build(this.display);
             this.display.getEntityData().set(DisplayEntityAccessor.getInterpolationDelta(), -1);
         }
     }
