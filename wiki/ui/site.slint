@@ -1,0 +1,370 @@
+import { Theme } from "theme.slint";
+import { ScrollView } from "std-widgets.slint";
+import { Utility } from "utility.slint";
+import { Redirect } from "redirects.slint";
+
+export {
+    Utility
+}
+
+export component Site inherits Window {
+    full-screen: true;
+    height: 700px;
+    width: 1000px;
+    background: Theme.background;
+
+    title_bar := Rectangle {
+        y: 5px;
+        width: 95%;
+        height: 10%;
+        background: Theme.item_1;
+        border-radius: 5px;
+        border-color: black;
+        border-width: 2px;
+
+        title := Text {
+            x: 20px;
+            y: 3px;
+            text: "Better Shulkers";
+            vertical-alignment: TextVerticalAlignment.top;
+            horizontal-alignment: TextHorizontalAlignment.left;
+            color: black;
+            font-size: 40px;
+            font-family: Theme.minecraft_font;
+        }
+
+        Text {
+            x: 20px;
+            y: title.height;
+            width: title.width;
+            text: "By noramibu and qpcrummer";
+            vertical-alignment: TextVerticalAlignment.bottom;
+            horizontal-alignment: TextHorizontalAlignment.center;
+            color: black;
+            font-size: 16px;
+            font-family: Theme.minecraft_font;
+        }
+
+        TouchArea {
+            height: 90%;
+            image := Image {
+                x: 0px;
+                height: 100%;
+                image-fit: ImageFit.contain;
+                source: Theme.github;
+            }
+            x: title_bar.width - image.width - 20px;
+            width: image.width;
+
+            clicked => {
+                Utility.redirect(Redirect.Github);
+            }
+        }
+
+        TouchArea {
+            height: 80%;
+            image1 := Image {
+                x: 0px;
+                height: 100%;
+                image-fit: ImageFit.contain;
+                source: Theme.modrinth;
+            }
+            x: title_bar.width - image1.width - image.width - 60px;
+            width: image1.width;
+
+            clicked => {
+                Utility.redirect(Redirect.Modrinth);
+            }
+        }
+
+        TouchArea {
+            height: 90%;
+            image2 := Image {
+                x: 0px;
+                height: 100%;
+                image-fit: ImageFit.contain;
+                source: Theme.curseforge;
+            }
+            x: title_bar.width - image2.width - image1.width - image.width - 100px;
+            width: image2.width;
+
+            clicked => {
+                Utility.redirect(Redirect.Curseforge);
+            }
+        }
+
+        TouchArea {
+            height: 90%;
+            image3 := Image {
+                x: 0px;
+                height: 100%;
+                image-fit: ImageFit.contain;
+                source: Theme.discord;
+            }
+            x: title_bar.width - image3.width - image2.width - image1.width - image.width - 140px;
+            width: image3.width;
+
+            clicked => {
+                Utility.redirect(Redirect.Discord);
+            }
+        }
+    }
+
+    scroll := ScrollView {
+        width: 100%;
+        height: 85%;
+        y: 15px + title_bar.height;
+        viewport-height: 1500px;
+
+        VerticalLayout {
+            width: 95%;
+            height: 100%;
+            spacing: 15px;
+            padding-top: 20px;
+
+            about := Rectangle {
+                width: 75%;
+                height: 30%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                Image {
+                    x: about.width - self.width - 20px;
+                    source: Theme.icon;
+                    image-rendering: ImageRendering.smooth;
+                    preferred-width: 200px;
+                    preferred-height: 200px;
+                }
+
+                Text {
+                    x: 20px;
+                    width: 75%;
+                    height: 95%;
+                    horizontal-alignment: left;
+                    vertical-alignment: center;
+                    text: "Better Shulkers is a Fabric and NeoForge serverside mod that adds many unique features to shulker boxes. This mod is for Minecraft 1.21 and above. Read below for more information.";
+                    font-family: Theme.minecraft_font;
+                    color: black;
+                    font-size: 20px;
+                }
+            }
+
+            feature_open_shulker := Rectangle {
+                width: 75%;
+                height: 30%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                Image {
+                    x: 20px;
+                    source: Theme.icon;
+                    image-rendering: ImageRendering.smooth;
+                    preferred-width: 200px;
+                    preferred-height: 200px;
+                }
+
+                Text {
+                    x: about.width - self.width - 20px;
+                    width: 75%;
+                    height: 95%;
+                    horizontal-alignment: left;
+                    vertical-alignment: center;
+                    text: "Shulkers can be opened without being placed just by right-clicking! Isn't that convenient.";
+                    font-family: Theme.minecraft_font;
+                    color: black;
+                    font-size: 20px;
+                }
+            }
+
+            feature_material_assignment := Rectangle {
+                width: 75%;
+                height: 30%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                Image {
+                    x: about.width - self.width - 20px;
+                    source: Theme.icon;
+                    image-rendering: ImageRendering.smooth;
+                    preferred-width: 200px;
+                    preferred-height: 200px;
+                }
+
+                Text {
+                    x: 20px;
+                    width: 75%;
+                    height: 95%;
+                    horizontal-alignment: left;
+                    vertical-alignment: center;
+                    text: "Shulkers can have materials be \"whitelisted\" with a simple crafting recipe. Just place 4 obsidian and the desired material around a shulker box and... voila! A better shulker!";
+                    font-family: Theme.minecraft_font;
+                    color: black;
+                    font-size: 20px;
+                }
+            }
+
+            feature_auto_pickup := Rectangle {
+                width: 75%;
+                height: 30%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                Image {
+                    x: 20px;
+                    source: Theme.icon;
+                    image-rendering: ImageRendering.smooth;
+                    preferred-width: 200px;
+                    preferred-height: 200px;
+                }
+
+                Text {
+                    x: about.width - self.width - 20px;
+                    width: 75%;
+                    height: 95%;
+                    horizontal-alignment: left;
+                    vertical-alignment: center;
+                    text: "Whitelisted shulker boxes will automatically pick up their material instead of that material going into your inventory. Inventory management solved?";
+                    font-family: Theme.minecraft_font;
+                    color: black;
+                    font-size: 20px;
+                }
+            }
+
+            feature_displays := Rectangle {
+                width: 75%;
+                height: 30%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                Image {
+                    x: about.width - self.width - 20px;
+                    source: Theme.icon;
+                    image-rendering: ImageRendering.smooth;
+                    preferred-width: 200px;
+                    preferred-height: 200px;
+                }
+
+                Text {
+                    x: 20px;
+                    width: 75%;
+                    height: 95%;
+                    horizontal-alignment: left;
+                    vertical-alignment: center;
+                    text: "Forgot what shulker you assigned to netherite blocks? No worries! Just use the display on top of the shulker to find it!";
+                    font-family: Theme.minecraft_font;
+                    color: black;
+                    font-size: 20px;
+                }
+            }
+
+            feature_spinning_displays := Rectangle {
+                width: 75%;
+                height: 30%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                Image {
+                    x: 20px;
+                    source: Theme.icon;
+                    image-rendering: ImageRendering.smooth;
+                    preferred-width: 200px;
+                    preferred-height: 200px;
+                }
+
+                Text {
+                    x: about.width - self.width - 20px;
+                    width: 75%;
+                    height: 95%;
+                    horizontal-alignment: left;
+                    vertical-alignment: center;
+                    text: "Possibly the most important feature: Material displays have accurate lid-spinning physics. Necessary? No. Impressive? Maybe.";
+                    font-family: Theme.minecraft_font;
+                    color: black;
+                    font-size: 20px;
+                }
+            }
+
+            downloads := Rectangle {
+                width: 75%;
+                height: 50%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                downloads-text := Text {
+                    text: "Downloads";
+                    font-family: Theme.minecraft_font;
+                    font-size: 30px;
+                    color: black;
+                    vertical-alignment: top;
+                    horizontal-alignment: center;
+                    y: 10px;
+                }
+
+                HorizontalLayout {
+                    width: 100%;
+                    height: 80%;
+                    y: downloads-text.height + 15px;
+                    spacing: 40px;
+                    padding-left: 40px;
+                    alignment: LayoutAlignment.center;
+
+                    TouchArea {
+                        height: 100%;
+                        image4 := Image {
+                            source: Theme.curseforge;
+                            height: 70%;
+                            image-fit: ImageFit.contain;
+                        }
+                        Text {
+                            text: "Curseforge";
+                            y: image4.height + 15px;
+                            font-size: 20px;
+                            font-family: Theme.minecraft_font;
+                            color: black;
+                        }
+                        width: 20%;
+
+                        clicked => {
+                            Utility.redirect(Redirect.Curseforge);
+                        }
+                    }
+
+                    TouchArea {
+                        height: 100%;
+                        image5 := Image {
+                            source: Theme.modrinth;
+                            height: 45%;
+                            image-fit: ImageFit.contain;
+                        }
+                        Text {
+                            text: "Modrinth";
+                            y: image4.height + 15px;
+                            font-size: 20px;
+                            font-family: Theme.minecraft_font;
+                            color: black;
+                        }
+                        width: 20%;
+
+                        clicked => {
+                            Utility.redirect(Redirect.Modrinth);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

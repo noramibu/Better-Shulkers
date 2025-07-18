@@ -1,0 +1,19 @@
+[package]
+name = "wiki"
+version = "0.0.1"
+edition = "2024"
+build = "build.rs"
+
+[dependencies]
+slint = "1.12.1"
+web-sys = { version = "0.3.77", features = ["Window", "Location"] }
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+wasm-bindgen = { version = "0.2" }
+
+[build-dependencies]
+slint-build = "1.12.1"
+
+
+[lib]
+crate-type = ["cdylib"]
