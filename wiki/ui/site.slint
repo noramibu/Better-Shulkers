@@ -10,6 +10,8 @@ export {
 
 export component Site inherits Window {
     background: Theme.background;
+    width: 600px;
+    height: 1000px;
 
     title_bar := Rectangle {
         y: 5px;
@@ -372,6 +374,14 @@ export component Site inherits Window {
                 }
             }
         }
+    }
+
+    Rectangle {
+        width: scroll.width;
+        height: scroll.height;
+        y: scroll.y;
+        clip: true;
+        background: @linear-gradient(0deg, Theme.background_start.with-alpha(1.0) 0%, Theme.background_start.with-alpha(0.0) 10%, Theme.background_end.with-alpha(0.0) 93%, Theme.background_end.with-alpha(1.0) 100%);
     }
 
     function is_visible(viewport-y: length, viewport-height: length, component-y: length, component-height: length) -> bool {
