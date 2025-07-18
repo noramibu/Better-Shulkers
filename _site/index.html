@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WASM App</title>
+    <style>
+        html, body, canvas {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script type="module">
+    import init from "./wiki/pkg/wiki.js";
+    init();
+</script>
+</body>
+</html>

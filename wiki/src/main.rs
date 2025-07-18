@@ -1,4 +1,4 @@
-use image::{EncodableLayout, ImageFormat};
+use image::ImageFormat;
 use slint::{Image, Rgba8Pixel, SharedPixelBuffer};
 use std::collections::HashMap;
 #[cfg(target_family = "wasm")]
