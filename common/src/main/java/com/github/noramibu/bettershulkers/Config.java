@@ -20,6 +20,7 @@ public final class Config {
     public static boolean RIGHT_CLICK_TO_OPEN_SHULKER;
     public static boolean ADD_RECIPE_FOR_PICKABLE_SHULKER;
     public static boolean DISABLE_PICKUP_FEATURE_OF_SHULKERS;
+    public static boolean SHOW_MATERIAL_DISPLAY;
 
     /**
      * Instantiates the config from a saved file, or creates a new one if one is not present.
@@ -57,6 +58,10 @@ public final class Config {
             writer.write("# If true, players can open shulker boxes by right-clicking them in hand.\n");
             writer.write("right-click-to-open-shulker = true\n\n");
 
+            writer.write("# If true, item displays will render on the shulker box lid to show the material.\n");
+            writer.write("# NOTE: Displays may appear slow if players have high latency.\n");
+            writer.write("show-material-display = true\n\n");
+
             writer.write("# If true, players will need permissions to use the /shulker command.\n");
             writer.write("require-permission-for-command = true\n\n");
 
@@ -80,5 +85,6 @@ public final class Config {
         RIGHT_CLICK_TO_OPEN_SHULKER = toml.getBoolean("right-click-to-open-shulker", true);
         ADD_RECIPE_FOR_PICKABLE_SHULKER = toml.getBoolean("add-recipe-for-pickable-shulker", true);
         DISABLE_PICKUP_FEATURE_OF_SHULKERS = toml.getBoolean("disable-pickup-feature-of-shulkers", false);
+        SHOW_MATERIAL_DISPLAY = toml.getBoolean("show-material-display", true);
     }
 }

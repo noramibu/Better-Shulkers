@@ -1,5 +1,6 @@
 package com.github.noramibu.bettershulkers.mixin;
 
+import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
@@ -141,7 +142,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     }
 
     private void createDisplay(Item material) {
-        if (material != null) {
+        if (Config.SHOW_MATERIAL_DISPLAY && material != null) {
             this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, this.getLevel());
             Vec3 positionOfShulker = this.worldPosition.getCenter();
             Direction rotation = this.getBlockState().getValue(BlockStateProperties.FACING);
