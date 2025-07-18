@@ -25,7 +25,7 @@ pub fn main() {
                 window.location().set_href("https://github.com/noramibu/Better-Shulkers").expect("failed to redirect");
             }
             Redirect::Discord => {
-                window.location().set_href("https://discord.com").expect("failed to redirect");
+                window.location().set_href("https://discord.gg/XGw3Te7QYr").expect("failed to redirect");
             }
         }
     });
