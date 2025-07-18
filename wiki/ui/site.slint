@@ -2,13 +2,14 @@ import { Theme } from "theme.slint";
 import { ScrollView } from "std-widgets.slint";
 import { Utility } from "utility.slint";
 import { Redirect } from "redirects.slint";
+import { AnimatedImage } from "animated_image.slint";
 
 export {
     Utility
 }
 
 export component Site inherits Window {
-    full-screen: true;
+    //full-screen: true;
     height: 700px;
     width: 1000px;
     background: Theme.background;
@@ -159,12 +160,12 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                Image {
+                AnimatedImage {
                     x: 20px;
-                    source: Theme.icon;
-                    image-rendering: ImageRendering.smooth;
-                    preferred-width: 200px;
-                    preferred-height: 200px;
+                    width: 200px;
+                    gif-name: "shulker_open";
+                    total-frames: 16;
+                    animation: is_visible(scroll.viewport-y, scroll.visible-height, self.y, self.height);
                 }
 
                 Text {
@@ -190,8 +191,9 @@ export component Site inherits Window {
 
                 Image {
                     x: about.width - self.width - 20px;
-                    source: Theme.icon;
+                    source: Theme.crafting;
                     image-rendering: ImageRendering.smooth;
+                    image-fit: contain;
                     preferred-width: 200px;
                     preferred-height: 200px;
                 }
@@ -217,12 +219,12 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                Image {
+                AnimatedImage {
                     x: 20px;
-                    source: Theme.icon;
-                    image-rendering: ImageRendering.smooth;
-                    preferred-width: 200px;
-                    preferred-height: 200px;
+                    width: 200px;
+                    total-frames: 30;
+                    gif-name: "pickup";
+                    animation: is_visible(scroll.viewport-y, scroll.visible-height, self.y, self.height);
                 }
 
                 Text {
@@ -248,10 +250,11 @@ export component Site inherits Window {
 
                 Image {
                     x: about.width - self.width - 20px;
-                    source: Theme.icon;
+                    source: Theme.display;
                     image-rendering: ImageRendering.smooth;
-                    preferred-width: 200px;
-                    preferred-height: 200px;
+                    image-fit: contain;
+                    preferred-width: 160px;
+                    preferred-height: 160px;
                 }
 
                 Text {
@@ -275,12 +278,12 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                Image {
+                AnimatedImage {
                     x: 20px;
-                    source: Theme.icon;
-                    image-rendering: ImageRendering.smooth;
-                    preferred-width: 200px;
-                    preferred-height: 200px;
+                    width: 200px;
+                    gif-name: "spin";
+                    total-frames: 35;
+                    animation: is_visible(scroll.viewport-y, scroll.visible-height, self.y, self.height);
                 }
 
                 Text {
@@ -366,5 +369,9 @@ export component Site inherits Window {
                 }
             }
         }
+    }
+
+    function is_visible(viewport-y: length, viewport-height: length, component-y: length, component-height: length) -> bool {
+        return (component-y < (viewport-y + viewport-height)) && ((component-y + component-height) > viewport-y);
     }
 }

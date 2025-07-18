@@ -1,4 +1,5 @@
 import { Redirect } from "redirects.slint";
 export global Utility {
     callback redirect(redirect: Redirect);
+    callback load_gif_frame(gif: string, frame: int) -> image;
 }

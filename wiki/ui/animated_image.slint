@@ -1,0 +1,25 @@
+import { Utility } from "utility.slint";
+import { Theme } from "theme.slint";
+export component AnimatedImage inherits Rectangle {
+    in-out property <int> current_frame;
+    in-out property <bool> animation;
+    in-out property <int> total-frames;
+    in-out property <string> gif-name;
+
+    img := Image {
+        width: 100%;
+        height: 100%;
+        image-fit: contain;
+        source: Theme.icon;
+    }
+
+    Timer {
+        interval: 66ms;
+        running: animation;
+        triggered => {
+            img.source = Utility.load_gif_frame(root.gif-name, root.current_frame);
+            current_frame = (current_frame + 1);
+            current_frame = Math.mod(current_frame, total-frames);
+        }
+    }
+}
