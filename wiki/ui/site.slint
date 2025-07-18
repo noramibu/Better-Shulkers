@@ -147,6 +147,7 @@ export component Site inherits Window {
                     vertical-alignment: center;
                     text: "Better Shulkers is a Fabric and NeoForge serverside mod that adds many unique features to shulker boxes. This mod is for Minecraft 1.21 and above. Read below for more information.";
                     font-family: Theme.minecraft_font;
+                    wrap: TextWrap.word-wrap;
                     color: black;
                     font-size: 20px;
                 }
@@ -160,22 +161,24 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                AnimatedImage {
+                open := AnimatedImage {
                     x: 20px;
-                    width: 200px;
+                    height: 95%;
                     gif-name: "shulker_open";
                     total-frames: 16;
-                    animation: is_visible(scroll.viewport-y, scroll.visible-height, self.y, self.height);
+                    fps: 8;
+                    animation: is_visible(scroll.viewport-y * -1, scroll.viewport-y * -1 + scroll.visible-height, feature_open_shulker.y, feature_open_shulker.height);
                 }
 
                 Text {
-                    x: about.width - self.width - 20px;
-                    width: 75%;
+                    x: open.width + 40px;
+                    width: feature_open_shulker.width - self.x - 20px;
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
                     text: "Shulkers can be opened without being placed just by right-clicking! Isn't that convenient.";
                     font-family: Theme.minecraft_font;
+                    wrap: TextWrap.word-wrap;
                     color: black;
                     font-size: 20px;
                 }
@@ -206,6 +209,7 @@ export component Site inherits Window {
                     vertical-alignment: center;
                     text: "Shulkers can have materials be \"whitelisted\" with a simple crafting recipe. Just place 4 obsidian and the desired material around a shulker box and... voila! A better shulker!";
                     font-family: Theme.minecraft_font;
+                    wrap: TextWrap.word-wrap;
                     color: black;
                     font-size: 20px;
                 }
@@ -219,22 +223,24 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                AnimatedImage {
+                pickup := AnimatedImage {
                     x: 20px;
-                    width: 200px;
+                    height: 95%;
                     total-frames: 30;
                     gif-name: "pickup";
-                    animation: is_visible(scroll.viewport-y, scroll.visible-height, self.y, self.height);
+                    fps: 8;
+                    animation: is_visible(scroll.viewport-y * -1, scroll.viewport-y * -1 + scroll.visible-height, feature_auto_pickup.y, feature_auto_pickup.height);
                 }
 
                 Text {
-                    x: about.width - self.width - 20px;
-                    width: 75%;
+                    x: pickup.width + 40px;
+                    width: feature_auto_pickup.width - self.x - 20px;
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
-                    text: "Whitelisted shulker boxes will automatically pick up their material instead of that material going into your inventory. Inventory management solved?";
+                    text: "Whitelisted shulker boxes will automatically pick up their material instead of putting it into your inventory. Inventory management update solved? Mojang, you can pay me later.";
                     font-family: Theme.minecraft_font;
+                    wrap: TextWrap.word-wrap;
                     color: black;
                     font-size: 20px;
                 }
@@ -265,6 +271,7 @@ export component Site inherits Window {
                     vertical-alignment: center;
                     text: "Forgot what shulker you assigned to netherite blocks? No worries! Just use the display on top of the shulker to find it!";
                     font-family: Theme.minecraft_font;
+                    wrap: TextWrap.word-wrap;
                     color: black;
                     font-size: 20px;
                 }
@@ -278,21 +285,23 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                AnimatedImage {
+                spin := AnimatedImage {
                     x: 20px;
-                    width: 200px;
+                    height: 95%;
                     gif-name: "spin";
                     total-frames: 35;
-                    animation: is_visible(scroll.viewport-y, scroll.visible-height, self.y, self.height);
+                    fps: 16;
+                    animation: is_visible(scroll.viewport-y * -1, scroll.viewport-y * -1 + scroll.visible-height, feature_spinning_displays.y, feature_spinning_displays.height);
                 }
 
                 Text {
-                    x: about.width - self.width - 20px;
-                    width: 75%;
+                    x: spin.width + 40px;
+                    width: feature_spinning_displays.width - self.x - 20px;
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
                     text: "Possibly the most important feature: Material displays have accurate lid-spinning physics. Necessary? No. Impressive? Maybe.";
+                    wrap: TextWrap.word-wrap;
                     font-family: Theme.minecraft_font;
                     color: black;
                     font-size: 20px;
