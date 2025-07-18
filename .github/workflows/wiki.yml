@@ -7,25 +7,30 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Build WASM
         run: |
           cd wiki
           cargo install wasm-pack
-          wasm-pack build --release --target web
+          wasm-pack build --release --target web --out-dir ../_site/wiki/pkg
+
       - name: Generate HTML
         run: |
-          echo '<canvas id="canvas"></canvas>' > index.html
-          echo '<script type="module">' >> index.html
-          echo 'import init from "./wiki/pkg/wiki.js";' >> index.html
-          echo 'init();' >> index.html
-          echo '</script>' >> index.html
+          mkdir -p _site
+          echo '<canvas id="canvas"></canvas>' > _site/index.html
+          echo '<script type="module">' >> _site/index.html
+          echo 'import init from "./wiki/pkg/wiki.js";' >> _site/index.html
+          echo 'init();' >> _site/index.html
+          echo '</script>' >> _site/index.html
+
       - name: Setup pages
         id: pages
         uses: actions/configure-pages@v5
-      - name: Add redirect
-        run: echo '<meta http-equiv="refresh" content="0;url=better-shulkers/index.html">' > index.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
 
   deploy:
     name: Deploy
