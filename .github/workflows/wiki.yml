@@ -1,11 +1,6 @@
 on:
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   compile:
     runs-on: ubuntu-latest
@@ -17,24 +12,18 @@ jobs:
           cd wiki
           cargo install wasm-pack
           wasm-pack build --release --target web
-      - name: Create site directory
-        run: mkdir -p _site
       - name: Generate HTML
         run: |
-          echo '<canvas id="canvas"></canvas>' > _site/index.html
-          echo '<script type="module">' >> _site/index.html
-          echo 'import init from "./wiki/pkg/wiki.js";' >> _site/index.html
-          echo 'init();' >> _site/index.html
-          echo '</script>' >> _site/index.html
-      - name: Copy WASM files
-        run: |
-          mkdir -p _site/wiki
-          cp -r wiki/pkg _site/wiki/
+          echo '<canvas id="canvas"></canvas>' > index.html
+          echo '<script type="module">' >> index.html
+          echo 'import init from "./wiki/pkg/wiki.js";' >> index.html
+          echo 'init();' >> index.html
+          echo '</script>' >> index.html
       - name: Setup pages
         id: pages
         uses: actions/configure-pages@v5
       - name: Add redirect
-        run: echo '<meta http-equiv="refresh" content="0;url=better-shulkers/index.html">' > _site/redirect.html
+        run: echo '<meta http-equiv="refresh" content="0;url=better-shulkers/index.html">' > index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
