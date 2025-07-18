@@ -1,4 +1,4 @@
-use image::ImageFormat;
+use image::{EncodableLayout, ImageFormat};
 use slint::{Image, Rgba8Pixel, SharedPixelBuffer};
 use std::collections::HashMap;
 #[cfg(target_family = "wasm")]
@@ -149,15 +149,11 @@ fn load_gifs() -> HashMap<String, Vec<&'static [u8]>> {
 }
 
 fn read_png(bytes: &[u8]) -> SharedPixelBuffer<Rgba8Pixel> {
-    let image = image::load_from_memory_with_format(&bytes, ImageFormat::PNG).expect("failed to load png data").to_rgba();
-    let width = image.width();
-    let height = image.height();
+    let image = image::load_from_memory_with_format(&bytes, ImageFormat::Png).expect("failed to load png data").into_rgba8();
     
-    let buffer = SharedPixelBuffer::<Rgba8Pixel>::clone_from_slice(
-        &*image.into_raw(),
-        width,
-        height,
-    );
-
-    buffer
+    SharedPixelBuffer::<Rgba8Pixel>::clone_from_slice(
+        image.as_raw(),
+        image.width(),
+        image.height(),
+    )
 }
