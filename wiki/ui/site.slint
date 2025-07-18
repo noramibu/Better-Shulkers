@@ -9,9 +9,6 @@ export {
 }
 
 export component Site inherits Window {
-    //full-screen: true;
-    height: 700px;
-    width: 1000px;
     background: Theme.background;
 
     title_bar := Rectangle {
@@ -115,7 +112,7 @@ export component Site inherits Window {
         width: 100%;
         height: 85%;
         y: 15px + title_bar.height;
-        viewport-height: 1500px;
+        viewport-height: (self.height * 0.3 + 15px) * 6 + 20px + (self.height * 0.5);
 
         VerticalLayout {
             width: 95%;
@@ -135,8 +132,7 @@ export component Site inherits Window {
                     x: about.width - self.width - 20px;
                     source: Theme.icon;
                     image-rendering: ImageRendering.smooth;
-                    preferred-width: 200px;
-                    preferred-height: 200px;
+                    height: 95%;
                 }
 
                 Text {
@@ -197,8 +193,7 @@ export component Site inherits Window {
                     source: Theme.crafting;
                     image-rendering: ImageRendering.smooth;
                     image-fit: contain;
-                    preferred-width: 200px;
-                    preferred-height: 200px;
+                    height: 95%;
                 }
 
                 Text {
@@ -259,8 +254,7 @@ export component Site inherits Window {
                     source: Theme.display;
                     image-rendering: ImageRendering.smooth;
                     image-fit: contain;
-                    preferred-width: 160px;
-                    preferred-height: 160px;
+                    height: 95%;
                 }
 
                 Text {

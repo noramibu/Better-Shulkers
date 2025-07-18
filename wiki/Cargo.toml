@@ -17,4 +17,5 @@ slint-build = "1.12.1"
 
 
 [lib]
+path = "src/main.rs"
 crate-type = ["cdylib"]
