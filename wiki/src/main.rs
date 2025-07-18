@@ -11,32 +11,45 @@ slint::include_modules!();
 pub fn main() {
     let site = Site::new().unwrap();
     let gifs = load_gifs();
-    
+
     site.global::<Utility>().on_redirect(move |redirect| {
         let window = window().expect("no global `window` exists");
         match redirect {
             Redirect::Modrinth => {
-                window.location().set_href("https://modrinth.com/mod/better-shulkers").expect("failed to redirect");
+                window
+                    .location()
+                    .set_href("https://modrinth.com/mod/better-shulkers")
+                    .expect("failed to redirect");
             }
             Redirect::Curseforge => {
-                window.location().set_href("https://curseforge.com").expect("failed to redirect");
+                window
+                    .location()
+                    .set_href("https://curseforge.com")
+                    .expect("failed to redirect");
             }
             Redirect::Github => {
-                window.location().set_href("https://github.com/noramibu/Better-Shulkers").expect("failed to redirect");
+                window
+                    .location()
+                    .set_href("https://github.com/noramibu/Better-Shulkers")
+                    .expect("failed to redirect");
             }
             Redirect::Discord => {
-                window.location().set_href("https://discord.gg/XGw3Te7QYr").expect("failed to redirect");
+                window
+                    .location()
+                    .set_href("https://discord.gg/XGw3Te7QYr")
+                    .expect("failed to redirect");
             }
         }
     });
 
-    site.global::<Utility>().on_load_gif_frame(move |name, frame| {
-        let frames = gifs.get(name.as_str()).unwrap();
-        let bytes = frames[frame as usize];
-        let buffer = read_png(&bytes);
-        Image::from_rgba8(buffer)
-    });
-    
+    site.global::<Utility>()
+        .on_load_gif_frame(move |name, frame| {
+            let frames = gifs.get(name.as_str()).unwrap();
+            let bytes = frames[frame as usize];
+            let buffer = read_png(bytes);
+            Image::from_rgba8(buffer)
+        });
+
     site.run().unwrap();
 }
 
@@ -149,11 +162,9 @@ fn load_gifs() -> HashMap<String, Vec<&'static [u8]>> {
 }
 
 fn read_png(bytes: &[u8]) -> SharedPixelBuffer<Rgba8Pixel> {
-    let image = image::load_from_memory_with_format(&bytes, ImageFormat::Png).expect("failed to load png data").into_rgba8();
-    
-    SharedPixelBuffer::<Rgba8Pixel>::clone_from_slice(
-        image.as_raw(),
-        image.width(),
-        image.height(),
-    )
+    let image = image::load_from_memory_with_format(bytes, ImageFormat::Png)
+        .expect("failed to load png data")
+        .into_rgba8();
+
+    SharedPixelBuffer::<Rgba8Pixel>::clone_from_slice(image.as_raw(), image.width(), image.height())
 }
