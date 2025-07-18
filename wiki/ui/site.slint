@@ -10,6 +10,8 @@ export {
 
 export component Site inherits Window {
     background: Theme.background;
+    width: 462px;
+    height: 1000px;
 
     title_bar := Rectangle {
         y: 5px;
@@ -128,7 +130,7 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                Image {
+                img1 := Image {
                     x: about.width - self.width - 20px;
                     source: Theme.icon;
                     image-rendering: ImageRendering.smooth;
@@ -137,7 +139,7 @@ export component Site inherits Window {
 
                 Text {
                     x: 20px;
-                    width: 75%;
+                    width: about.width - img1.width - 60px;
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
@@ -188,7 +190,7 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                Image {
+                img2 := Image {
                     x: about.width - self.width - 20px;
                     source: Theme.crafting;
                     image-rendering: ImageRendering.smooth;
@@ -198,7 +200,7 @@ export component Site inherits Window {
 
                 Text {
                     x: 20px;
-                    width: 75%;
+                    width: feature_material_assignment.width - img2.width - 60px;
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
@@ -249,7 +251,7 @@ export component Site inherits Window {
                 border-width: 2px;
                 background: Theme.item_2;
 
-                Image {
+                img3 := Image {
                     x: about.width - self.width - 20px;
                     source: Theme.display;
                     image-rendering: ImageRendering.smooth;
@@ -259,7 +261,7 @@ export component Site inherits Window {
 
                 Text {
                     x: 20px;
-                    width: 75%;
+                    width: feature_displays.width - img3.width - 60px;
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
