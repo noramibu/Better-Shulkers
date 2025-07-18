@@ -28,7 +28,7 @@ The mod is compatible with Minecraft 1.21 and above.
 
 ## Need Help?
 Just join our Discord server!<p>
-[![Join our Discord](https://img.shields.io/discord/123456789012345678.svg?label=Join%20us%20on%20Discord&logo=discord&style=for-the-badge)](https://discord.gg/XGw3Te7QYr)
+[![Join our Discord](https://img.shields.io/discord/948704397569958038.svg?label=Join%20us%20on%20Discord&logo=discord&style=for-the-badge)](https://discord.gg/XGw3Te7QYr)
 
 ## Credits
 |                                                                                                                                                                       | Name            | Role                      |
