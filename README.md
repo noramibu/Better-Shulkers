@@ -26,6 +26,33 @@ This is a brief list of features. More can be found on [our website](https://nor
 Download Better Shulkers from [Curseforge]() or [Modrinth](https://modrinth.com/mod/better-shulkers).
 The mod is compatible with Minecraft 1.21 and above.
 
+## Configuration & Permissions
+
+### Configuration Options
+The mod creates a `bettershulkers.toml` file in your server's config folder. Here are all available options:
+
+| Option                                            | Default  | Description                                                                                                                                                            |
+|---------------------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `disable-pickup-feature-of-shulkers`              | `false`  | Disables the main feature of this mod, which is shulkers retaining their inventory when broken. **Note:** This does NOT disable the recipe to craft pickable shulkers. |
+| `add-recipe-for-pickable-shulker`                 | `true`   | If true, a recipe is added to make shulkers pickable. **Note:** This does NOT disable the pickup feature, only the recipe to craft them.                               |
+| `right-click-to-open-shulker`                     | `true`   | If true, players can open shulker boxes by right-clicking them in hand.                                                                                                |
+| `show-material-display`                           | `true`   | If true, item displays will render on the shulker box lid to show the material. **Note:** Displays may appear slow if players have high latency.                       |
+| `require-permission-for-command`                  | `true`   | If true, players will need permissions to use the `/shulker` command.                                                                                                  |
+| `require-permission-for-right-click-open-shulker` | `false`  | If true, players will need 'bettershulkers.open' permission to open shulker boxes by right-clicking them.                                                              |
+
+### Permission Nodes
+The following permission nodes are available for server administrators:
+
+| Permission Node                 | Description                                                                                                  |
+|---------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `bettershulkers.command.set`    | Allows setting a shulker's material using the `/shulker` command.                                            |
+| `bettershulkers.command.reload` | Allows reloading the configuration file using the `/shulker` command.                                        |
+| `bettershulkers.open`           | Allows opening shulker boxes by right-clicking them in hand. (permission req. for this disabled as default)  |
+
+### Commands
+- `/shulker set <material>` - Set a shulker box's material (requires `bettershulkers.command.set` permission)
+- `/shulker reload` - Reload the configuration file (requires `bettershulkers.command.reload` permission)
+
 ## Need Help?
 Just join our Discord server!<p>
 [![Join our Discord](https://img.shields.io/discord/948704397569958038.svg?label=Join%20us%20on%20Discord&logo=discord&style=for-the-badge)](https://discord.gg/XGw3Te7QYr)
