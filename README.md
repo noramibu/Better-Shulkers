@@ -65,6 +65,6 @@ Just join our Discord server!<p>
 ## Credits
 |                                                                                                                                                                       | Name            | Role                      |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------|:--------------------------|
-| [![Norambu's Avatar](https://avatars.githubusercontent.com/u/50046813?s=48)](https://github.com/noramibu)                                                             | norambu         | Developer                 |
+| [![noramibu's Avatar](https://avatars.githubusercontent.com/u/50046813?s=48)](https://github.com/noramibu)                                                            | noramibu         | Developer                 |
 | [![QPCrummer's Avatar](https://avatars.githubusercontent.com/u/66036033?s=48)](https://github.com/QPCrummer)                                                          | qpcrummer       | Developer                 |
 | [![TaterCertifed's Avatar](https://avatars.githubusercontent.com/u/98563278?s=48&u=8a1ddaf201e7c943713e4aee471ad1aa0fbe682f&v=4)](https://github.com/Tater-Certified) | Tater Certified | Contributing Organization |
