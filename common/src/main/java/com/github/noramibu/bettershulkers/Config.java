@@ -104,5 +104,6 @@ public final class Config {
         INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT = toml.getBoolean("initialize-material-collector-enchantment", true);
         MATERIAL_COLLECTOR_PICKUP_ALL_WITHOUT_FILTERING = toml.getBoolean("material-collector-pickup-all-without-filtering", false);
         ONLY_ENCHANTED_SHULKER_COLLECTS = toml.getBoolean("only-enchanted-shulker-collects", false);
+
     }
 }

@@ -24,5 +24,6 @@ public final class MaterialCollector {
         BetterShulkers.LOGGER.info("Material Collector Enchantment Registry Name: {}:{}", MATERIAL_COLLECTOR.location().getNamespace(), MATERIAL_COLLECTOR.location().getPath());
         BetterShulkers.LOGGER.info("Material Collector Enchantment Registry ID: {}:{}", MATERIAL_COLLECTOR.location().getNamespace(), MATERIAL_COLLECTOR.location().getPath());
         BetterShulkers.LOGGER.info("--------------------------------------");
+
     }
 }

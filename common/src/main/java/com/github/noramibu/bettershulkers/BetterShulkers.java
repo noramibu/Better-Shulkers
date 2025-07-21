@@ -2,6 +2,7 @@ package com.github.noramibu.bettershulkers;
 
 import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
+import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
@@ -44,6 +45,14 @@ public final class BetterShulkers {
      */
     public static void init() {
         Config.init();
+
+        // Initialize the Material Collector enchantment
+        if (Config.INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT) {
+            MaterialCollector.initialize();
+        } else {
+            LOGGER.info("Material Collector enchantment initialization skipped by config.");
+        }
+
 
         CommandRegistrationEvent.EVENT.register((commandDispatcher, commandBuildContext, commandSelection) -> {
             ShulkerCommand.register(commandDispatcher, commandBuildContext);
