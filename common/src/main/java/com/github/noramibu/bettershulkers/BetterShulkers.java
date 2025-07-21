@@ -61,20 +61,8 @@ public final class BetterShulkers {
 
                             return InteractionResult.PASS;
                             //: END
-                       }
-                    
-
-                    ShulkerBoxBlock shulker = (ShulkerBoxBlock) ((BlockItem)stack.getItem()).getBlock();
-                    ((ShulkerViewer) player).setViewing(stack);
-
-                    //: >=1.21.6
-                   ((ServerPlayer)player).level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
-                    //: END
-                   /*\ <=1.21.5
-
-                    ((ServerPlayer)player).serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
-                    \END */
-                    ((RemoteInventory)shulker).openInventory((ServerPlayer) player, stack);
+                    }
+                    openShulkerMenu(stack, (ServerPlayer) player);
                 }
             }
             /*\ <=1.21.1 || 1.21.5
@@ -85,6 +73,24 @@ public final class BetterShulkers {
             return InteractionResult.PASS;
             //: END
        });
+    }
+
+    /**
+     * Opens a shulker box inventory without a shulker box block existing
+     * @param shulkerStack Shulker item
+     * @param player ServerPlayer opening the shulker box UI
+     */
+    public static void openShulkerMenu(ItemStack shulkerStack, ServerPlayer player) {
+        ShulkerBoxBlock shulker = (ShulkerBoxBlock) ((BlockItem)shulkerStack.getItem()).getBlock();
+
+        //: >=1.21.6
+        player.level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+        //: END
+        /*\ <=1.21.5
+
+        player.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+        \END */
+        ((RemoteInventory)shulker).openInventory(player, shulkerStack);
     }
 
     /**

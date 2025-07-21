@@ -43,10 +43,12 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
                 /*\ <=1.21.5
                 serverPlayer.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
                 \END */
+
+                // TODO I have forgotten why I am doing this
                 if (viewedStack.isEmpty()) {
                     ItemStack stack = this.getCarried();
                     if (!stack.isEmpty()) {
-                        ((ShulkerViewer)serverPlayer).setViewing(stack);
+                        ((ShulkerViewer)serverPlayer).setViewing(stack, null);
                     }
                 }
             }

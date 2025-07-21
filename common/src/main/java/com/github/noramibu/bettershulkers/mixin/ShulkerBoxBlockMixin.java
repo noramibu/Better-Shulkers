@@ -4,12 +4,12 @@ import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
+import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -57,13 +57,8 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
     @Override
     public void openInventory(ServerPlayer player, ItemStack stack) {
         ShulkerBoxBlockEntity blockEntity = new ShulkerBoxBlockEntity(player.blockPosition(), Blocks.SHULKER_BOX.defaultBlockState());
-        NonNullList<ItemStack> inventoryFrom = ((ContainerComponentAccessor)(Object)stack.getComponents().get(DataComponents.CONTAINER)).getStacks();
-        NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
-        for (int i = 0; i < 27; i++) {
-            if (i < inventoryFrom.size()) {
-                inventory.set(i, inventoryFrom.get(i));
-            }
-        }
+        ((ShulkerViewer) player).setViewing(stack, blockEntity);
+        NonNullList<ItemStack> inventory = ShulkerUtil.getInventoryFromShulker(stack);
         ((ForceInventory)blockEntity).setInventory(inventory);
         ((ForceInventory)blockEntity).setForced();
 
