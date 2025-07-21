@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
+import net.minecraft.resources.ResourceKey;
 
 @Mixin(ItemEntity.class)
 public abstract class ItemEntityMixin {
@@ -37,31 +39,63 @@ public abstract class ItemEntityMixin {
 
         for (int i = 0; i < playerInventory.getContainerSize(); i++) {
             ItemStack inventoryStack = playerInventory.getItem(i);
-            if (ShulkerUtil.isShulkerBox(inventoryStack) &&
-                    ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
-                int originalCount = itemStack.getCount();
-                ShulkerUtil.addToShulker(inventoryStack, itemStack);
-                playerInventory.setItem(i, inventoryStack);
+            if (!ShulkerUtil.isShulkerBox(inventoryStack)) continue;
 
-                if (player.containerMenu instanceof ShulkerBoxMenu menuHandler) {
-                    Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)menuHandler).getInventory();
-
-                    if (((ForceInventory)screenInventory).forced() && ((ShulkerViewer)player).getViewedStack() == inventoryStack) {
-                        NonNullList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
-                        ((ForceInventory)screenInventory).setInventory(updatedList);
-                        menuHandler.broadcastChanges();
+            boolean hasEnchantment = false;
+            var ench = inventoryStack.get(net.minecraft.core.component.DataComponents.ENCHANTMENTS);
+            if (ench != null) {
+                for (var key : ench.keySet()) {
+                    // Try to extract ResourceKey from Holder/Reference
+                    ResourceKey<?> keyResource = null;
+                    try {
+                        if (key instanceof net.minecraft.core.Holder holder) {
+                            Object maybeKey = holder.unwrapKey().orElse(null);
+                            if (maybeKey instanceof ResourceKey<?> resourceKey) {
+                                keyResource = resourceKey;
+                            }
+                        }
+                    } catch (Exception e) {
+                        // ignore
+                    }
+                    if (keyResource != null && keyResource.equals(MaterialCollector.MATERIAL_COLLECTOR)) {
+                        hasEnchantment = true;
                     }
                 }
+            }
 
-                if (itemStack.isEmpty()) {
-                    player.take(self, originalCount);
-                    self.discard();
-                    ci.cancel();
-                } else {
-                    int pickedUpCount = originalCount - itemStack.getCount();
-                    if (pickedUpCount > 0) {
-                        player.take(self, pickedUpCount);
-                    }
+            // Only allow pickup if enchanted or config allows non-enchanted
+            if (!hasEnchantment && Config.ONLY_ENCHANTED_SHULKER_COLLECTS) {
+                continue;
+            }
+
+            boolean hasMaterial = ShulkerUtil.getMaterialFromShulker(inventoryStack) != null;
+            boolean allowAny = hasEnchantment && Config.MATERIAL_COLLECTOR_PICKUP_ALL_WITHOUT_FILTERING && !hasMaterial;
+
+            boolean canPickup = allowAny || ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack);
+            if (!canPickup) continue;
+
+            int originalCount = itemStack.getCount();
+            ShulkerUtil.addToShulker(inventoryStack, itemStack);
+            playerInventory.setItem(i, inventoryStack);
+
+            if (player.containerMenu instanceof ShulkerBoxMenu menuHandler) {
+                Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)menuHandler).getInventory();
+
+                if (((ForceInventory)screenInventory).forced() && ((ShulkerViewer)player).getViewedStack() == inventoryStack) {
+                    NonNullList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
+                    ((ForceInventory)screenInventory).setInventory(updatedList);
+                    menuHandler.broadcastChanges();
+                }
+            }
+
+            if (itemStack.isEmpty()) {
+                player.take(self, originalCount);
+                self.discard();
+                ci.cancel();
+            } else {
+                int pickedUpCount = originalCount - itemStack.getCount();
+                if (pickedUpCount > 0) {
+                    player.take(self, pickedUpCount);
                 }
             }
             if (ci.isCancelled()) {

@@ -21,6 +21,9 @@ public final class Config {
     public static boolean ADD_RECIPE_FOR_PICKABLE_SHULKER;
     public static boolean DISABLE_PICKUP_FEATURE_OF_SHULKERS;
     public static boolean SHOW_MATERIAL_DISPLAY;
+    public static boolean INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT;
+    public static boolean MATERIAL_COLLECTOR_PICKUP_ALL_WITHOUT_FILTERING;
+    public static boolean ONLY_ENCHANTED_SHULKER_COLLECTS;
 
     /**
      * Instantiates the config from a saved file, or creates a new one if one is not present.
@@ -68,6 +71,18 @@ public final class Config {
             writer.write("# If true, players will need 'bettershulkers.open' permission to open shulker boxes by right-clicking them.\n");
             writer.write("require-permission-for-right-click-open-shulker = false\n\n");
 
+            writer.write("# If true, the Material Collector enchantment will be initialized.\n");
+            writer.write("# NOTE: Changing this option only takes effect after a server restart.\n");
+            writer.write("initialize-material-collector-enchantment = true\n\n");
+
+            writer.write("# If true, a shulker with the Material Collector enchantment will pick up everything unless a material is applied to it.\n");
+            writer.write("# If false, it will only pick up items matching its material.\n");
+            writer.write("material-collector-pickup-all-without-filtering = false\n\n");
+
+            writer.write("# If true, only shulker boxes with the Material Collector enchantment will collect items.\n");
+            writer.write("# If false, any shulker box with a material applied can collect items.\n");
+            writer.write("only-enchanted-shulker-collects = false\n\n");
+
             writer.write("# --- Permission Nodes ---\n");
             writer.write("# bettershulkers.command.set   - Allows setting a shulker's material.\n");
             writer.write("# bettershulkers.command.reload - Allows reloading this configuration file.\n");
@@ -86,5 +101,8 @@ public final class Config {
         ADD_RECIPE_FOR_PICKABLE_SHULKER = toml.getBoolean("add-recipe-for-pickable-shulker", true);
         DISABLE_PICKUP_FEATURE_OF_SHULKERS = toml.getBoolean("disable-pickup-feature-of-shulkers", false);
         SHOW_MATERIAL_DISPLAY = toml.getBoolean("show-material-display", true);
+        INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT = toml.getBoolean("initialize-material-collector-enchantment", true);
+        MATERIAL_COLLECTOR_PICKUP_ALL_WITHOUT_FILTERING = toml.getBoolean("material-collector-pickup-all-without-filtering", false);
+        ONLY_ENCHANTED_SHULKER_COLLECTS = toml.getBoolean("only-enchanted-shulker-collects", false);
     }
 }

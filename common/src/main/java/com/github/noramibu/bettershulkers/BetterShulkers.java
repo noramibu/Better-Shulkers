@@ -2,6 +2,7 @@ package com.github.noramibu.bettershulkers;
 
 import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
+import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
@@ -49,6 +50,14 @@ public final class BetterShulkers {
             ShulkerCommand.register(commandDispatcher, commandBuildContext);
         });
 
+        // Initialize the Material Collector enchantment
+        if (Config.INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT) {
+            MaterialCollector.initialize();
+        } else {
+            LOGGER.info("Material Collector enchantment initialization skipped by config.");
+        }
+
+
         InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
             ItemStack stack = player.getItemInHand(hand);
             if (!player.level().isClientSide) {
@@ -75,6 +84,7 @@ public final class BetterShulkers {
                     ((ServerPlayer)player).serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
                     \END */
                     ((RemoteInventory)shulker).openInventory((ServerPlayer) player, stack);
+
                 }
             }
             /*\ <=1.21.1 || 1.21.5
