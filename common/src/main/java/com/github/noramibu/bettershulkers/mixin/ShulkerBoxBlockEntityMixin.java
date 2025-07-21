@@ -11,7 +11,7 @@ import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
@@ -34,8 +33,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.List;
 
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ForceInventory, MaterialDisplay {
@@ -76,17 +73,10 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     private void removeWhenClosed(Player player, CallbackInfo ci) {
         if (this.forced()) {
             if (player instanceof ServerPlayer serverPlayer) {
-                int smallestSize = this.getSmallestListIndex();
-                if (smallestSize != -1) {
-                    NonNullList<ItemStack> newInventory = NonNullList.withSize(smallestSize + 1, ItemStack.EMPTY);
-                    for (int i = 0; i <= smallestSize; i++) {
-                        newInventory.set(i, this.itemStacks.get(i));
-                    }
-                    ((ShulkerViewer)serverPlayer).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
-                } else {
-                    ((ShulkerViewer)serverPlayer).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
-                }
-                ((ShulkerViewer)serverPlayer).setViewing(null);
+                ShulkerUtil.saveShulkerInventory(this.itemStacks, serverPlayer);
+                ((ShulkerViewer)serverPlayer).setViewing(null, null);
+                // Prevent ghost items
+                serverPlayer.connection.send(new ClientboundSetCursorItemPacket(ItemStack.EMPTY));
             }
             this.setRemoved();
             ci.cancel();
@@ -97,17 +87,6 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
             Animation animation = new Animation(10, 270F, 0F, -0.4987F, -0.01F, 0.015F, 0.01F);
             ((UpdatingAnimation)this.display).addAnimation(animation);
         }
-    }
-
-    @Unique
-    private int getSmallestListIndex() {
-        int lastIndex = -1;
-        for (int i = 0; i < 27; i++) {
-            if (this.itemStacks.get(i) != ItemStack.EMPTY) {
-                lastIndex = i;
-            }
-        }
-        return lastIndex;
     }
 
     @Inject(method = "startOpen", at = @At("HEAD"), cancellable = true)
