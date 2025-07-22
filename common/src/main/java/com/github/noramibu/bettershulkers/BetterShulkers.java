@@ -4,7 +4,6 @@ import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
 import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
-import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 /*\ <=1.21.1 || 1.21.5
@@ -47,7 +46,7 @@ public final class BetterShulkers {
         Config.init();
 
         // Initialize the Material Collector enchantment
-        if (Config.INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT) {
+        if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.ENCHANTMENT)) {
             MaterialCollector.initialize();
         } else {
             LOGGER.info("Material Collector enchantment initialization skipped by config.");
