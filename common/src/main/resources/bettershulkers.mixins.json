@@ -15,6 +15,7 @@
     "ItemEntityMixin",
     "RecipeFilterMixin",
     "ServerboundContainerClickPacketMixin",
+    "ServerPlayerAccessor",
     "ServerPlayerMixin",
     "ShulkerBoxBlockEntityMixin",
     "ShulkerBoxBlockMixin",

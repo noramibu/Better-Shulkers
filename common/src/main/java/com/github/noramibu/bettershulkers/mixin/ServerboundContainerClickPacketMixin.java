@@ -1,20 +1,25 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.BetterShulkers;
+import com.github.noramibu.bettershulkers.enchantment.MaterialFilterUI;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,59 +36,78 @@ public abstract class ServerboundContainerClickPacketMixin {
 
             ItemStack held = instance.getCarried();
 
-            switch (clickType) {
-                // Insert item, Open
-                case PICKUP -> {
-                    if (buttonNum == 1 && ShulkerUtil.isShulkerBox(stack)) {
+            if (ShulkerUtil.isShulkerBox(stack)) {
+                switch (clickType) {
+                    // Insert item, Open
+                    case PICKUP -> {
+                        if (buttonNum == 1) {
 
-                        if (viewing != null) {
-                            if (viewing.equals(stack)) {
-                                // Automatically insert items
-                                if (!held.isEmpty()) {
-                                    ShulkerUtil.addToShulkerInventory(instance, held, true);
+                            if (viewing != null) {
+                                if (viewing.equals(stack)) {
+                                    // Automatically insert items
+                                    if (!held.isEmpty()) {
+                                        ShulkerUtil.addToShulkerInventory(instance, held, true);
+                                    }
+
+                                } else {
+                                    // Automatically insert items
+                                    if (!held.isEmpty()) {
+                                        ShulkerUtil.addToShulker(stack, held);
+                                    }
+
+                                    ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
                                 }
-
                             } else {
                                 // Automatically insert items
                                 if (!held.isEmpty()) {
                                     ShulkerUtil.addToShulker(stack, held);
                                 }
 
-                                ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
+                                BetterShulkers.openShulkerMenu(stack, this.player);
                             }
                         } else {
-                            // Automatically insert items
-                            if (!held.isEmpty()) {
-                                ShulkerUtil.addToShulker(stack, held);
-                            }
-
-                            BetterShulkers.openShulkerMenu(stack, this.player);
+                            return true;
                         }
-                    } else {
-                        return true;
                     }
-                }
-                // Insert all, Extract all, Open
-                case QUICK_MOVE -> {
-                    if (buttonNum == 1 && ShulkerUtil.isShulkerBox(stack)) {
+                    // Insert all, Extract all, Open
+                    case QUICK_MOVE -> {
+                        if (buttonNum == 1) {
 
-                        if (viewing != null) {
-                            if (viewing.equals(stack)) {
-                                // Quick item moving
-                                quickMove(instance, held);
+                            if (viewing != null) {
+                                if (viewing.equals(stack)) {
+                                    // Quick item moving
+                                    quickMove(instance, held);
+                                } else {
+                                    ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
+                                }
                             } else {
-                                ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
+                                BetterShulkers.openShulkerMenu(stack, this.player);
                             }
                         } else {
-                            BetterShulkers.openShulkerMenu(stack, this.player);
+                            return true;
                         }
-                    } else {
+                    }
+                    case CLONE -> {
+                        // TODO Open a hopper UI for filters
+                        MenuProvider provider = new MenuProvider() {
+                            @Override
+                            public Component getDisplayName() {
+                                return Component.literal("Filter");
+                            }
+
+                            @Override
+                            public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                                return new MaterialFilterUI(player, 1);
+                            }
+                        };
+                        player.openMenu(provider);
+                    }
+                    default -> {
                         return true;
                     }
                 }
-                default -> {
-                    return true;
-                }
+            } else {
+                return true;
             }
 
 

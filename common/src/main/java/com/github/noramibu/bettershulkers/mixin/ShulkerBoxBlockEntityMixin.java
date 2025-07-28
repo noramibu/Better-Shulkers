@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -161,5 +162,40 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     public void createDisplay(ItemStack shulkerStack) {
         Item material = ShulkerUtil.getMaterialFromShulker(shulkerStack);
         this.createDisplay(material);
+    }
+
+    @Override
+    public void saveWithFullMetadata(ValueOutput valueOutput) {
+        if (!this.forced()) {
+            super.saveWithFullMetadata(valueOutput);
+        }
+    }
+
+    @Override
+    public void saveWithId(ValueOutput valueOutput) {
+        if (!this.forced()) {
+            super.saveWithId(valueOutput);
+        }
+    }
+
+    @Override
+    public void saveWithoutMetadata(ValueOutput valueOutput) {
+        if (!this.forced()) {
+            super.saveWithoutMetadata(valueOutput);
+        }
+    }
+
+    @Override
+    public void saveCustomOnly(ValueOutput valueOutput) {
+        if (!this.forced()) {
+            super.saveCustomOnly(valueOutput);
+        }
+    }
+
+    @Inject(method = "saveAdditional", at = @At("HEAD"), cancellable = true)
+    private void doNotSaveData(ValueOutput valueOutput, CallbackInfo ci) {
+        if (this.forced()) {
+            ci.cancel();
+        }
     }
 }
