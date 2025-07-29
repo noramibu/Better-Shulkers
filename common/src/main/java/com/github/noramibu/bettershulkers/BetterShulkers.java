@@ -3,6 +3,8 @@ package com.github.noramibu.bettershulkers;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
 import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
+import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 /*\ <=1.21.1 || 1.21.5
 import dev.architectury.event.CompoundEventResult;
@@ -61,25 +63,32 @@ public final class BetterShulkers {
                     ShulkerUtil.isShulkerBox(stack) &&
                     ShulkerUtil.hasOpenPermission(player)
             ) {
-                openShulkerMenu(stack, (ServerPlayer) player);
+                ShulkerBoxBlock shulker = (ShulkerBoxBlock) ((BlockItem)stack.getItem()).getBlock();
+                ((ShulkerViewer) player).setViewing(stack, null);
+
+                //: >=1.21.6
+                ((ServerPlayer)player).level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                //: END
+                /*\ <=1.21.5
+                ((ServerPlayer)player).serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                \END */
+                ((RemoteInventory)shulker).openInventory((ServerPlayer) player, stack);
+                
+                /*\ <=1.21.1 || 1.21.5
+                return CompoundEventResult.pass();
+                \END */
+                //: 1.21.2 - 1.21.4 || >=1.21.6
+                return InteractionResult.SUCCESS;
+                //: END
             } else {
                 /*\ <=1.21.1 || 1.21.5
                 return CompoundEventResult.pass();
                 \END */
-
                 //: 1.21.2 - 1.21.4 || >=1.21.6
                 return InteractionResult.PASS;
                 //: END
             }
-
-            /*\ <=1.21.1 || 1.21.5
-            return CompoundEventResult.pass();
-            \END */
-
-            //: 1.21.2 - 1.21.4 || >=1.21.6
-            return InteractionResult.PASS;
-            //: END
-       });
+        });
     }
 
     /**

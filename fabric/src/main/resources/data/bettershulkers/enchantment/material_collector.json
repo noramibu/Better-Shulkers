@@ -1,7 +1,7 @@
 {
   "anvil_cost": 4,
   "description": {
-    "translate": "enchantment.bettershulkers.collector"
+    "translate": "enchantment.bettershulkers.material_collector"
   },
   "max_cost": {
     "base": 50,
@@ -15,6 +15,6 @@
   "slots": [
     "any"
   ],
-  "supported_items": "#minecraft:shulker_boxes",
+  "supported_items": "#bettershulkers:shulker_boxes",
   "weight": 2
-}
+} 

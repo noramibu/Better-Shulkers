@@ -2,7 +2,7 @@
 
 # Better Shulkers
 [![Modrinth](https://img.shields.io/badge/Modrinth-Download-green?logo=modrinth)](https://modrinth.com/mod/better-shulkers)
-[![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/YOUR_MOD_SLUG)
+[![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/better-shulkers)
 
 [![Available for Fabric](https://img.shields.io/badge/Available%20for-Fabric-5C5240?&logo=fabric&logoColor=white)](https://modrinth.com/mod/better-shulkers/versions?l=fabric)
 [![Available for Quilt](https://img.shields.io/badge/Available%20for-Quilt-5A2C91?logo=quilt&logoColor=white)](https://modrinth.com/mod/better-shulkers/versions?l=quilt)
@@ -24,8 +24,13 @@ This is a brief list of features. More can be found on [our website](https://nor
 - Visual display to show shulker box whitelists
 
 ## Downloads
-Download Better Shulkers from [Curseforge]() or [Modrinth](https://modrinth.com/mod/better-shulkers).
+Download Better Shulkers from [Curseforge](https://www.curseforge.com/minecraft/mc-mods/better-shulkers) or [Modrinth](https://modrinth.com/mod/better-shulkers).
 The mod is compatible with Minecraft 1.21 and above.
+
+## Showcase Video
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=HpEtTcU-fMk" target="_blank">
+ <img src="http://img.youtube.com/vi/HpEtTcU-fMk/mqdefault.jpg" alt="" width="1920" height="1080" border="10" />
+</a>
 
 ## Configuration & Permissions
 
@@ -60,6 +65,6 @@ Just join our Discord server!<p>
 ## Credits
 |                                                                                                                                                                       | Name            | Role                      |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------|:--------------------------|
-| [![Norambu's Avatar](https://avatars.githubusercontent.com/u/50046813?s=48)](https://github.com/noramibu)                                                             | norambu         | Developer                 |
+| [![noramibu's Avatar](https://avatars.githubusercontent.com/u/50046813?s=48)](https://github.com/noramibu)                                                            | noramibu         | Developer                 |
 | [![QPCrummer's Avatar](https://avatars.githubusercontent.com/u/66036033?s=48)](https://github.com/QPCrummer)                                                          | qpcrummer       | Developer                 |
 | [![TaterCertifed's Avatar](https://avatars.githubusercontent.com/u/98563278?s=48&u=8a1ddaf201e7c943713e4aee471ad1aa0fbe682f&v=4)](https://github.com/Tater-Certified) | Tater Certified | Contributing Organization |
