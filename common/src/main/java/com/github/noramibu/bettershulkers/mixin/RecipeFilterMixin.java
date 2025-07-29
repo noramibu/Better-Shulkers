@@ -25,7 +25,7 @@ public abstract class RecipeFilterMixin implements Packet<ClientGamePacketListen
     private static List<RecipeHolder<?>> filterRecipes(List<RecipeHolder<?>> recipes) {
         List<RecipeHolder<?>> list = new ArrayList<>();
         for (var recipe : recipes) {
-            if (!(recipe.value().getSerializer() instanceof FakeRecipe)) {
+            if (!(recipe.value() instanceof FakeRecipe)) {
                 list.add(recipe);
             }
         }

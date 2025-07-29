@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 /**
  * The custom material-assigning recipe
  */
-public class ShulkerUpgradeRecipe extends CustomRecipe {
+public class ShulkerUpgradeRecipe extends CustomRecipe implements FakeRecipe {
     public ShulkerUpgradeRecipe(CraftingBookCategory craftingBookCategory) {
         super(craftingBookCategory);
     }
