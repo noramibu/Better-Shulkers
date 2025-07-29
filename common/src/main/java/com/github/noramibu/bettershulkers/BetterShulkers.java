@@ -3,7 +3,6 @@ package com.github.noramibu.bettershulkers;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
 import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
-import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 /*\ <=1.21.1 || 1.21.5
 import dev.architectury.event.CompoundEventResult;
@@ -109,12 +108,5 @@ public final class BetterShulkers {
         CompoundTag compound = new CompoundTag();
         compound.put(MATERIAL_PATH, StringTag.valueOf(""));
         return CustomData.of(compound);
-    }
-
-    /**
-     * Registers data for Better Shulkers
-     */
-    public static void register() {
-        BetterShulkersRecipes.register();
     }
 }

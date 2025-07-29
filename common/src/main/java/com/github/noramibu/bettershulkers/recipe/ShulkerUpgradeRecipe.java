@@ -3,11 +3,6 @@ package com.github.noramibu.bettershulkers.recipe;
 import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.HolderLookup;
-//: >=1.21.2
-import net.minecraft.network.FriendlyByteBuf;
-//: END
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -88,39 +83,11 @@ public class ShulkerUpgradeRecipe extends CustomRecipe {
 
     @Override
     public RecipeSerializer<? extends CustomRecipe> getSerializer() {
-        return BetterShulkersRecipes.SHULKER_UPGRADE_SERIALIZER;
+        return null;
     }
 
     @Override
     public CraftingBookCategory category() {
         return CraftingBookCategory.MISC;
     }
-
-    //: >=1.21.2
-    public static class Serializer extends CustomRecipe.Serializer<ShulkerUpgradeRecipe> {
-
-        public Serializer(CustomRecipe.Serializer.Factory<ShulkerUpgradeRecipe> factory) {
-            super(factory);
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ShulkerUpgradeRecipe> streamCodec() {
-            return null;
-        }
-    }
-    //: END
-
-    /*\ <=1.21.1
-    public static class Serializer extends SimpleCraftingRecipeSerializer<ShulkerUpgradeRecipe> implements FakeRecipe {
-
-        public Serializer(Factory<ShulkerUpgradeRecipe> factory) {
-            super(factory);
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, ShulkerUpgradeRecipe> streamCodec() {
-            return null;
-        }
-    }
-    \END */
 }
