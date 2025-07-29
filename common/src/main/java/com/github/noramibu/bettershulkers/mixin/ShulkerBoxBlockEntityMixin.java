@@ -36,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import com.github.noramibu.bettershulkers.BetterShulkers;
 
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ForceInventory, MaterialDisplay {
@@ -76,15 +77,26 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     private void removeWhenClosed(Player player, CallbackInfo ci) {
         if (this.forced()) {
             if (player instanceof ServerPlayer serverPlayer) {
-                int smallestSize = this.getSmallestListIndex();
-                if (smallestSize != -1) {
-                    NonNullList<ItemStack> newInventory = NonNullList.withSize(smallestSize + 1, ItemStack.EMPTY);
-                    for (int i = 0; i <= smallestSize; i++) {
-                        newInventory.set(i, this.itemStacks.get(i));
+                ItemStack viewedStack = ((ShulkerViewer)serverPlayer).getViewedStack();
+                BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack: {}", viewedStack);
+                BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack isEmpty: {}", viewedStack == null ? "null" : viewedStack.isEmpty());
+                if (viewedStack != null) {
+                    BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack item: {}", viewedStack.getItem());
+                    BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack count: {}", viewedStack.getCount());
+                }
+                
+                // Only save data if the viewed stack is not null
+                if (viewedStack != null) {
+                    int smallestSize = this.getSmallestListIndex();
+                    if (smallestSize != -1) {
+                        NonNullList<ItemStack> newInventory = NonNullList.withSize(smallestSize + 1, ItemStack.EMPTY);
+                        for (int i = 0; i <= smallestSize; i++) {
+                            newInventory.set(i, this.itemStacks.get(i));
+                        }
+                        viewedStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
+                    } else {
+                        viewedStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
                     }
-                    ((ShulkerViewer)serverPlayer).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
-                } else {
-                    ((ShulkerViewer)serverPlayer).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
                 }
                 ((ShulkerViewer)serverPlayer).setViewing(null);
             }

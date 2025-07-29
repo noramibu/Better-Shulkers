@@ -62,7 +62,7 @@ public final class BetterShulkers {
                             return InteractionResult.PASS;
                             //: END
                        }
-                    
+
 
                     ShulkerBoxBlock shulker = (ShulkerBoxBlock) ((BlockItem)stack.getItem()).getBlock();
                     ((ShulkerViewer) player).setViewing(stack);
