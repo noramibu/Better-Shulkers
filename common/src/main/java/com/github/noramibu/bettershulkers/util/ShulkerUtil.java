@@ -14,8 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -316,5 +315,16 @@ public class ShulkerUtil {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Valid menus to open a shulker box in
+     * @param menu The menu instance
+     * @return True if a shulker can be opened in the menu
+     */
+    public static boolean isValidOpeningUI(AbstractContainerMenu menu) {
+        return menu instanceof InventoryMenu ||
+                menu instanceof ShulkerBoxMenu ||
+                menu instanceof ChestMenu;
     }
 }
