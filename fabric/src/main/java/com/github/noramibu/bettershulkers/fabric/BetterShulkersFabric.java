@@ -16,7 +16,6 @@ public final class BetterShulkersFabric implements ModInitializer {
     public void onInitialize() {
         AbstractionManager.ABSTRACTION = new FabricAbstraction();
         BetterShulkers.init();
-        BetterShulkers.register();
         DefaultItemComponentEvents.MODIFY.register(modifyContext -> {
             modifyContext.modify(ShulkerUtil::earlyIsShulkerBox, (builder, item) -> {
                 builder.set(DataComponents.CUSTOM_DATA, BetterShulkers.getShulkerCustomData());

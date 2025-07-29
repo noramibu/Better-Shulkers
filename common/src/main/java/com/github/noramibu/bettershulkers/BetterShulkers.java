@@ -118,11 +118,4 @@ public final class BetterShulkers {
         compound.put(MATERIAL_PATH, StringTag.valueOf(""));
         return CustomData.of(compound);
     }
-
-    /**
-     * Registers data for Better Shulkers
-     */
-    public static void register() {
-        BetterShulkersRecipes.register();
-    }
 }

@@ -10,8 +10,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
 
 /**
@@ -25,11 +23,6 @@ public final class BetterShulkersNeoForge {
         BetterShulkers.init();
         NeoForge.EVENT_BUS.addListener((final PermissionGatherEvent.Nodes nodes) -> {
             nodes.addNodes(CommandPermission.SET_COMMAND_NODE, CommandPermission.RELOAD_COMMAND_NODE);
-        });
-        modBus.addListener((final RegisterEvent event) -> {
-            event.register(NeoForgeRegistries.HOLDER_SET_TYPES.key(), (helper) -> {
-                BetterShulkers.register();
-            });
         });
         modBus.addListener((final ModifyDefaultComponentsEvent event) -> {
             event.modifyMatching(ShulkerUtil::earlyIsShulkerBox, builder -> {
