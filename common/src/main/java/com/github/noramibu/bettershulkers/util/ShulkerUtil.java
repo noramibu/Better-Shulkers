@@ -307,8 +307,14 @@ public class ShulkerUtil {
      * @return True if they have sufficient permissions
      */
     public static boolean hasOpenPermission(Player player) {
-        return Config.OPEN_SHULKER_FROM_INVENTORY &&
-                Config.REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN &&
-                AbstractionManager.ABSTRACTION.permissionCheck(((ServerPlayer) player).createCommandSourceStack(), "bettershulkers.open", player.hasPermissions(2));
+        return Config.OPEN_SHULKER_FROM_INVENTORY && checkOpenPermission(player);
+    }
+
+    private static boolean checkOpenPermission(Player player) {
+        if (Config.REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN) {
+            return AbstractionManager.ABSTRACTION.permissionCheck(((ServerPlayer) player).createCommandSourceStack(), "bettershulkers.open", player.hasPermissions(2));
+        } else {
+            return true;
+        }
     }
 }

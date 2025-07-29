@@ -1,6 +1,5 @@
 package com.github.noramibu.bettershulkers;
 
-import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
 import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;

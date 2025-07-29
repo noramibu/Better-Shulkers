@@ -72,7 +72,7 @@ public final class Config {
             writer.write("# NONE: Shulker boxes do not automatically pick up items.\n");
             writer.write("# RECIPE: All shulkers with a material can pick up items.\n");
             writer.write("# ENCHANTMENT: Only shulkers with a material and the pick up enchantment can pick up items.\n");
-            writer.write("item-pickup-type = ENCHANTMENT\n\n");
+            writer.write("item-pickup-type = \"ENCHANTMENT\"\n\n");
 
             writer.write("# If true, players can open shulker boxes by right-clicking them in hand or in their inventory.\n");
             writer.write("open-from-inventory = true\n\n");
