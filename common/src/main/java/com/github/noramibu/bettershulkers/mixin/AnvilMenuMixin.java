@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.world.entity.player.Player;
 
 @Mixin(AnvilMenu.class)
 public abstract class AnvilMenuMixin extends ItemCombinerMenu {
@@ -71,6 +72,68 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
                         ci.cancel();
                         break;
                     }
+                }
+            }
+        }
+    }
+
+    @Inject(method = "onTake", at = @At("HEAD"), cancellable = true)
+    private void handleResultTaken(Player player, ItemStack stack, CallbackInfo ci) {
+        // Check if this is our custom shulker material recipe
+        if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.ENCHANTMENT)) {
+            ItemStack stack1 = this.inputSlots.getItem(0);
+            ItemStack stack2 = this.inputSlots.getItem(1);
+            
+            ItemStack material = null;
+            ItemStack shulker = null;
+
+            if (ShulkerUtil.isShulkerBox(stack1)) {
+                shulker = stack1;
+            } else if (!stack1.isEmpty()) {
+                material = stack1;
+            }
+
+            if (!stack2.isEmpty()) {
+                if (shulker == null && ShulkerUtil.isShulkerBox(stack2)) {
+                    shulker = stack2;
+                } else if (material == null) {
+                    material = stack2;
+                }
+            }
+
+            if (material != null && shulker != null) {
+                ItemEnchantments enchants = EnchantmentHelper.getEnchantmentsForCrafting(shulker);
+                boolean isCustomRecipe = false;
+
+                for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
+                    Holder<Enchantment> holder = entry.getKey();
+                    if (holder.is(MaterialCollector.MATERIAL_COLLECTOR)) {
+                        isCustomRecipe = true;
+                        break;
+                    }
+                }
+
+                if (isCustomRecipe) {
+                    // Consume only one item from the material stack
+                    int materialSlot = (material == stack1) ? 0 : 1;
+                    if (material.getCount() > 1) {
+                        material.shrink(1);
+                        this.inputSlots.setItem(materialSlot, material);
+                    } else {
+                        this.inputSlots.setItem(materialSlot, ItemStack.EMPTY);
+                    }
+                    
+                    // Let the default behavior handle consuming the shulker and clearing the result slot
+                    // But we need to prevent it from consuming the material stack again
+                    // We'll handle the shulker consumption manually
+                    if (shulker == stack1) {
+                        this.inputSlots.setItem(0, ItemStack.EMPTY);
+                    } else if (shulker == stack2) {
+                        this.inputSlots.setItem(1, ItemStack.EMPTY);
+                    }
+                    
+                    // Cancel the default behavior since we've handled everything manually
+                    ci.cancel();
                 }
             }
         }
