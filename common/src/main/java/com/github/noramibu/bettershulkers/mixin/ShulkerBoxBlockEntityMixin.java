@@ -45,11 +45,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
-import com.github.noramibu.bettershulkers.BetterShulkers;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.ItemContainerContents;
-
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ForceInventory, MaterialDisplay {
 
@@ -90,12 +85,6 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         if (this.forced()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 ItemStack viewedStack = ((ShulkerViewer)serverPlayer).getViewedStack();
-                BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack: {}", viewedStack);
-                BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack isEmpty: {}", viewedStack == null ? "null" : viewedStack.isEmpty());
-                if (viewedStack != null) {
-                    BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack item: {}", viewedStack.getItem());
-                    BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack count: {}", viewedStack.getCount());
-                }
                 
                 // Use the utility method for saving inventory
                 ShulkerUtil.saveShulkerInventory(this.itemStacks, serverPlayer);

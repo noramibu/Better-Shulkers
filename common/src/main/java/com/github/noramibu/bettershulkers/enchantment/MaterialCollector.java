@@ -14,16 +14,7 @@ public final class MaterialCollector {
     }
 
     public static void initialize() {
-        BetterShulkers.LOGGER.info("--- Loaded Enchantments at Startup ---");
-        BetterShulkers.LOGGER.info("Enchantment Registry Key: {}", Registries.ENCHANTMENT.registryKey());
-        BetterShulkers.LOGGER.info("Material Collector Enchantment Key: {}", MATERIAL_COLLECTOR.location());
-        BetterShulkers.LOGGER.info("Material Collector Enchantment ID: {}", MATERIAL_COLLECTOR.location().getPath());
-        BetterShulkers.LOGGER.info("Material Collector Enchantment Resource Location: {}", MATERIAL_COLLECTOR.location());
-        BetterShulkers.LOGGER.info("Material Collector Enchantment Resource Key: {}", MATERIAL_COLLECTOR);
-        BetterShulkers.LOGGER.info("Material Collector Enchantment Registry: {}", Registries.ENCHANTMENT);
-        BetterShulkers.LOGGER.info("Material Collector Enchantment Registry Name: {}:{}", MATERIAL_COLLECTOR.location().getNamespace(), MATERIAL_COLLECTOR.location().getPath());
-        BetterShulkers.LOGGER.info("Material Collector Enchantment Registry ID: {}:{}", MATERIAL_COLLECTOR.location().getNamespace(), MATERIAL_COLLECTOR.location().getPath());
-        BetterShulkers.LOGGER.info("--------------------------------------");
+        BetterShulkers.LOGGER.info("Better Shulkers enchantment registered");
 
     }
 }
