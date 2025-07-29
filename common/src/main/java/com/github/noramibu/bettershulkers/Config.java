@@ -87,10 +87,6 @@ public final class Config {
             writer.write("# If true, players will need 'bettershulkers.open' permission to open shulker boxes by right-clicking them.\n");
             writer.write("require-permission-for-right-click-open-shulker = false\n\n");
 
-            writer.write("# If true, a shulker with the Material Collector enchantment will pick up everything unless a material is applied to it.\n");
-            writer.write("# If false, it will only pick up items matching its material.\n");
-            writer.write("material-collector-pickup-all-without-filtering = false\n\n");
-
             writer.write("# --- Permission Nodes ---\n");
             writer.write("# bettershulkers.command.set   - Allows setting a shulker's material.\n");
             writer.write("# bettershulkers.command.reload - Allows reloading this configuration file.\n");

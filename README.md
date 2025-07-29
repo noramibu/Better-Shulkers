@@ -18,8 +18,9 @@ Better Shulkers is an open-source Fabric and NeoForge Minecraft mod that works c
 ## Features
 This is a brief list of features. More can be found on [our website](https://noramibu.github.io/Better-Shulkers/):
 - Open shulker boxes from your hotbar
+- Open shulker boxes from your inventory
 - Automatically pick up items and place them in a shulker box
-- Whitelist certain items for a shulker box
+- Whitelist certain items for a shulker box via a recipe or enchantment
 - Visual display to show shulker box whitelists
 
 ## Downloads
@@ -31,14 +32,13 @@ The mod is compatible with Minecraft 1.21 and above.
 ### Configuration Options
 The mod creates a `bettershulkers.toml` file in your server's config folder. Here are all available options:
 
-| Option                                            | Default  | Description                                                                                                                                                            |
-|---------------------------------------------------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `disable-pickup-feature-of-shulkers`              | `false`  | Disables the main feature of this mod, which is shulkers retaining their inventory when broken. **Note:** This does NOT disable the recipe to craft pickable shulkers. |
-| `add-recipe-for-pickable-shulker`                 | `true`   | If true, a recipe is added to make shulkers pickable. **Note:** This does NOT disable the pickup feature, only the recipe to craft them.                               |
-| `right-click-to-open-shulker`                     | `true`   | If true, players can open shulker boxes by right-clicking them in hand.                                                                                                |
-| `show-material-display`                           | `true`   | If true, item displays will render on the shulker box lid to show the material. **Note:** Displays may appear slow if players have high latency.                       |
-| `require-permission-for-command`                  | `true`   | If true, players will need permissions to use the `/shulker` command.                                                                                                  |
-| `require-permission-for-right-click-open-shulker` | `false`  | If true, players will need 'bettershulkers.open' permission to open shulker boxes by right-clicking them.                                                              |
+| Option                                            | Default       | Description                                                                                                                                                                                          |
+|---------------------------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `item-pickup-type `                               | `ENCHANTMENT` | Either NONE (shulkers don't pick up items), RECIPE (you must use the recipe to add item filters), or ENCHANTMENT (you must enchant the shulker with Collecting and then add a filter using an anvil) |
+| `open-from-inventory `                            | `true`        | If true, players can open shulker boxes by right-clicking them in their hand or in their inventory                                                                                                   |
+| `show-material-display`                           | `true`        | If true, item displays will render on the shulker box lid to show the material. **Note:** Displays may appear slow if players have high latency.                                                     |
+| `require-permission-for-command`                  | `true`        | If true, players will need permissions to use the `/shulker` command.                                                                                                                                |
+| `require-permission-for-right-click-open-shulker` | `false`       | If true, players will need 'bettershulkers.open' permission to open shulker boxes by right-clicking them.                                                                                            |
 
 ### Permission Nodes
 The following permission nodes are available for server administrators:
