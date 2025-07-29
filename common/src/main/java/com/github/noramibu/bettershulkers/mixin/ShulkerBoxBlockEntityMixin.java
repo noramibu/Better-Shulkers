@@ -10,8 +10,16 @@ import com.github.noramibu.bettershulkers.util.ItemRenderData;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+/*\ <=1.21.5
+import net.minecraft.core.HolderLookup;
+\END */
 import net.minecraft.core.NonNullList;
+/*\ <=1.21.5
+import net.minecraft.nbt.CompoundTag;
+\END */
+//: >=1.21.2
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
+//: END
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +33,9 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+//: >=1.21.6
 import net.minecraft.world.level.storage.ValueOutput;
+//: END
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -77,7 +87,9 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
                 ShulkerUtil.saveShulkerInventory(this.itemStacks, serverPlayer);
                 ((ShulkerViewer)serverPlayer).setViewing(null, null);
                 // Prevent ghost items
+                //: >=1.21.2
                 serverPlayer.connection.send(new ClientboundSetCursorItemPacket(ItemStack.EMPTY));
+                //: END
             }
             this.setRemoved();
             ci.cancel();
@@ -164,6 +176,7 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         this.createDisplay(material);
     }
 
+    //: >=1.21.6
     @Override
     public void saveWithFullMetadata(ValueOutput valueOutput) {
         if (!this.forced()) {
@@ -198,4 +211,14 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
             ci.cancel();
         }
     }
+    //: END
+
+    /*\ <=1.21.5
+    @Override
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        if (!this.forced()) {
+            super.saveAdditional(compoundTag, provider);
+        }
+    }
+    \END */
 }

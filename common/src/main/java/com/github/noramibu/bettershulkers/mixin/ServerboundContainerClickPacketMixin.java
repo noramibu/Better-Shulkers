@@ -6,7 +6,9 @@ import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+//: >=1.21.2
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
+//: END
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
@@ -95,7 +97,9 @@ public abstract class ServerboundContainerClickPacketMixin {
 
             // Don't delete held items
             instance.setCarried(held);
+            //: >=1.21.2
             this.player.connection.send(new ClientboundSetCursorItemPacket(held));
+            //: END
             this.player.connection.send(new ClientboundContainerSetSlotPacket(instance.containerId, instance.getStateId(), slot, stack));
             return false;
         }

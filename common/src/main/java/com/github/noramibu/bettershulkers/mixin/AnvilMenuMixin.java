@@ -24,9 +24,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     @Shadow @Final private DataSlot cost;
 
+    /*\ <=1.21.1
+    public AnvilMenuMixin(@Nullable MenuType<?> menuType, int i, Inventory inventory, ContainerLevelAccess containerLevelAccess) {
+        super(menuType, i, inventory, containerLevelAccess);
+    }
+    \END */
+
+    //: >=1.21.2
     public AnvilMenuMixin(@Nullable MenuType<?> menuType, int i, Inventory inventory, ContainerLevelAccess containerLevelAccess, ItemCombinerMenuSlotDefinition itemCombinerMenuSlotDefinition) {
         super(menuType, i, inventory, containerLevelAccess, itemCombinerMenuSlotDefinition);
     }
+    //: END
 
     @Inject(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/ItemEnchantments$Mutable;<init>(Lnet/minecraft/world/item/enchantment/ItemEnchantments;)V"), cancellable = true)
     private void checkForShulkerMaterial(CallbackInfo ci, @Local(ordinal = 0) ItemStack stack1, @Local(ordinal = 2) ItemStack stack2) {
