@@ -7,7 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 public final class MaterialCollector {
-    public static final ResourceKey<Enchantment> MATERIAL_COLLECTOR = create("bettershulkers:material_collector");
+    public static final ResourceKey<Enchantment> MATERIAL_COLLECTOR = create("bettershulkers:collector");
 
     private static ResourceKey<Enchantment> create(String name) {
         return ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.parse(name));

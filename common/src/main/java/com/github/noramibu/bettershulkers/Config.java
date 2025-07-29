@@ -17,13 +17,9 @@ public final class Config {
 
     public static boolean REQUIRE_PERMISSION_FOR_COMMAND;
     public static boolean REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN;
-    public static boolean RIGHT_CLICK_TO_OPEN_SHULKER;
-    public static boolean ADD_RECIPE_FOR_PICKABLE_SHULKER;
-    public static boolean DISABLE_PICKUP_FEATURE_OF_SHULKERS;
+    public static boolean OPEN_SHULKER_FROM_INVENTORY;
     public static boolean SHOW_MATERIAL_DISPLAY;
-    public static boolean INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT;
-    public static boolean MATERIAL_COLLECTOR_PICKUP_ALL_WITHOUT_FILTERING;
-    public static boolean ONLY_ENCHANTED_SHULKER_COLLECTS;
+    public static PickupType ITEM_PICKUP_TYPE;
 
     /**
      * Instantiates the config from a saved file, or creates a new one if one is not present.
@@ -46,20 +42,40 @@ public final class Config {
         load(CONFIG_PATH.toFile());
     }
 
+    /**
+     * How a shulker should pick up an item
+     */
+    public enum PickupType {
+        NONE,
+        RECIPE,
+        ENCHANTMENT;
+
+        /**
+         * Gets the PickupType from a string
+         * @param string String to parse
+         * @return PickupType instance
+         */
+        public static PickupType fromString(String string) {
+            return switch (string) {
+                case "RECIPE" -> RECIPE;
+                case "ENCHANTMENT" -> ENCHANTMENT;
+                default -> NONE;
+            };
+        }
+    }
+
     private static void create(File file) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("# Better Shulkers Configuration\n\n");
 
-            writer.write("# Disables the main feature of this mod, which is shulkers retaining their inventory when broken.\n");
-            writer.write("# NOTE: This does NOT disable the recipe to craft pickable shulkers.\n");
-            writer.write("disable-pickup-feature-of-shulkers = false\n\n");
+            writer.write("# Selects the type of automatic item pickup shulker boxes should be able to do. The options include: \n");
+            writer.write("# NONE: Shulker boxes do not automatically pick up items.\n");
+            writer.write("# RECIPE: All shulkers with a material can pick up items.\n");
+            writer.write("# ENCHANTMENT: Only shulkers with a material and the pick up enchantment can pick up items.\n");
+            writer.write("item-pickup-type = \"ENCHANTMENT\"\n\n");
 
-            writer.write("# If true, a recipe is added to make shulkers pickable.\n");
-            writer.write("# NOTE: This does NOT disable the pickup feature, only the recipe to craft them.\n");
-            writer.write("add-recipe-for-pickable-shulker = true\n\n");
-
-            writer.write("# If true, players can open shulker boxes by right-clicking them in hand.\n");
-            writer.write("right-click-to-open-shulker = true\n\n");
+            writer.write("# If true, players can open shulker boxes by right-clicking them in hand or in their inventory.\n");
+            writer.write("open-from-inventory = true\n\n");
 
             writer.write("# If true, item displays will render on the shulker box lid to show the material.\n");
             writer.write("# NOTE: Displays may appear slow if players have high latency.\n");
@@ -70,18 +86,6 @@ public final class Config {
 
             writer.write("# If true, players will need 'bettershulkers.open' permission to open shulker boxes by right-clicking them.\n");
             writer.write("require-permission-for-right-click-open-shulker = false\n\n");
-
-            writer.write("# If true, the Material Collector enchantment will be initialized.\n");
-            writer.write("# NOTE: Changing this option only takes effect after a server restart.\n");
-            writer.write("initialize-material-collector-enchantment = true\n\n");
-
-            writer.write("# If true, a shulker with the Material Collector enchantment will pick up everything unless a material is applied to it.\n");
-            writer.write("# If false, it will only pick up items matching its material.\n");
-            writer.write("material-collector-pickup-all-without-filtering = false\n\n");
-
-            writer.write("# If true, only shulker boxes with the Material Collector enchantment will collect items.\n");
-            writer.write("# If false, any shulker box with a material applied can collect items.\n");
-            writer.write("only-enchanted-shulker-collects = false\n\n");
 
             writer.write("# --- Permission Nodes ---\n");
             writer.write("# bettershulkers.command.set   - Allows setting a shulker's material.\n");
@@ -97,13 +101,8 @@ public final class Config {
         Toml toml = new Toml().read(file);
         REQUIRE_PERMISSION_FOR_COMMAND = toml.getBoolean("require-permission-for-command", true);
         REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN = toml.getBoolean("require-permission-for-right-click-open-shulker", false);
-        RIGHT_CLICK_TO_OPEN_SHULKER = toml.getBoolean("right-click-to-open-shulker", true);
-        ADD_RECIPE_FOR_PICKABLE_SHULKER = toml.getBoolean("add-recipe-for-pickable-shulker", true);
-        DISABLE_PICKUP_FEATURE_OF_SHULKERS = toml.getBoolean("disable-pickup-feature-of-shulkers", false);
+        OPEN_SHULKER_FROM_INVENTORY = toml.getBoolean("open-from-inventory", true);
         SHOW_MATERIAL_DISPLAY = toml.getBoolean("show-material-display", true);
-        INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT = toml.getBoolean("initialize-material-collector-enchantment", true);
-        MATERIAL_COLLECTOR_PICKUP_ALL_WITHOUT_FILTERING = toml.getBoolean("material-collector-pickup-all-without-filtering", false);
-        ONLY_ENCHANTED_SHULKER_COLLECTS = toml.getBoolean("only-enchanted-shulker-collects", false);
-
+        ITEM_PICKUP_TYPE = PickupType.fromString(toml.getString("item-pickup-type", "ENCHANTMENT"));
     }
 }

@@ -7,7 +7,7 @@
   ],
   "mixins": [
     "AbstractContainerAccessor",
-    "ContainerComponentAccessor",
+    "AnvilMenuMixin",
     "DisplayEntityAccessor",
     "ItemAccessor",
     "ItemDisplayInvoker",

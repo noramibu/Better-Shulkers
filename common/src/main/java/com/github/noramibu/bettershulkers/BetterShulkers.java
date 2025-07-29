@@ -1,10 +1,8 @@
 package com.github.noramibu.bettershulkers;
 
-import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
 import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
-import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.recipe.BetterShulkersRecipes;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 /*\ <=1.21.1 || 1.21.5
@@ -47,7 +45,7 @@ public final class BetterShulkers {
         Config.init();
 
         // Initialize the Material Collector enchantment
-        if (Config.INITIALIZE_MATERIAL_COLLECTOR_ENCHANTMENT) {
+        if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.ENCHANTMENT)) {
             MaterialCollector.initialize();
         } else {
             LOGGER.info("Material Collector enchantment initialization skipped by config.");
@@ -60,25 +58,26 @@ public final class BetterShulkers {
 
         InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
             ItemStack stack = player.getItemInHand(hand);
-            if (!player.level().isClientSide) {
-                if (Config.RIGHT_CLICK_TO_OPEN_SHULKER && ShulkerUtil.isShulkerBox(stack)) {
-                    if (Config.REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN && !AbstractionManager.ABSTRACTION.permissionCheck(((ServerPlayer) player).createCommandSourceStack(), "bettershulkers.open", player.hasPermissions(2))) {
-                            /*\ <=1.21.1 || 1.21.5
-                           return CompoundEventResult.pass();
-                            \END */
-                          //: 1.21.2 - 1.21.4 || >=1.21.6
+            if (!player.level().isClientSide &&
+                    ShulkerUtil.isShulkerBox(stack) &&
+                    ShulkerUtil.hasOpenPermission(player)
+            ) {
+                openShulkerMenu(stack, (ServerPlayer) player);
+            } else {
+                /*\ <=1.21.1 || 1.21.5
+                return CompoundEventResult.pass();
+                \END */
 
-                            return InteractionResult.PASS;
-                            //: END
-                    }
-                    openShulkerMenu(stack, (ServerPlayer) player);
-                }
+                //: 1.21.2 - 1.21.4 || >=1.21.6
+                return InteractionResult.PASS;
+                //: END
             }
-            /*\ <=1.21.1 || 1.21.5
-           return CompoundEventResult.pass();
-            \END */
-          //: 1.21.2 - 1.21.4 || >=1.21.6
 
+            /*\ <=1.21.1 || 1.21.5
+            return CompoundEventResult.pass();
+            \END */
+
+            //: 1.21.2 - 1.21.4 || >=1.21.6
             return InteractionResult.PASS;
             //: END
        });

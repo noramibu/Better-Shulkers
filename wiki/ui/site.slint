@@ -112,7 +112,7 @@ export component Site inherits Window {
         width: 100%;
         height: 85%;
         y: 15px + title_bar.height;
-        viewport-height: (self.height * 0.3 + 15px) * 6 + 20px + (self.height * 0.5);
+        viewport-height: (self.height * 0.3 + 15px) * 8 + 20px + (self.height * 0.5);
 
         VerticalLayout {
             width: 95%;
@@ -202,7 +202,67 @@ export component Site inherits Window {
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
-                    text: "Shulkers can have materials be \"whitelisted\" with a simple crafting recipe. Just place 4 obsidian and the desired material around a shulker box and... voila! A better shulker!";
+                    text: "Shulkers can have materials be filtered with a simple crafting recipe. Just place 4 obsidian and the desired material around a shulker box and... voila! A better shulker!";
+                    font-family: Theme.minecraft_font;
+                    wrap: TextWrap.word-wrap;
+                    color: black;
+                    font-size: 20px;
+                }
+            }
+
+            feature_anvil_material_assignment := Rectangle {
+                width: 75%;
+                height: 30%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                img4 := Image {
+                    x: 20px;
+                    source: Theme.anvil;
+                    image-rendering: ImageRendering.smooth;
+                    image-fit: contain;
+                    height: 95%;
+                }
+
+                Text {
+                    x: img4.width + 40px;
+                    width: feature_material_assignment.width - img4.width - 60px;
+                    height: 95%;
+                    horizontal-alignment: left;
+                    vertical-alignment: center;
+                    text: "Don't like recipes? No worries! Enable the collector enchantment and assign materials using an anvil!";
+                    font-family: Theme.minecraft_font;
+                    wrap: TextWrap.word-wrap;
+                    color: black;
+                    font-size: 20px;
+                }
+            }
+
+            feature_quick_move := Rectangle {
+                width: 75%;
+                height: 30%;
+                border-radius: 10px;
+                border-color: black;
+                border-width: 2px;
+                background: Theme.item_2;
+
+                img5 := Image {
+                    x: about.width - self.width - 20px;
+                    source: Theme.quick-move;
+                    image-rendering: ImageRendering.smooth;
+                    image-fit: contain;
+                    height: 95%;
+                }
+
+                Text {
+                    x: 20px;
+                    width: feature_material_assignment.width - img2.width - 60px;
+                    height: 95%;
+                    horizontal-alignment: left;
+                    vertical-alignment: center;
+                    text: "Quickly move items to shulkers by right-clicking held items on a shulker box. Shift-right-click to put all of that type in the open shulker. Shift-right-click with an empty hand to retrieve all items in a shulker.";
                     font-family: Theme.minecraft_font;
                     wrap: TextWrap.word-wrap;
                     color: black;
@@ -233,7 +293,7 @@ export component Site inherits Window {
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
-                    text: "Whitelisted shulker boxes will automatically pick up their material instead of putting it into your inventory. Inventory management update solved? Mojang, you can pay me later.";
+                    text: "Filtered shulker boxes will automatically pick up their material instead of putting it into your inventory. Inventory management update solved? Mojang, you can pay me later.";
                     font-family: Theme.minecraft_font;
                     wrap: TextWrap.word-wrap;
                     color: black;
@@ -263,7 +323,7 @@ export component Site inherits Window {
                     height: 95%;
                     horizontal-alignment: left;
                     vertical-alignment: center;
-                    text: "Forgot what shulker you assigned to netherite blocks? No worries! Just use the display on top of the shulker to find it!";
+                    text: "Forgot what shulker you assigned to diamond blocks? No worries! Just use the display on top of the shulker to find it!";
                     font-family: Theme.minecraft_font;
                     wrap: TextWrap.word-wrap;
                     color: black;
