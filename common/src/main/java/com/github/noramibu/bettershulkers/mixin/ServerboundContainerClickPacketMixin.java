@@ -1,25 +1,20 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.BetterShulkers;
-import com.github.noramibu.bettershulkers.enchantment.MaterialFilterUI;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -86,21 +81,6 @@ public abstract class ServerboundContainerClickPacketMixin {
                         } else {
                             return true;
                         }
-                    }
-                    case CLONE -> {
-                        // TODO Open a hopper UI for filters
-                        MenuProvider provider = new MenuProvider() {
-                            @Override
-                            public Component getDisplayName() {
-                                return Component.literal("Filter");
-                            }
-
-                            @Override
-                            public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-                                return new MaterialFilterUI(player, 1);
-                            }
-                        };
-                        player.openMenu(provider);
                     }
                     default -> {
                         return true;

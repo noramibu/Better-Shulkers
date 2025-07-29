@@ -7,7 +7,6 @@
   ],
   "mixins": [
     "AbstractContainerAccessor",
-    "ContainerComponentAccessor",
     "DisplayEntityAccessor",
     "ItemAccessor",
     "ItemDisplayInvoker",
@@ -15,7 +14,6 @@
     "ItemEntityMixin",
     "RecipeFilterMixin",
     "ServerboundContainerClickPacketMixin",
-    "ServerPlayerAccessor",
     "ServerPlayerMixin",
     "ShulkerBoxBlockEntityMixin",
     "ShulkerBoxBlockMixin",
