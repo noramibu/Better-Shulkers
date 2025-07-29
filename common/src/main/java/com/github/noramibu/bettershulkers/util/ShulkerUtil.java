@@ -1,6 +1,7 @@
 package com.github.noramibu.bettershulkers.util;
 
 import com.github.noramibu.bettershulkers.BetterShulkers;
+import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.BlockItem;
@@ -297,5 +299,16 @@ public class ShulkerUtil {
 
     private static void setShulkerMaterialLore(ItemStack shulkerBox, Item material) {
         shulkerBox.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(MATERIAL_PREFIX + material.toString()))));
+    }
+
+    /**
+     * If the player has the permissions to open a shulker in their inventory
+     * @param player Player to check permissions of
+     * @return True if they have sufficient permissions
+     */
+    public static boolean hasOpenPermission(Player player) {
+        return Config.OPEN_SHULKER_FROM_INVENTORY &&
+                Config.REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN &&
+                AbstractionManager.ABSTRACTION.permissionCheck(((ServerPlayer) player).createCommandSourceStack(), "bettershulkers.open", player.hasPermissions(2));
     }
 }

@@ -17,7 +17,7 @@ public final class Config {
 
     public static boolean REQUIRE_PERMISSION_FOR_COMMAND;
     public static boolean REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN;
-    public static boolean RIGHT_CLICK_TO_OPEN_SHULKER;
+    public static boolean OPEN_SHULKER_FROM_INVENTORY;
     public static boolean SHOW_MATERIAL_DISPLAY;
     public static PickupType ITEM_PICKUP_TYPE;
 
@@ -42,11 +42,19 @@ public final class Config {
         load(CONFIG_PATH.toFile());
     }
 
+    /**
+     * How a shulker should pick up an item
+     */
     public enum PickupType {
         NONE,
         RECIPE,
         ENCHANTMENT;
 
+        /**
+         * Gets the PickupType from a string
+         * @param string String to parse
+         * @return PickupType instance
+         */
         public static PickupType fromString(String string) {
             return switch (string) {
                 case "RECIPE" -> RECIPE;
@@ -66,8 +74,8 @@ public final class Config {
             writer.write("# ENCHANTMENT: Only shulkers with a material and the pick up enchantment can pick up items.\n");
             writer.write("item-pickup-type = ENCHANTMENT\n\n");
 
-            writer.write("# If true, players can open shulker boxes by right-clicking them in hand.\n");
-            writer.write("right-click-to-open-shulker = true\n\n");
+            writer.write("# If true, players can open shulker boxes by right-clicking them in hand or in their inventory.\n");
+            writer.write("open-from-inventory = true\n\n");
 
             writer.write("# If true, item displays will render on the shulker box lid to show the material.\n");
             writer.write("# NOTE: Displays may appear slow if players have high latency.\n");
@@ -97,7 +105,7 @@ public final class Config {
         Toml toml = new Toml().read(file);
         REQUIRE_PERMISSION_FOR_COMMAND = toml.getBoolean("require-permission-for-command", true);
         REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN = toml.getBoolean("require-permission-for-right-click-open-shulker", false);
-        RIGHT_CLICK_TO_OPEN_SHULKER = toml.getBoolean("right-click-to-open-shulker", true);
+        OPEN_SHULKER_FROM_INVENTORY = toml.getBoolean("open-from-inventory", true);
         SHOW_MATERIAL_DISPLAY = toml.getBoolean("show-material-display", true);
         ITEM_PICKUP_TYPE = PickupType.fromString(toml.getString("item-pickup-type", "ENCHANTMENT"));
     }
