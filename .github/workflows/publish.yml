@@ -1,0 +1,100 @@
+on:
+  release:
+    types: [published]
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create dirs
+        run: mkdir -p jars/fabric jars/neoforge
+
+      - name: Download JAR files and build matrix
+        id: set-matrix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p tmp
+          cd tmp
+
+          RELEASE_URLS=$(curl -sL -H "Authorization: token $GITHUB_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest" \
+            | jq -r '.assets[] | select(.name | endswith(".jar")) | .browser_download_url')
+
+          echo "Gathering JAR metadata..."
+          MATRIX_LIST="["
+
+          for url in $RELEASE_URLS; do
+            filename=$(basename "$url")
+            curl -sL -O -H "Authorization: token $GITHUB_TOKEN" "$url"
+
+            loader="unknown"
+            loaders_json="[]"
+          
+            if [[ "$filename" == *"fabric"* ]]; then
+              loader="fabric"
+              loaders_json='["fabric","quilt"]'
+              mv "$filename" ../jars/fabric/
+            elif [[ "$filename" == *"neoforge"* ]]; then
+              loader="neoforge"
+              loaders_json='["neoforge"]'
+              mv "$filename" ../jars/neoforge/
+            fi
+
+            if [[ "$filename" =~ mc([0-9]+\.[0-9]+(\.[0-9]+)?) ]]; then
+              mc_version="${BASH_REMATCH[1]}"
+            else
+              echo "Could not extract Minecraft version from $filename"
+              exit 1
+            fi
+
+            MATRIX_LIST+="{\"filename\":\"$filename\",\"loader\":\"$loader\",\"loaders\":$loaders_json,\"mc_version\":\"$mc_version\"},"
+          done
+
+          MATRIX_LIST="${MATRIX_LIST%,}]"
+
+          echo "Final matrix: $MATRIX_LIST"
+          echo "matrix=$MATRIX_LIST" >> $GITHUB_OUTPUT
+
+  publish:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jar: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use JAR info
+        run: |
+          echo "Publishing ${{ matrix.jar.filename }}"
+          echo "Loader: ${{ matrix.jar.loader }}"
+          echo "Minecraft: ${{ matrix.jar.mc_version }}"
+
+      - name: Publish to Mod Sites
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          modrinth-id: klQIi2Fg
+          modrinth-featured: true
+          modrinth-unfeature-mode: subset
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: 1309653
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          files: jars/${{ matrix.jar.loader }}/${{ matrix.jar.filename }}
+
+          name: Better Shulkers ${{ matrix.jar.loader }} ${{ github.ref_name }} - ${{ matrix.jar.mc_version }}
+          version: ${{ matrix.jar.mc_version }}-${{ github.ref_name }}
+          version-type: release
+          loaders: ${{ toJson(matrix.jar.loaders) }}
+
+          java: |
+            21
+            22

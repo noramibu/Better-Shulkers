@@ -10,8 +10,16 @@ import com.github.noramibu.bettershulkers.util.ItemRenderData;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+/*\ <=1.21.5
+import net.minecraft.core.HolderLookup;
+\END */
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
+/*\ <=1.21.5
+import net.minecraft.nbt.CompoundTag;
+\END */
+//: >=1.21.2
+import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
+//: END
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,12 +28,14 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+//: >=1.21.6
+import net.minecraft.world.level.storage.ValueOutput;
+//: END
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,6 +47,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import com.github.noramibu.bettershulkers.BetterShulkers;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.ItemContainerContents;
 
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ForceInventory, MaterialDisplay {
@@ -85,20 +97,13 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
                     BetterShulkers.LOGGER.info("[DEBUG] stopOpen - viewedStack count: {}", viewedStack.getCount());
                 }
                 
-                // Only save data if the viewed stack is not null
-                if (viewedStack != null) {
-                    int smallestSize = this.getSmallestListIndex();
-                    if (smallestSize != -1) {
-                        NonNullList<ItemStack> newInventory = NonNullList.withSize(smallestSize + 1, ItemStack.EMPTY);
-                        for (int i = 0; i <= smallestSize; i++) {
-                            newInventory.set(i, this.itemStacks.get(i));
-                        }
-                        viewedStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
-                    } else {
-                        viewedStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
-                    }
-                }
-                ((ShulkerViewer)serverPlayer).setViewing(null);
+                // Use the utility method for saving inventory
+                ShulkerUtil.saveShulkerInventory(this.itemStacks, serverPlayer);
+                ((ShulkerViewer)serverPlayer).setViewing(null, null);
+                // Prevent ghost items
+                //: >=1.21.2
+                serverPlayer.connection.send(new ClientboundSetCursorItemPacket(ItemStack.EMPTY));
+                //: END
             }
             this.setRemoved();
             ci.cancel();
@@ -109,17 +114,6 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
             Animation animation = new Animation(10, 270F, 0F, -0.4987F, -0.01F, 0.015F, 0.01F);
             ((UpdatingAnimation)this.display).addAnimation(animation);
         }
-    }
-
-    @Unique
-    private int getSmallestListIndex() {
-        int lastIndex = -1;
-        for (int i = 0; i < 27; i++) {
-            if (this.itemStacks.get(i) != ItemStack.EMPTY) {
-                lastIndex = i;
-            }
-        }
-        return lastIndex;
     }
 
     @Inject(method = "startOpen", at = @At("HEAD"), cancellable = true)
@@ -195,4 +189,50 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         Item material = ShulkerUtil.getMaterialFromShulker(shulkerStack);
         this.createDisplay(material);
     }
+
+    //: >=1.21.6
+    @Override
+    public void saveWithFullMetadata(ValueOutput valueOutput) {
+        if (!this.forced()) {
+            super.saveWithFullMetadata(valueOutput);
+        }
+    }
+
+    @Override
+    public void saveWithId(ValueOutput valueOutput) {
+        if (!this.forced()) {
+            super.saveWithId(valueOutput);
+        }
+    }
+
+    @Override
+    public void saveWithoutMetadata(ValueOutput valueOutput) {
+        if (!this.forced()) {
+            super.saveWithoutMetadata(valueOutput);
+        }
+    }
+
+    @Override
+    public void saveCustomOnly(ValueOutput valueOutput) {
+        if (!this.forced()) {
+            super.saveCustomOnly(valueOutput);
+        }
+    }
+
+    @Inject(method = "saveAdditional", at = @At("HEAD"), cancellable = true)
+    private void doNotSaveData(ValueOutput valueOutput, CallbackInfo ci) {
+        if (this.forced()) {
+            ci.cancel();
+        }
+    }
+    //: END
+
+    /*\ <=1.21.5
+    @Override
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        if (!this.forced()) {
+            super.saveAdditional(compoundTag, provider);
+        }
+    }
+    \END */
 }

@@ -6,13 +6,15 @@
   "client": [
   ],
   "mixins": [
-    "ContainerComponentAccessor",
+    "AbstractContainerAccessor",
+    "AnvilMenuMixin",
     "DisplayEntityAccessor",
     "ItemAccessor",
     "ItemDisplayInvoker",
     "ItemDisplayMixin",
     "ItemEntityMixin",
     "RecipeFilterMixin",
+    "ServerboundContainerClickPacketMixin",
     "ServerPlayerMixin",
     "ShulkerBoxBlockEntityMixin",
     "ShulkerBoxBlockMixin",

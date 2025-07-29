@@ -24,7 +24,7 @@ public class ShulkerUpgradeRecipe extends CustomRecipe {
 
     @Override
     public boolean matches(CraftingInput input, Level world) {
-        if (!Config.ADD_RECIPE_FOR_PICKABLE_SHULKER) {
+        if (!Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.RECIPE)) {
             return false;
         }
         // Prevent OutOfBoundsException

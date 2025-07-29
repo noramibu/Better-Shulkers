@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import net.minecraft.world.level.Level;
@@ -36,6 +37,7 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
     private String shulkerFingerprint = null;
     @Unique
     private boolean wasInCursor = false;
+    private ShulkerBoxBlockEntity viewingForcedShulkerBoxEntity;
 
     @Override
     public boolean isViewingShulker() {
@@ -177,21 +179,31 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
     }
     
     @Override
-    public void setViewing(@Nullable ItemStack stack) {
+    public void setViewing(@Nullable ItemStack stack, @Nullable ShulkerBoxBlockEntity blockEntity) {
         this.viewingForcedShulker = stack;
         if (stack != null) {
             this.shulkerFingerprint = generateFingerprint(stack);
             this.originalShulkerSlot = findShulkerSlot(stack);
+            this.viewingForcedShulkerBoxEntity = blockEntity;
         } else {
             this.originalShulkerSlot = -1;
             this.shulkerFingerprint = null;
             this.wasInCursor = false;
+            if (this.viewingForcedShulkerBoxEntity != null) {
+                this.viewingForcedShulkerBoxEntity.setRemoved();
+                this.viewingForcedShulkerBoxEntity = null;
+            }
         }
     }
 
     @Override
     public ItemStack getViewedStack() {
         return this.viewingForcedShulker;
+    }
+
+    @Override
+    public ShulkerBoxBlockEntity getViewedEntity() {
+        return this.viewingForcedShulkerBoxEntity;
     }
 
     @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"))

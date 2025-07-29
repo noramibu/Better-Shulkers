@@ -1,13 +1,20 @@
 package com.github.noramibu.bettershulkers.util;
 
 import com.github.noramibu.bettershulkers.BetterShulkers;
+import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
+import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
+import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.mixin.AbstractContainerAccessor;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +23,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -64,6 +72,34 @@ public class ShulkerUtil {
     }
 
     /**
+     * Saves the inventory to the Component
+     * @param inventory The inventory of the active shulker
+     * @param player Player that was viewing the screen
+     */
+    public static void saveShulkerInventory(NonNullList<ItemStack> inventory, ServerPlayer player) {
+        int smallestSize = getSmallestListIndex(inventory);
+        if (smallestSize != -1) {
+            NonNullList<ItemStack> newInventory = NonNullList.withSize(smallestSize + 1, ItemStack.EMPTY);
+            for (int i = 0; i <= smallestSize; i++) {
+                newInventory.set(i, inventory.get(i));
+            }
+            ((ShulkerViewer)player).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
+        } else {
+            ((ShulkerViewer)player).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
+        }
+    }
+
+    private static int getSmallestListIndex(NonNullList<ItemStack> itemStacks) {
+        int lastIndex = -1;
+        for (int i = 0; i < 27; i++) {
+            if (itemStacks.get(i) != ItemStack.EMPTY) {
+                lastIndex = i;
+            }
+        }
+        return lastIndex;
+    }
+
+    /**
      * If an item can be added to a shulker box
      * @param shulkerStack The shulker box item
      * @param itemToAdd The item to try and insert into the shulker box
@@ -90,10 +126,14 @@ public class ShulkerUtil {
         ItemContainerContents container = shulkerStack.get(DataComponents.CONTAINER);
         NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
         container.copyInto(inventory);
+        addToShulker(inventory, itemToAdd);
+        shulkerStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(inventory));
+    }
 
+    private static void addToShulker(NonNullList<ItemStack> inventory, ItemStack itemToAdd) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack slot = inventory.get(i);
-            if(slot.isEmpty()) {
+            if (slot.isEmpty()) {
                 inventory.set(i, itemToAdd.copy());
                 itemToAdd.setCount(0);
                 break;
@@ -107,8 +147,69 @@ public class ShulkerUtil {
                 break;
             }
         }
+    }
 
-        shulkerStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(inventory));
+    /**
+     * Adds the item to the shulker box's inventory
+     * @param container The shulker box's UI
+     * @param itemToAdd The item to be inserted
+     * @param update Whether to send an update packet
+     */
+    public static void addToShulkerInventory(AbstractContainerMenu container, ItemStack itemToAdd, boolean update) {
+        iterateThroughInventory(container, itemToAdd, 0, 27, update);
+    }
+
+    /**
+     * Adds the item to the player's inventory
+     * @param container The shulker box's UI
+     * @param itemToAdd The item to be inserted
+     * @param update Whether to send an update packet
+     */
+    public static void addToPlayerInventory(AbstractContainerMenu container, ItemStack itemToAdd, boolean update) {
+        iterateThroughInventory(container, itemToAdd, 27, 63, update);
+    }
+
+    private static void iterateThroughInventory(AbstractContainerMenu container, ItemStack itemToAdd, int start, int stop, boolean update) {
+        NonNullList<Slot> slots = ((AbstractContainerAccessor)container).getSlots();
+        boolean markDirty = false;
+
+        for (int i = start; i < stop; i++) {
+            Slot slot = slots.get(i);
+            ItemStack stack = slot.getItem();
+            if (stack.isEmpty()) {
+                slot.set(itemToAdd.copy());
+                itemToAdd.setCount(0);
+                markDirty = true;
+                break;
+            } else if (canFit(stack, itemToAdd)) {
+                int toAdd = Math.min(itemToAdd.getCount(), stack.getMaxStackSize() - stack.getCount());
+                stack.grow(toAdd);
+                itemToAdd.shrink(toAdd);
+                markDirty = true;
+            }
+
+            if (itemToAdd.isEmpty()) {
+                break;
+            }
+        }
+
+        if (markDirty && update) {
+            container.broadcastChanges();
+        }
+    }
+
+    /**
+     * Switches the shulker inventory without closing the existing shulker's inventory screen
+     * @param player The player viewing the screen
+     * @param newShulker The new shulker to view
+     */
+    public static void seamlesslySwitchShulkerInventory(ServerPlayer player, ItemStack newShulker) {
+        saveShulkerInventory(player.containerMenu.getItems(), player);
+        ((ShulkerViewer) player).setViewing(newShulker, null);
+        NonNullList<ItemStack> newInventory = getInventoryFromShulker(newShulker);
+        ShulkerBoxBlockEntity blockEntity = ((ShulkerViewer)player).getViewedEntity();
+        ((ForceInventory)blockEntity).setInventory(newInventory);
+        player.containerMenu.broadcastChanges();
     }
 
     /**
@@ -197,5 +298,33 @@ public class ShulkerUtil {
 
     private static void setShulkerMaterialLore(ItemStack shulkerBox, Item material) {
         shulkerBox.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(MATERIAL_PREFIX + material.toString()))));
+    }
+
+    /**
+     * If the player has the permissions to open a shulker in their inventory
+     * @param player Player to check permissions of
+     * @return True if they have sufficient permissions
+     */
+    public static boolean hasOpenPermission(Player player) {
+        return Config.OPEN_SHULKER_FROM_INVENTORY && checkOpenPermission(player);
+    }
+
+    private static boolean checkOpenPermission(Player player) {
+        if (Config.REQUIRE_PERMISSION_FOR_RIGHT_CLICK_OPEN) {
+            return AbstractionManager.ABSTRACTION.permissionCheck(((ServerPlayer) player).createCommandSourceStack(), "bettershulkers.open", player.hasPermissions(2));
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Valid menus to open a shulker box in
+     * @param menu The menu instance
+     * @return True if a shulker can be opened in the menu
+     */
+    public static boolean isValidOpeningUI(AbstractContainerMenu menu) {
+        return menu instanceof InventoryMenu ||
+                menu instanceof ShulkerBoxMenu ||
+                menu instanceof ChestMenu;
     }
 }
