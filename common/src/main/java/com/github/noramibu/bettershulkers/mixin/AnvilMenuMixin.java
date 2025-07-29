@@ -3,7 +3,6 @@ package com.github.noramibu.bettershulkers.mixin;
 import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
-import com.llamalad7.mixinextras.sugar.Local;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,9 +35,12 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     }
     //: END
 
-    @Inject(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/ItemEnchantments$Mutable;<init>(Lnet/minecraft/world/item/enchantment/ItemEnchantments;)V"), cancellable = true)
-    private void checkForShulkerMaterial(CallbackInfo ci, @Local(ordinal = 0) ItemStack stack1, @Local(ordinal = 2) ItemStack stack2) {
+    @Inject(method = "createResult()V", at = @At("HEAD"), cancellable = true)
+    private void checkForShulkerMaterial(CallbackInfo ci) {
         if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.ENCHANTMENT)) {
+            ItemStack stack1 = this.inputSlots.getItem(0);
+            ItemStack stack2 = this.inputSlots.getItem(1);
+            
             ItemStack material = null;
             ItemStack shulker = null;
 
