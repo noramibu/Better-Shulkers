@@ -9,7 +9,6 @@ import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 //: >=1.21.2
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
 //: END
-import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
