@@ -22,7 +22,7 @@ public final class BetterShulkersNeoForge {
         AbstractionManager.ABSTRACTION = new NeoForgeAbstraction();
         BetterShulkers.init();
         NeoForge.EVENT_BUS.addListener((final PermissionGatherEvent.Nodes nodes) -> {
-            nodes.addNodes(CommandPermission.SET_COMMAND_NODE, CommandPermission.RELOAD_COMMAND_NODE);
+            nodes.addNodes(CommandPermission.SET_COMMAND_NODE, CommandPermission.RELOAD_COMMAND_NODE, CommandPermission.OPEN_NODE);
         });
         modBus.addListener((final ModifyDefaultComponentsEvent event) -> {
             event.modifyMatching(ShulkerUtil::earlyIsShulkerBox, builder -> {
