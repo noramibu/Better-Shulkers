@@ -128,7 +128,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
                     // We'll handle the shulker consumption manually
                     if (shulker == stack1) {
                         this.inputSlots.setItem(0, ItemStack.EMPTY);
-                    } else if (shulker == stack2) {
+                    } else {
                         this.inputSlots.setItem(1, ItemStack.EMPTY);
                     }
                     
