@@ -207,6 +207,21 @@ public class ShulkerUtil {
     }
 
     /**
+     * Gets only the items from a Shulker box's inventory
+     * @param containerMenu Shulker menu
+     * @return Only the items in a Shulker box
+     */
+    public static NonNullList<ItemStack> getShulkerInventoryFromMenu(AbstractContainerMenu containerMenu) {
+        NonNullList<Slot> slots = ((AbstractContainerAccessor)containerMenu).getSlots();
+        NonNullList<ItemStack> stacks = NonNullList.withSize(27, ItemStack.EMPTY);
+        for (int i = 0; i < 27; i++) {
+            Slot slot = slots.get(i);
+            stacks.set(i, slot.getItem());
+        }
+        return stacks;
+    }
+
+    /**
      * Switches the shulker inventory without closing the existing shulker's inventory screen
      * @param player The player viewing the screen
      * @param newShulker The new shulker to view

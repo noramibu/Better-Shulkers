@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -56,18 +57,22 @@ public abstract class ItemEntityMixin {
             }
 
             if (ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
+
+                // Check if the shulker being checked is currently open
+                boolean isUIOpen = ((ShulkerViewer)player).getViewedStack() == inventoryStack && !player.level().isClientSide;
+                if (isUIOpen) {
+                    ShulkerUtil.saveShulkerInventory(ShulkerUtil.getShulkerInventoryFromMenu(player.containerMenu), (ServerPlayer) player);
+                }
+
                 int originalCount = itemStack.getCount();
                 ShulkerUtil.addToShulker(inventoryStack, itemStack);
                 playerInventory.setItem(i, inventoryStack);
 
-                if (player.containerMenu instanceof ShulkerBoxMenu menuHandler) {
-                    Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)menuHandler).getInventory();
-
-                    if (((ForceInventory)screenInventory).forced() && ((ShulkerViewer)player).getViewedStack() == inventoryStack) {
-                        NonNullList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
-                        ((ForceInventory)screenInventory).setInventory(updatedList);
-                        menuHandler.broadcastChanges();
-                    }
+                if (isUIOpen) {
+                    Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)player.containerMenu).getInventory();
+                    NonNullList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
+                    ((ForceInventory)screenInventory).setInventory(updatedList);
+                    player.containerMenu.broadcastChanges();
                 }
 
                 if (itemStack.isEmpty()) {
