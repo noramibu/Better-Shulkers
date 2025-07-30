@@ -18,7 +18,12 @@ public class NeoForgeAbstraction implements PlatformAbstraction {
     @Override
     public boolean permissionCheck(CommandSourceStack source, String id, boolean hasProperPermissionLevel) {
         if (source.isPlayer()) {
-            return PermissionAPI.getPermission(source.getPlayer(), CommandPermission.getPermission(id));
+            var permissionNode = CommandPermission.getPermission(id);
+            if (permissionNode == null) {
+                // If permission node is not found, return false or true based on configuration
+                return !hasProperPermissionLevel; // Default to allowing if no specific permission is configured
+            }
+            return PermissionAPI.getPermission(source.getPlayer(), permissionNode);
         } else {
             return false;
         }
