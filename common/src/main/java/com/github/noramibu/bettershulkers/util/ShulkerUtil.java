@@ -205,9 +205,10 @@ public class ShulkerUtil {
      */
     public static void seamlesslySwitchShulkerInventory(ServerPlayer player, ItemStack newShulker) {
         saveShulkerInventory(player.containerMenu.getItems(), player);
-        ((ShulkerViewer) player).setViewing(newShulker, null);
-        NonNullList<ItemStack> newInventory = getInventoryFromShulker(newShulker);
         ShulkerBoxBlockEntity blockEntity = ((ShulkerViewer)player).getViewedEntity();
+        // Keep the same block entity
+        ((ShulkerViewer) player).setViewing(newShulker, blockEntity);
+        NonNullList<ItemStack> newInventory = getInventoryFromShulker(newShulker);
         ((ForceInventory)blockEntity).setInventory(newInventory);
         player.containerMenu.broadcastChanges();
     }

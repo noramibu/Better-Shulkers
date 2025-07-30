@@ -49,7 +49,7 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     }
 
                                 } else {
-                                    // Automatically insert items
+                                    // Automatically insert items into a different shulker
                                     if (!held.isEmpty()) {
                                         ShulkerUtil.addToShulker(stack, held);
                                     }
