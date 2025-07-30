@@ -5,10 +5,11 @@ import com.github.noramibu.bettershulkers.recipe.ShulkerUpgradeRecipe;
 /*\ <=1.21.1
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.gson.JsonElement;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 \END */
-import com.llamalad7.mixinextras.sugar.Local;
 //: >=1.21.2
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 //: END
@@ -18,16 +19,13 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 /*\ <=1.21.1
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 \END */
 //: >=1.21.2
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 //: END
-
-import java.util.Map;
 
 @Mixin(RecipeManager.class)
 public class RecipeManagerMixin {
@@ -43,13 +41,22 @@ public class RecipeManagerMixin {
     //: END
 
     /*\ <=1.21.1
-    @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMultimap$Builder;build()Lcom/google/common/collect/ImmutableMultimap;"))
-    private void addBetterShulkerRecipe(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profilerFiller, CallbackInfo ci, @Local(ordinal = 0) ImmutableMultimap.Builder<RecipeType<?>, RecipeHolder<?>> builder, @Local(ordinal = 0) ImmutableMap.Builder<ResourceLocation, RecipeHolder<?>> builder2) {
+    @WrapOperation(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMultimap$Builder;build()Lcom/google/common/collect/ImmutableMultimap;"))
+    private <K, V> ImmutableMultimap<K, V> addBetterShulkerRecipe(ImmutableMultimap.Builder  instance, Operation<ImmutableMultimap<K, V>> original) {
         ShulkerUpgradeRecipe recipe = new ShulkerUpgradeRecipe(CraftingBookCategory.MISC);
         ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(BetterShulkers.MOD_ID, "shulker_upgrade");
         RecipeHolder<?> recipeHolder = new RecipeHolder<>(resourceLocation, recipe);
-        builder.put(recipe.getType(), recipeHolder);
-        builder2.put(resourceLocation, recipeHolder);
+        instance.put(recipe.getType(), recipeHolder);
+        return instance.build();
+    }
+
+    @WrapOperation(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()Lcom/google/common/collect/ImmutableMap;"))
+    private <K, V> ImmutableMap<K, V> addBetterShulkerRecipe(ImmutableMap.Builder instance, Operation<ImmutableMap<K, V>> original) {
+        ShulkerUpgradeRecipe recipe = new ShulkerUpgradeRecipe(CraftingBookCategory.MISC);
+        ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(BetterShulkers.MOD_ID, "shulker_upgrade");
+        RecipeHolder<?> recipeHolder = new RecipeHolder<>(resourceLocation, recipe);
+        instance.put(resourceLocation, recipeHolder);
+        return instance.build();
     }
     \END */
 }
