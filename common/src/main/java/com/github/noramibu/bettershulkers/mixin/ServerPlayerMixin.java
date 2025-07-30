@@ -23,12 +23,13 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
 
     public ServerPlayerMixin(Level world, GameProfile profile) {
         /*\ <=1.21.5
-        super(world, null, 1.0f, profile);
-        \END */
-        //: >=1.21.6
+      super(world, null, 1.0f, profile);
+        \END */    //: >=1.21.6
+
+
         super(world, profile);
         //: END
-    }
+  }
 
     private ItemStack viewingForcedShulker;
     @Unique
@@ -41,7 +42,11 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
 
     @Override
     public boolean isViewingShulker() {
-        if (this.viewingForcedShulker != null && this.viewingForcedShulker.isEmpty()) {
+        if (this.viewingForcedShulker == null) {
+            return false;
+        }
+        
+        if (this.viewingForcedShulker.isEmpty()) {
             // Check cursor first
             ItemStack cursorStack = this.containerMenu.getCarried();
             if (cursorStack != null && !cursorStack.isEmpty() && ShulkerUtil.isShulkerBox(cursorStack) && hasMatchingFingerprint(cursorStack)) {
@@ -208,7 +213,17 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
 
     @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"))
     private void checkIfItemIsViewedShulker(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
-        if (this.viewingForcedShulker != null && this.viewingForcedShulker.isEmpty()) {
+        // Check if the dropped item is the viewed shulker
+        if (this.viewingForcedShulker != null && 
+            ShulkerUtil.isShulkerBox(stack) && 
+            (stack == this.viewingForcedShulker || hasMatchingFingerprint(stack))) {
+            
+            // Save the inventory before closing
+            if (this.containerMenu != null) {
+                ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), (ServerPlayer)(Object)this);
+            }
+            
+            // Close the container immediately
             this.closeContainer();
             this.viewingForcedShulker = null;
             this.shulkerFingerprint = null;
