@@ -11,6 +11,9 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+/*\ <=1.21.1
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+\END */
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -98,6 +101,13 @@ public class ShulkerUtil {
         }
         return lastIndex;
     }
+
+    /*\ <=1.21.1
+    public static void syncHeldItem(AbstractContainerMenu menu, ServerPlayer player) {
+        ClientboundContainerSetContentPacket contentPacket = new ClientboundContainerSetContentPacket(menu.containerId, menu.getStateId(), menu.getItems(), ItemStack.EMPTY);
+        player.connection.send(contentPacket);
+    }
+    \END */
 
     /**
      * If an item can be added to a shulker box
