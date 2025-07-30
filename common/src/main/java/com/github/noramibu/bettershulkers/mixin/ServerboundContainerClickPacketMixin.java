@@ -63,18 +63,7 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     ShulkerUtil.addToShulker(stack, held);
                                 }
 
-                                // Schedule packet for the next tick
-                                this.player.getServer().schedule(new TickTask(1, () -> {
-                                    // Don't delete held items
-                                    this.player.containerMenu.setCarried(held);
-                                    //: >=1.21.2
-                                    this.player.connection.send(new ClientboundSetCursorItemPacket(held));
-                                    //: END
-                                    this.player.connection.send(new ClientboundContainerSetSlotPacket(instance.containerId, instance.getStateId(), slot, stack));
-                                }));
-
                                 BetterShulkers.openShulkerMenu(stack, this.player);
-                                return false;
                             }
                         } else {
                             return true;
@@ -92,18 +81,7 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
                                 }
                             } else {
-                                // Schedule packet for the next tick
-                                this.player.getServer().schedule(new TickTask(1, () -> {
-                                    // Don't delete held items
-                                    this.player.containerMenu.setCarried(held);
-                                    //: >=1.21.2
-                                    this.player.connection.send(new ClientboundSetCursorItemPacket(held));
-                                    //: END
-                                    this.player.connection.send(new ClientboundContainerSetSlotPacket(instance.containerId, instance.getStateId(), slot, stack));
-                                }));
-
                                 BetterShulkers.openShulkerMenu(stack, this.player);
-                                return false;
                             }
                         } else {
                             return true;
@@ -118,7 +96,7 @@ public abstract class ServerboundContainerClickPacketMixin {
             }
 
             // Don't delete held items
-            instance.setCarried(held);
+            this.player.containerMenu.setCarried(held);
             //: >=1.21.2
             this.player.connection.send(new ClientboundSetCursorItemPacket(held));
             //: END
