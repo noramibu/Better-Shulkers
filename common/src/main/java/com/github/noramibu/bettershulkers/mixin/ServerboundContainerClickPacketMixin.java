@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 //: >=1.21.2
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
 //: END
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
@@ -62,7 +63,18 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     ShulkerUtil.addToShulker(stack, held);
                                 }
 
+                                // Schedule packet for the next tick
+                                this.player.getServer().schedule(new TickTask(1, () -> {
+                                    // Don't delete held items
+                                    this.player.containerMenu.setCarried(held);
+                                    //: >=1.21.2
+                                    this.player.connection.send(new ClientboundSetCursorItemPacket(held));
+                                    //: END
+                                    this.player.connection.send(new ClientboundContainerSetSlotPacket(instance.containerId, instance.getStateId(), slot, stack));
+                                }));
+
                                 BetterShulkers.openShulkerMenu(stack, this.player);
+                                return false;
                             }
                         } else {
                             return true;
@@ -80,7 +92,18 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
                                 }
                             } else {
+                                // Schedule packet for the next tick
+                                this.player.getServer().schedule(new TickTask(1, () -> {
+                                    // Don't delete held items
+                                    this.player.containerMenu.setCarried(held);
+                                    //: >=1.21.2
+                                    this.player.connection.send(new ClientboundSetCursorItemPacket(held));
+                                    //: END
+                                    this.player.connection.send(new ClientboundContainerSetSlotPacket(instance.containerId, instance.getStateId(), slot, stack));
+                                }));
+
                                 BetterShulkers.openShulkerMenu(stack, this.player);
+                                return false;
                             }
                         } else {
                             return true;
@@ -93,7 +116,6 @@ public abstract class ServerboundContainerClickPacketMixin {
             } else {
                 return true;
             }
-
 
             // Don't delete held items
             instance.setCarried(held);
@@ -116,6 +138,10 @@ public abstract class ServerboundContainerClickPacketMixin {
     }
 
     private void quickInsert(AbstractContainerMenu container, ItemStack heldStack) {
+        // Ensure shulker boxes cannot be inserted into shulker boxes
+        if (ShulkerUtil.isShulkerBox(heldStack)) {
+            return;
+        }
         NonNullList<Slot> slots = ((AbstractContainerAccessor)container).getSlots();
         Item itemType = heldStack.getItem();
         for (int i = 27; i < 63; i++) {

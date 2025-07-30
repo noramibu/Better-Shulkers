@@ -123,6 +123,10 @@ public class ShulkerUtil {
      * @param itemToAdd The item to be inserted
      */
     public static void addToShulker(ItemStack shulkerStack, ItemStack itemToAdd) {
+        // Ensure shulker boxes cannot be inserted into shulker boxes
+        if (ShulkerUtil.isShulkerBox(itemToAdd)) {
+            return;
+        }
         ItemContainerContents container = shulkerStack.get(DataComponents.CONTAINER);
         NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
         container.copyInto(inventory);
@@ -156,6 +160,10 @@ public class ShulkerUtil {
      * @param update Whether to send an update packet
      */
     public static void addToShulkerInventory(AbstractContainerMenu container, ItemStack itemToAdd, boolean update) {
+        // Ensure shulker boxes cannot be inserted into shulker boxes
+        if (ShulkerUtil.isShulkerBox(itemToAdd)) {
+            return;
+        }
         iterateThroughInventory(container, itemToAdd, 0, 27, update);
     }
 
