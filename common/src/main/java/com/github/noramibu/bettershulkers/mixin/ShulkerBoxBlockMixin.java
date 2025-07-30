@@ -10,7 +10,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -58,7 +57,7 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
     @Override
     public void openInventory(ServerPlayer player, ItemStack stack) {
         ShulkerBoxBlockEntity blockEntity = new ShulkerBoxBlockEntity(player.blockPosition(), Blocks.SHULKER_BOX.defaultBlockState());
-        ((BaseContainerBlockEntityAccessor)blockEntity).setName(stack.getCustomName());
+        ((BaseContainerBlockEntityAccessor)blockEntity).setName(stack.getDisplayName());
         ((ShulkerViewer) player).setViewing(stack, blockEntity);
         NonNullList<ItemStack> inventory = ShulkerUtil.getInventoryFromShulker(stack);
         ((ForceInventory)blockEntity).setInventory(inventory);
