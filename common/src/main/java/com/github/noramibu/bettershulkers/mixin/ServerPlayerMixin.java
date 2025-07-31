@@ -48,7 +48,7 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
         if (this.viewingForcedShulker.isEmpty()) {
             // Check cursor first
             ItemStack cursorStack = this.containerMenu.getCarried();
-            if (cursorStack != null && !cursorStack.isEmpty() && ShulkerUtil.isShulkerBox(cursorStack) && hasMatchingFingerprint(cursorStack)) {
+            if (!cursorStack.isEmpty() && ShulkerUtil.isShulkerBox(cursorStack) && hasMatchingFingerprint(cursorStack)) {
                 this.viewingForcedShulker = cursorStack;
                 this.originalShulkerSlot = -1;
                 this.wasInCursor = true;
@@ -69,7 +69,7 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
             // Check original slot
             if (this.originalShulkerSlot >= 0 && this.originalShulkerSlot < this.getInventory().getContainerSize()) {
                 ItemStack originalSlotStack = this.getInventory().getItem(this.originalShulkerSlot);
-                if (originalSlotStack != null && !originalSlotStack.isEmpty() && ShulkerUtil.isShulkerBox(originalSlotStack) && hasMatchingFingerprint(originalSlotStack)) {
+                if (!originalSlotStack.isEmpty() && ShulkerUtil.isShulkerBox(originalSlotStack) && hasMatchingFingerprint(originalSlotStack)) {
                     this.viewingForcedShulker = originalSlotStack;
                     return true;
                 }
@@ -84,16 +84,14 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
             }
             
             // Not found, save and clear
-            if (this.containerMenu != null) {
-                this.containerMenu.removed(this);
-            }
+            this.containerMenu.removed(this);
             this.viewingForcedShulker = null;
             this.shulkerFingerprint = null;
             this.wasInCursor = false;
             return false;
         }
         
-        return this.viewingForcedShulker != null && !this.viewingForcedShulker.isEmpty();
+        return true;
     }
     
     @Unique
@@ -113,7 +111,7 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
     @Unique
     private String generateFingerprint(ItemStack stack) {
         StringBuilder fingerprint = new StringBuilder();
-        fingerprint.append(stack.getItem().toString()).append(":").append(stack.getCount());
+        fingerprint.append(stack.getItem()).append(":").append(stack.getCount());
         
         var container = stack.get(DataComponents.CONTAINER);
         if (container != null) {
@@ -148,7 +146,7 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
         
         for (int i = 0; i < this.getInventory().getContainerSize(); i++) {
             ItemStack stack = this.getInventory().getItem(i);
-            if (stack != null && !stack.isEmpty() && ShulkerUtil.isShulkerBox(stack) && hasMatchingFingerprint(stack)) {
+            if (!stack.isEmpty() && ShulkerUtil.isShulkerBox(stack) && hasMatchingFingerprint(stack)) {
                 int distance = Math.abs(i - this.originalShulkerSlot);
                 if (distance < closestDistance) {
                     closestMatch = stack;
@@ -165,7 +163,7 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
         // Search from hotbar slots first (most recently placed)
         for (int i = this.getInventory().getContainerSize() - 1; i >= 0; i--) {
             ItemStack stack = this.getInventory().getItem(i);
-            if (stack != null && !stack.isEmpty() && ShulkerUtil.isShulkerBox(stack) && hasMatchingFingerprint(stack)) {
+            if (!stack.isEmpty() && ShulkerUtil.isShulkerBox(stack) && hasMatchingFingerprint(stack)) {
                 return stack;
             }
         }
@@ -218,10 +216,8 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
             (stack == this.viewingForcedShulker || hasMatchingFingerprint(stack))) {
             
             // Save the inventory before closing
-            if (this.containerMenu != null) {
-                ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), (ServerPlayer)(Object)this);
-            }
-            
+            ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), (ServerPlayer) (Object) this);
+
             // Close the container immediately
             this.closeContainer();
             this.viewingForcedShulker = null;
