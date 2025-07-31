@@ -1,7 +1,6 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.Config;
-import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
@@ -10,9 +9,7 @@ import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -50,14 +47,6 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
             for (ItemStack stack : original) {
                 if (ShulkerUtil.isShulkerBox(stack)) {
                     ShulkerUtil.setMaterialForShulker(stack, material.getDefaultInstance());
-                    if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.ENCHANTMENT)) {
-                        //: >=1.21.2
-                        stack.enchant(Holder.direct(blockEntity.getLevel().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getValue(MaterialCollector.MATERIAL_COLLECTOR)), 1);
-                        //: END
-                        /*\ <=1.21.1
-                        stack.enchant(Holder.direct(blockEntity.getLevel().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(MaterialCollector.MATERIAL_COLLECTOR).value()), 1);
-                        \END */
-                    }
                     break;
                 }
             }

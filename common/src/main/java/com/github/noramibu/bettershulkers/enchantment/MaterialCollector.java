@@ -15,6 +15,5 @@ public final class MaterialCollector {
 
     public static void initialize() {
         BetterShulkers.LOGGER.info("Better Shulkers enchantment registered");
-
     }
 }

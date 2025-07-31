@@ -1,15 +1,12 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.Config;
-import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.core.Holder;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -59,20 +56,12 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
                 }
             }
 
-            if (material != null && shulker != null) {
-                ItemEnchantments enchants = EnchantmentHelper.getEnchantmentsForCrafting(shulker);
-
-                for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
-                    Holder<Enchantment> holder = entry.getKey();
-                    if (holder.is(MaterialCollector.MATERIAL_COLLECTOR)) {
-                        ItemStack clone = shulker.copy();
-                        ShulkerUtil.setMaterialForShulker(clone, material);
-                        this.cost.set(1);
-                        this.resultSlots.setItem(0, clone);
-                        ci.cancel();
-                        break;
-                    }
-                }
+            if (material != null && shulker != null && ShulkerUtil.isEnchanted(shulker)) {
+                ItemStack clone = shulker.copy();
+                ShulkerUtil.setMaterialForShulker(clone, material);
+                this.cost.set(1);
+                this.resultSlots.setItem(0, clone);
+                ci.cancel();
             }
         }
     }
@@ -101,41 +90,40 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
                 }
             }
 
-            if (material != null && shulker != null) {
-                ItemEnchantments enchants = EnchantmentHelper.getEnchantmentsForCrafting(shulker);
-                boolean isCustomRecipe = false;
-
-                for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
-                    Holder<Enchantment> holder = entry.getKey();
-                    if (holder.is(MaterialCollector.MATERIAL_COLLECTOR)) {
-                        isCustomRecipe = true;
-                        break;
-                    }
+            if (material != null &&
+                    shulker != null &&
+                    ShulkerUtil.isEnchanted(shulker)
+            ) {
+                // Consume only one item from the material stack
+                int materialSlot = (material == stack1) ? 0 : 1;
+                if (material.getCount() > 1) {
+                    material.shrink(1);
+                    this.inputSlots.setItem(materialSlot, material);
+                } else {
+                    this.inputSlots.setItem(materialSlot, ItemStack.EMPTY);
                 }
 
-                if (isCustomRecipe) {
-                    // Consume only one item from the material stack
-                    int materialSlot = (material == stack1) ? 0 : 1;
-                    if (material.getCount() > 1) {
-                        material.shrink(1);
-                        this.inputSlots.setItem(materialSlot, material);
-                    } else {
-                        this.inputSlots.setItem(materialSlot, ItemStack.EMPTY);
-                    }
-                    
-                    // Let the default behavior handle consuming the shulker and clearing the result slot
-                    // But we need to prevent it from consuming the material stack again
-                    // We'll handle the shulker consumption manually
-                    if (shulker == stack1) {
-                        this.inputSlots.setItem(0, ItemStack.EMPTY);
-                    } else {
-                        this.inputSlots.setItem(1, ItemStack.EMPTY);
-                    }
-                    
-                    // Cancel the default behavior since we've handled everything manually
-                    ci.cancel();
+                // Let the default behavior handle consuming the shulker and clearing the result slot
+                // But we need to prevent it from consuming the material stack again
+                // We'll handle the shulker consumption manually
+                if (shulker == stack1) {
+                    this.inputSlots.setItem(0, ItemStack.EMPTY);
+                } else {
+                    this.inputSlots.setItem(1, ItemStack.EMPTY);
                 }
+
+                // Cancel the default behavior since we've handled everything manually
+                ci.cancel();
             }
+        }
+    }
+
+    @WrapOperation(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;setEnchantments(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/enchantment/ItemEnchantments;)V"))
+    private void doNotSetShulkerEnchantments(ItemStack itemStack, ItemEnchantments itemEnchantments, Operation<Void> original) {
+        if (ShulkerUtil.isShulkerBox(itemStack)) {
+            ShulkerUtil.setMaterialForShulker(itemStack, ItemStack.EMPTY);
+        } else {
+            original.call(itemStack, itemEnchantments);
         }
     }
 }

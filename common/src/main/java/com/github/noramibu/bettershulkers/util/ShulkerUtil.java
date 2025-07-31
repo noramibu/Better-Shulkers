@@ -22,6 +22,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.ItemLore;
@@ -40,6 +41,11 @@ public class ShulkerUtil {
      * The Lore prefix for a shulker box that has a material
      */
     public static final String MATERIAL_PREFIX = "Material: ";
+
+    /**
+     * The Lore for if a shulker box has no set material
+     */
+    public static final String NO_MATERIAL = "None";
 
     /**
      * If an item is a shulker box
@@ -273,7 +279,7 @@ public class ShulkerUtil {
     /**
      * Gets the material from the Shulker Box's NBT data.
      * @param shulker ItemStack of the Shulker Box
-     * @return Item that is the material if present, else null
+     * @return Item that is the material if present, else null. If a material isn't set, Air is returned
      */
     @Nullable
     public static Item getMaterialFromShulker(ItemStack shulker) {
@@ -289,6 +295,11 @@ public class ShulkerUtil {
         if (materialId.isEmpty()) {
             return null;
         }
+
+        if (NO_MATERIAL.equals(materialId)) {
+            return Items.AIR;
+        }
+
         return getItemFromId(materialId);
     }
 
@@ -301,10 +312,8 @@ public class ShulkerUtil {
     public static Item getMaterialFromShulkerBlock(BlockEntity shulker) {
         CustomData component = shulker.components().get(DataComponents.CUSTOM_DATA);
         if (component == null) {
-            System.out.println("Material is NULL!");
             return null;
         }
-        System.out.println(component);
         CompoundTag nbt = component.copyTag();
 
         //: >=1.21.5
@@ -318,6 +327,11 @@ public class ShulkerUtil {
         if (materialId.isEmpty()) {
             return null;
         }
+
+        if (NO_MATERIAL.equals(materialId)) {
+            return Items.AIR;
+        }
+
         return getItemFromId(materialId);
     }
 
@@ -328,13 +342,34 @@ public class ShulkerUtil {
      */
     public static void setMaterialForShulker(ItemStack shulker, ItemStack material) {
         CompoundTag nbt = shulker.get(DataComponents.CUSTOM_DATA).copyTag();
-        nbt.put(BetterShulkers.MATERIAL_PATH, StringTag.valueOf(getItemId(material)));
-        shulker.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
-        setShulkerMaterialLore(shulker, material.getItem());
+        // Air is not a valid material and indicates an unset material
+        if (material.is(Items.AIR)) {
+            nbt.put(BetterShulkers.MATERIAL_PATH, StringTag.valueOf(ShulkerUtil.NO_MATERIAL));
+            shulker.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+            setShulkerMaterialLore(shulker, null);
+        } else {
+            nbt.put(BetterShulkers.MATERIAL_PATH, StringTag.valueOf(getItemId(material)));
+            shulker.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
+            setShulkerMaterialLore(shulker, material.getItem());
+        }
     }
 
-    private static void setShulkerMaterialLore(ItemStack shulkerBox, Item material) {
-        shulkerBox.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(MATERIAL_PREFIX + material.toString()))));
+    private static void setShulkerMaterialLore(ItemStack shulkerBox, @Nullable Item material) {
+        if (material != null) {
+            shulkerBox.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(MATERIAL_PREFIX + material))));
+        } else {
+            shulkerBox.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(MATERIAL_PREFIX + NO_MATERIAL))));
+        }
+    }
+
+    /**
+     * If the shulker box has the Material Collector enchantment
+     * @param shulker ItemStack of the Shulker Box
+     * @return True if the Shulker box is enchanted
+     */
+    public static boolean isEnchanted(ItemStack shulker) {
+        Item item = getMaterialFromShulker(shulker);
+        return item != null;
     }
 
     /**
