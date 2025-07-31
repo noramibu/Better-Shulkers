@@ -51,7 +51,12 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
                 if (ShulkerUtil.isShulkerBox(stack)) {
                     ShulkerUtil.setMaterialForShulker(stack, material.getDefaultInstance());
                     if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.ENCHANTMENT)) {
+                        //: >=1.21.2
                         stack.enchant(Holder.direct(blockEntity.getLevel().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getValue(MaterialCollector.MATERIAL_COLLECTOR)), 1);
+                        //: END
+                        /*\ <=1.21.1
+                        stack.enchant(Holder.direct(blockEntity.getLevel().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(MaterialCollector.MATERIAL_COLLECTOR).value()), 1);
+                        \END */
                     }
                     break;
                 }
