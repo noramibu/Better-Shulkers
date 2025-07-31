@@ -9,6 +9,7 @@ import com.github.noramibu.bettershulkers.mixin.AbstractContainerAccessor;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 /*\ <=1.21.1
@@ -276,7 +277,7 @@ public class ShulkerUtil {
      */
     @Nullable
     public static Item getMaterialFromShulker(ItemStack shulker) {
-        var nbt = shulker.get(DataComponents.CUSTOM_DATA).copyTag();
+        CompoundTag nbt = shulker.get(DataComponents.CUSTOM_DATA).copyTag();
         //: >=1.21.5
         String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH).get();
         //: END
@@ -298,11 +299,13 @@ public class ShulkerUtil {
      */
     @Nullable
     public static Item getMaterialFromShulkerBlock(BlockEntity shulker) {
-        var component = shulker.components().get(DataComponents.CUSTOM_DATA);
+        CustomData component = shulker.components().get(DataComponents.CUSTOM_DATA);
         if (component == null) {
+            System.out.println("Material is NULL!");
             return null;
         }
-        var nbt = component.copyTag();
+        System.out.println(component);
+        CompoundTag nbt = component.copyTag();
 
         //: >=1.21.5
         String materialId = nbt.getString(BetterShulkers.MATERIAL_PATH).get();
@@ -324,7 +327,7 @@ public class ShulkerUtil {
      * @param material ItemStack of the material to collect
      */
     public static void setMaterialForShulker(ItemStack shulker, ItemStack material) {
-        var nbt = shulker.get(DataComponents.CUSTOM_DATA).copyTag();
+        CompoundTag nbt = shulker.get(DataComponents.CUSTOM_DATA).copyTag();
         nbt.put(BetterShulkers.MATERIAL_PATH, StringTag.valueOf(getItemId(material)));
         shulker.set(DataComponents.CUSTOM_DATA, CustomData.of(nbt));
         setShulkerMaterialLore(shulker, material.getItem());
