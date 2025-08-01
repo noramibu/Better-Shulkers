@@ -30,8 +30,8 @@ jobs:
           MATRIX_LIST="["
 
           for url in $RELEASE_URLS; do
-            filename=$(basename "$url")
-            curl -sL -O -H "Authorization: token $GITHUB_TOKEN" "$url"
+            encoded_filename=$(basename "$url")
+            filename=$(printf '%b' "${encoded_filename//%/\\x}")
 
             loader="unknown"
             loaders_json="[]"
