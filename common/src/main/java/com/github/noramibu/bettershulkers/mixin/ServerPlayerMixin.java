@@ -29,7 +29,7 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
         //: >=1.21.6
         super(world, profile);
         //: END
-}
+    }
 
     private ItemStack viewingForcedShulker;
     @Unique
