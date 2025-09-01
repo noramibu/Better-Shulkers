@@ -217,8 +217,6 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
             (stack == this.viewingForcedShulker || hasMatchingFingerprint(stack))) {
             
             // Save the inventory before closing
-            System.out.println("SAVING");
-            System.out.println(this.containerMenu.getItems());
             ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), stack);
 
             // Close the container immediately
