@@ -23,14 +23,10 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
 
     public ServerPlayerMixin(Level world, GameProfile profile) {
         /*\ <=1.21.5
-      super(world, null, 1.0f, profile);
-        \END *///: >=1.21.6
+        super(world, null, 1.0f, profile);
+        \END */
 
-
-
-
-
-
+        //: >=1.21.6
         super(world, profile);
         //: END
 }
