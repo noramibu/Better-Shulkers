@@ -23,14 +23,17 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
 
     public ServerPlayerMixin(Level world, GameProfile profile) {
         /*\ <=1.21.5
-       super(world, null, 1.0f, profile);
-        \END */    //: >=1.21.6
+      super(world, null, 1.0f, profile);
+        \END *///: >=1.21.6
+
+
+
 
 
 
         super(world, profile);
         //: END
- }
+}
 
     private ItemStack viewingForcedShulker;
     @Unique
@@ -218,7 +221,9 @@ public abstract class ServerPlayerMixin extends Player implements ShulkerViewer 
             (stack == this.viewingForcedShulker || hasMatchingFingerprint(stack))) {
             
             // Save the inventory before closing
-            ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), (ServerPlayer) (Object) this);
+            System.out.println("SAVING");
+            System.out.println(this.containerMenu.getItems());
+            ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), stack);
 
             // Close the container immediately
             this.closeContainer();

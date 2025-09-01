@@ -87,15 +87,24 @@ public class ShulkerUtil {
      * @param player Player that was viewing the screen
      */
     public static void saveShulkerInventory(NonNullList<ItemStack> inventory, ServerPlayer player) {
+        saveShulkerInventory(inventory, ((ShulkerViewer)player).getViewedStack());
+    }
+
+    /**
+     * Saves the inventory to the Component
+     * @param inventory The inventory of the active shulker
+     * @param shulker The shulker box item
+     */
+    public static void saveShulkerInventory(NonNullList<ItemStack> inventory, ItemStack shulker) {
         int smallestSize = getSmallestListIndex(inventory);
         if (smallestSize != -1) {
             NonNullList<ItemStack> newInventory = NonNullList.withSize(smallestSize + 1, ItemStack.EMPTY);
             for (int i = 0; i <= smallestSize; i++) {
                 newInventory.set(i, inventory.get(i));
             }
-            ((ShulkerViewer)player).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
+            shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
         } else {
-            ((ShulkerViewer)player).getViewedStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
+            shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
         }
     }
 
