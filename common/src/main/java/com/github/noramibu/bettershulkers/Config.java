@@ -20,6 +20,7 @@ public final class Config {
     public static boolean OPEN_SHULKER_FROM_INVENTORY;
     public static boolean SHOW_MATERIAL_DISPLAY;
     public static PickupType ITEM_PICKUP_TYPE;
+    public static boolean PLAYER_SHULKER_SOUND_GLOBAL;
 
     /**
      * Instantiates the config from a saved file, or creates a new one if one is not present.
@@ -87,7 +88,11 @@ public final class Config {
             writer.write("# If true, players will need 'bettershulkers.open' permission to open shulker boxes by right-clicking them.\n");
             writer.write("require-permission-for-right-click-open-shulker = false\n\n");
 
-            writer.write("# --- Permission Nodes ---\n");
+            writer.write("\n# If true (default), shulker open/close sounds are played globally at the block position.\n");
+            writer.write("# If false, sounds are only played to the player (not broadcast to the world).\n");
+            writer.write("play-shulker-sounds-global = true\n");
+
+            writer.write("\n# --- Permission Nodes ---\n");
             writer.write("# bettershulkers.command.set   - Allows setting a shulker's material.\n");
             writer.write("# bettershulkers.command.reload - Allows reloading this configuration file.\n");
             writer.write("# bettershulkers.open          - Allows opening shulker boxes by right-clicking them in hand.\n");
@@ -104,5 +109,6 @@ public final class Config {
         OPEN_SHULKER_FROM_INVENTORY = toml.getBoolean("open-from-inventory", true);
         SHOW_MATERIAL_DISPLAY = toml.getBoolean("show-material-display", true);
         ITEM_PICKUP_TYPE = PickupType.fromString(toml.getString("item-pickup-type", "ENCHANTMENT"));
+        PLAYER_SHULKER_SOUND_GLOBAL = toml.getBoolean("play-shulker-sounds-global", true);
     }
 }

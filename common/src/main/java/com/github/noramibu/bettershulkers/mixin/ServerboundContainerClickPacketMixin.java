@@ -1,6 +1,7 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.BetterShulkers;
+import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
@@ -11,6 +12,7 @@ import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
 //: END
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
@@ -53,6 +55,21 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     if (!held.isEmpty()) {
                                         ShulkerUtil.addToShulker(stack, held);
                                     }
+                                    // Play open sound when switching viewed shulker inside containers
+                                    //: >=1.21.6
+                                    if (Config.PLAYER_SHULKER_SOUND_GLOBAL) {
+                                        ((ServerPlayer)player).level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                                    } else {
+                                        ((ServerPlayer)player).playNotifySound(SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                                    }
+                                    //: END
+                                    /*\ <=1.21.5
+                                    if (Config.PLAYER_SHULKER_SOUND_GLOBAL) {
+                                        ((ServerPlayer)player).serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                                    } else {
+                                        ((ServerPlayer)player).playNotifySound(SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                                    }
+                                    \END */
 
                                     ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
                                 }
@@ -77,6 +94,22 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     // Quick item moving
                                     quickMove(instance, held);
                                 } else {
+                                    this.player.level().playSound(null, this.player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, this.player.getSoundSource(), 1.0F, 1.0F);
+                                    //: >=1.21.6
+                                    if (Config.PLAYER_SHULKER_SOUND_GLOBAL) {
+                                        ((ServerPlayer)player).level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                                    } else {
+                                        ((ServerPlayer)player).playNotifySound(SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                                    }
+                                    //: END
+                                    /*\ <=1.21.5
+                                    if (Config.PLAYER_SHULKER_SOUND_GLOBAL) {
+                                        ((ServerPlayer)player).serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                                    } else {
+                                        ((ServerPlayer)player).playNotifySound(SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                                    }
+                                    \END */
+                                    
                                     ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
                                 }
                             } else {

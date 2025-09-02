@@ -75,8 +75,16 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     private void removeWhenClosed(Player player, CallbackInfo ci) {
         if (this.forced()) {
             if (player instanceof ServerPlayer serverPlayer) {
-                // Use the utility method for saving inventory
-                ShulkerUtil.saveShulkerInventory(this.itemStacks, serverPlayer);
+                // Save to viewed stack if still present; only use carried when viewed became empty
+                ItemStack viewed = ((ShulkerViewer)serverPlayer).getViewedStack();
+                ItemStack carried = serverPlayer.containerMenu.getCarried();
+                if (viewed != null && !viewed.isEmpty() && ShulkerUtil.isShulkerBox(viewed)) {
+                    ShulkerUtil.saveShulkerInventory(this.itemStacks, viewed);
+                } else if (!carried.isEmpty() && ShulkerUtil.isShulkerBox(carried)) {
+                    ShulkerUtil.saveShulkerInventory(this.itemStacks, carried);
+                } else {
+                    ShulkerUtil.saveShulkerInventory(this.itemStacks, serverPlayer);
+                }
                 ((ShulkerViewer)serverPlayer).setViewing(null, null);
                 // Prevent ghost items
                 //: >=1.21.2

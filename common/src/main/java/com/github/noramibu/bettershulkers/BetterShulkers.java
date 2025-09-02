@@ -66,10 +66,18 @@ public final class BetterShulkers {
                 ((ShulkerViewer) player).setViewing(stack, null);
 
                 //: >=1.21.6
-                ((ServerPlayer)player).level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                if (Config.PLAYER_SHULKER_SOUND_GLOBAL) {
+                    ((ServerPlayer)player).level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                } else {
+                    ((ServerPlayer)player).playNotifySound(SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                }
                 //: END
                 /*\ <=1.21.5
-                ((ServerPlayer)player).serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                if (Config.PLAYER_SHULKER_SOUND_GLOBAL) {
+                    ((ServerPlayer)player).serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                } else {
+                    ((ServerPlayer)player).playNotifySound(SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
+                }
                 \END */
                 ((RemoteInventory)shulker).openInventory((ServerPlayer) player, stack);
                 

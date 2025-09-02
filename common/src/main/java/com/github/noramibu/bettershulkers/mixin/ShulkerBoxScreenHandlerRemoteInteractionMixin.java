@@ -1,8 +1,10 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
@@ -44,7 +46,20 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
                 serverPlayer.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
                 \END */
 
-                // TODO I have forgotten why I am doing this
+                // Early save: save to viewed if still present; only use carried when viewed became empty
+                ItemStack carriedNow = this.getCarried();
+                NonNullList<ItemStack> shulkerInvNow = ShulkerUtil.getShulkerInventoryFromMenu(this);
+                if (viewedStack.isEmpty()) {
+                    if (!carriedNow.isEmpty() && ShulkerUtil.isShulkerBox(carriedNow)) {
+                        ShulkerUtil.saveShulkerInventory(shulkerInvNow, carriedNow);
+                    }
+                } else {
+                    if (ShulkerUtil.isShulkerBox(viewedStack)) {
+                        ShulkerUtil.saveShulkerInventory(shulkerInvNow, viewedStack);
+                    }
+                }
+
+                // If the viewed shulker moved to the cursor while UI was open, rebind viewing
                 if (viewedStack.isEmpty()) {
                     ItemStack stack = this.getCarried();
                     if (!stack.isEmpty()) {
