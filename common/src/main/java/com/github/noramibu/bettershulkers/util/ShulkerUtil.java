@@ -3,7 +3,7 @@ package com.github.noramibu.bettershulkers.util;
 import com.github.noramibu.bettershulkers.BetterShulkers;
 import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
-import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
+import com.github.noramibu.bettershulkers.interfaces.MutableContainerInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.mixin.AbstractContainerAccessor;
 import net.minecraft.core.NonNullList;
@@ -28,7 +28,6 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -87,7 +86,7 @@ public class ShulkerUtil {
      * @param player Player that was viewing the screen
      */
     public static void saveShulkerInventory(NonNullList<ItemStack> inventory, ServerPlayer player) {
-        saveShulkerInventory(inventory, ((ShulkerViewer)player).getViewedStack());
+        saveShulkerInventory(inventory, ((ShulkerViewer)player).getViewing());
     }
 
     /**
@@ -106,6 +105,7 @@ public class ShulkerUtil {
         } else {
             shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
         }
+        System.out.println("Shulker inventory saved");
     }
 
     private static int getSmallestListIndex(NonNullList<ItemStack> itemStacks) {
@@ -254,11 +254,10 @@ public class ShulkerUtil {
      */
     public static void seamlesslySwitchShulkerInventory(ServerPlayer player, ItemStack newShulker) {
         saveShulkerInventory(player.containerMenu.getItems(), player);
-        ShulkerBoxBlockEntity blockEntity = ((ShulkerViewer)player).getViewedEntity();
         // Keep the same block entity
-        ((ShulkerViewer) player).setViewing(newShulker, blockEntity);
+        ((ShulkerViewer) player).addViewing(newShulker);
         NonNullList<ItemStack> newInventory = getInventoryFromShulker(newShulker);
-        ((ForceInventory)blockEntity).setInventory(newInventory);
+        ((MutableContainerInventory)player.containerMenu).setInventory(newInventory);
         player.containerMenu.broadcastChanges();
     }
 

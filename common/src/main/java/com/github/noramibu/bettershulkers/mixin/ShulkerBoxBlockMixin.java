@@ -58,7 +58,7 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
     public void openInventory(ServerPlayer player, ItemStack stack) {
         ShulkerBoxBlockEntity blockEntity = new ShulkerBoxBlockEntity(player.blockPosition(), Blocks.SHULKER_BOX.defaultBlockState());
         ((BaseContainerBlockEntityAccessor)blockEntity).setName(stack.getDisplayName());
-        ((ShulkerViewer) player).setViewing(stack, blockEntity);
+        ((ShulkerViewer) player).addViewing(stack);
         NonNullList<ItemStack> inventory = ShulkerUtil.getInventoryFromShulker(stack);
         ((ForceInventory)blockEntity).setInventory(inventory);
         ((ForceInventory)blockEntity).setForced();

@@ -7,6 +7,7 @@
   ],
   "mixins": [
     "AbstractContainerAccessor",
+    "AbstractContainerMixin",
     "AnvilMenuMixin",
     "BaseContainerBlockEntityAccessor",
     "DisplayEntityAccessor",
@@ -14,6 +15,7 @@
     "ItemDisplayInvoker",
     "ItemDisplayMixin",
     "ItemEntityMixin",
+    "ItemStackMixin",
     "RecipeFilterMixin",
     "RecipeManagerMixin",
     "ServerboundContainerClickPacketMixin",

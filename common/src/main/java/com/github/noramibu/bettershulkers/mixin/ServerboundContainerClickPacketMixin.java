@@ -31,7 +31,7 @@ public abstract class ServerboundContainerClickPacketMixin {
                 ShulkerUtil.hasOpenPermission(player) &&
                 slot >= 0) {
             ItemStack stack = instance.getSlot(slot).getItem();
-            ItemStack viewing = ((ShulkerViewer) this.player).getViewedStack();
+            ItemStack viewing = ((ShulkerViewer) this.player).getViewing();
 
             ItemStack held = instance.getCarried();
 

@@ -1,8 +1,12 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+//: >=1.21.2
+import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
+//: END
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
@@ -25,7 +29,7 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
 
     @WrapOperation(method = "stillValid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Container;stillValid(Lnet/minecraft/world/entity/player/Player;)Z"))
     private boolean checkIfForced(Container instance, Player player, Operation<Boolean> original) {
-        if (player instanceof ServerPlayer serverPlayer && ((ShulkerViewer)serverPlayer).isViewingShulker()) {
+        if (player instanceof ServerPlayer serverPlayer && ((ShulkerViewer)serverPlayer).isViewing()) {
             return true;
         }
         return original.call(instance, player);
@@ -34,8 +38,21 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
     @Inject(method = "removed", at = @At("HEAD"))
     private void checkIfShulkerIsHeld(Player player, CallbackInfo ci) {
         if (player instanceof ServerPlayer serverPlayer) {
-            ItemStack viewedStack = ((ShulkerViewer)serverPlayer).getViewedStack();
+            ItemStack viewedStack = ((ShulkerViewer)serverPlayer).getViewing();
             if (viewedStack != null) {
+                // Save the shulker inventory when closing the menu
+                ShulkerUtil.saveShulkerInventory(serverPlayer.containerMenu.getItems(), viewedStack);
+                System.out.println(viewedStack);
+                ((ShulkerViewer)serverPlayer).removeViewing();
+
+                // Prevent ghost items
+                //: >=1.21.2
+                serverPlayer.connection.send(new ClientboundSetCursorItemPacket(ItemStack.EMPTY));
+                //: END
+                /*\ <=1.21.1
+                ShulkerUtil.syncHeldItem(player.inventoryMenu, serverPlayer);
+                \END */
+
                 //: >=1.21.6
                 serverPlayer.level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
                 //: END
@@ -48,7 +65,7 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
                 if (viewedStack.isEmpty()) {
                     ItemStack stack = this.getCarried();
                     if (!stack.isEmpty()) {
-                        ((ShulkerViewer)serverPlayer).setViewing(stack, null);
+                        ((ShulkerViewer)serverPlayer).addViewing(stack);
                     }
                 }
             }

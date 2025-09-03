@@ -3,7 +3,6 @@ package com.github.noramibu.bettershulkers.mixin;
 import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
-import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.interfaces.UpdatingAnimation;
 import com.github.noramibu.bettershulkers.util.Animation;
 import com.github.noramibu.bettershulkers.util.ItemRenderData;
@@ -11,10 +10,6 @@ import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-//: >=1.21.2
-import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
-//: END
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -74,18 +69,6 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     @Inject(method = "stopOpen", at = @At("HEAD"), cancellable = true)
     private void removeWhenClosed(Player player, CallbackInfo ci) {
         if (this.forced()) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                // Use the utility method for saving inventory
-                ShulkerUtil.saveShulkerInventory(this.itemStacks, serverPlayer);
-                ((ShulkerViewer)serverPlayer).setViewing(null, null);
-                // Prevent ghost items
-                //: >=1.21.2
-                serverPlayer.connection.send(new ClientboundSetCursorItemPacket(ItemStack.EMPTY));
-                //: END
-                /*\ <=1.21.1
-                ShulkerUtil.syncHeldItem(player.inventoryMenu, serverPlayer);
-                \END */
-            }
             this.setRemoved();
             ci.cancel();
         }

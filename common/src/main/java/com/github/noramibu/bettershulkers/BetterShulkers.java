@@ -3,7 +3,6 @@ package com.github.noramibu.bettershulkers;
 import com.github.noramibu.bettershulkers.command.ShulkerCommand;
 import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
 import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
-import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 /*\ <=1.21.1 || 1.21.5
 import dev.architectury.event.CompoundEventResult;
@@ -63,7 +62,6 @@ public final class BetterShulkers {
                     ShulkerUtil.hasOpenPermission(player)
             ) {
                 ShulkerBoxBlock shulker = (ShulkerBoxBlock) ((BlockItem)stack.getItem()).getBlock();
-                ((ShulkerViewer) player).setViewing(stack, null);
 
                 //: >=1.21.6
                 ((ServerPlayer)player).level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_OPEN, player.getSoundSource(), 1.0F, 1.0F);
