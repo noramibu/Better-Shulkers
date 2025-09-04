@@ -14,6 +14,7 @@ import net.minecraft.nbt.StringTag;
 //: 1.21.2 - 1.21.4 || >=1.21.6
 import net.minecraft.world.InteractionResult;
 //: END
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import org.slf4j.Logger;
@@ -57,7 +58,7 @@ public final class BetterShulkers {
                     ShulkerUtil.isShulkerBox(stack) &&
                     ShulkerUtil.hasOpenPermission(player)
             ) {
-                ShulkerUIUtils.openMenu(stack, player);
+                ShulkerUIUtils.openMenu(stack, (ServerPlayer) player);
                 
                 /*\ <=1.21.1 || 1.21.5
                 return CompoundEventResult.pass();

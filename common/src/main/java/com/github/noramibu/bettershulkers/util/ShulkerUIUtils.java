@@ -3,6 +3,7 @@ package com.github.noramibu.bettershulkers.util;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -35,7 +36,7 @@ public final class ShulkerUIUtils {
      * @param shulkerItem Shulker box item to get the inventory from
      * @param player The player opening the menu
      */
-    public static void openMenu(ItemStack shulkerItem, Player player) {
+    public static void openMenu(ItemStack shulkerItem, ServerPlayer player) {
         MenuProvider provider = createMenu(shulkerItem);
         player.openMenu(provider);
         ((ShulkerViewer) player.containerMenu).addViewing(shulkerItem);
