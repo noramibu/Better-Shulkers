@@ -1,22 +1,16 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.Config;
-import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
-import com.github.noramibu.bettershulkers.interfaces.RemoteInventory;
-import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
@@ -30,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.List;
 
 @Mixin(ShulkerBoxBlock.class)
-public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements RemoteInventory {
+public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
     protected ShulkerBoxBlockMixin(Properties settings) {
         super(settings);
     }
@@ -52,18 +46,6 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock implements Re
             }
         }
         return original;
-    }
-
-    @Override
-    public void openInventory(ServerPlayer player, ItemStack stack) {
-        ShulkerBoxBlockEntity blockEntity = new ShulkerBoxBlockEntity(player.blockPosition(), Blocks.SHULKER_BOX.defaultBlockState());
-        ((BaseContainerBlockEntityAccessor)blockEntity).setName(stack.getDisplayName());
-        ((ShulkerViewer) player).addViewing(stack);
-        NonNullList<ItemStack> inventory = ShulkerUtil.getInventoryFromShulker(stack);
-        ((ForceInventory)blockEntity).setInventory(inventory);
-        ((ForceInventory)blockEntity).setForced();
-
-        player.openMenu(blockEntity);
     }
 
     @Override

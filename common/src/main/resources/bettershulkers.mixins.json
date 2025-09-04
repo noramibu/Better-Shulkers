@@ -7,7 +7,6 @@
   ],
   "mixins": [
     "AbstractContainerAccessor",
-    "AbstractContainerMixin",
     "AnvilMenuMixin",
     "BaseContainerBlockEntityAccessor",
     "DisplayEntityAccessor",
@@ -15,7 +14,6 @@
     "ItemDisplayInvoker",
     "ItemDisplayMixin",
     "ItemEntityMixin",
-    "ItemStackMixin",
     "RecipeFilterMixin",
     "RecipeManagerMixin",
     "ServerboundContainerClickPacketMixin",
@@ -23,7 +21,8 @@
     "ShulkerBoxBlockEntityMixin",
     "ShulkerBoxBlockMixin",
     "ShulkerBoxMenuHandlerAccessor",
-    "ShulkerBoxScreenHandlerRemoteInteractionMixin"
+    "ShulkerBoxScreenHandlerRemoteInteractionMixin",
+    "SimpleContainerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -3,9 +3,10 @@ package com.github.noramibu.bettershulkers.util;
 import com.github.noramibu.bettershulkers.BetterShulkers;
 import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
-import com.github.noramibu.bettershulkers.interfaces.MutableContainerInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.interfaces.SimpleContainerAccessor;
 import com.github.noramibu.bettershulkers.mixin.AbstractContainerAccessor;
+import com.github.noramibu.bettershulkers.mixin.ShulkerBoxMenuHandlerAccessor;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,6 +18,7 @@ import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 \END */
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.BlockItem;
@@ -86,7 +88,7 @@ public class ShulkerUtil {
      * @param player Player that was viewing the screen
      */
     public static void saveShulkerInventory(NonNullList<ItemStack> inventory, ServerPlayer player) {
-        saveShulkerInventory(inventory, ((ShulkerViewer)player).getViewing());
+        saveShulkerInventory(inventory, ((ShulkerViewer) player.containerMenu).getViewing());
     }
 
     /**
@@ -105,7 +107,6 @@ public class ShulkerUtil {
         } else {
             shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
         }
-        System.out.println("Shulker inventory saved");
     }
 
     private static int getSmallestListIndex(NonNullList<ItemStack> itemStacks) {
@@ -255,9 +256,10 @@ public class ShulkerUtil {
     public static void seamlesslySwitchShulkerInventory(ServerPlayer player, ItemStack newShulker) {
         saveShulkerInventory(player.containerMenu.getItems(), player);
         // Keep the same block entity
-        ((ShulkerViewer) player).addViewing(newShulker);
+        ((ShulkerViewer) player.containerMenu).addViewing(newShulker);
         NonNullList<ItemStack> newInventory = getInventoryFromShulker(newShulker);
-        ((MutableContainerInventory)player.containerMenu).setInventory(newInventory);
+        Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)player.containerMenu).getInventory();
+        ((SimpleContainerAccessor)screenInventory).setItems(newInventory);
         player.containerMenu.broadcastChanges();
     }
 

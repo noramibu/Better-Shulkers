@@ -1,7 +1,6 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.Config;
-import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.MaterialDisplay;
 import com.github.noramibu.bettershulkers.interfaces.UpdatingAnimation;
 import com.github.noramibu.bettershulkers.util.Animation;
@@ -9,7 +8,6 @@ import com.github.noramibu.bettershulkers.util.ItemRenderData;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -25,18 +23,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ShulkerBoxBlockEntity.class)
-public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ForceInventory, MaterialDisplay {
-
-    @Shadow private NonNullList<ItemStack> itemStacks;
-    @Unique
-    private boolean forced;
+public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements MaterialDisplay {
     @Unique
     private Display.ItemDisplay display;
 
@@ -44,35 +37,8 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         super(blockEntityType, blockPos, blockState);
     }
 
-    @Override
-    public void setInventory(NonNullList<ItemStack> inventory) {
-        this.itemStacks = inventory;
-    }
-
-    @Override
-    public void setForced() {
-        this.forced = true;
-    }
-
-    @Override
-    public boolean forced() {
-        return this.forced;
-    }
-
-    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-    private static void skipTicks(Level world, BlockPos pos, BlockState state, ShulkerBoxBlockEntity blockEntity, CallbackInfo ci) {
-        if (((ForceInventory)blockEntity).forced()) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "stopOpen", at = @At("HEAD"), cancellable = true)
-    private void removeWhenClosed(Player player, CallbackInfo ci) {
-        if (this.forced()) {
-            this.setRemoved();
-            ci.cancel();
-        }
-
+    @Inject(method = "stopOpen", at = @At("HEAD"))
+    private void bettershulkers$animateClosing(Player player, CallbackInfo ci) {
         // Item Display animation
         if (this.display != null) {
             Animation animation = new Animation(10, 270F, 0F, -0.4987F, -0.01F, 0.015F, 0.01F);
@@ -80,12 +46,8 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
         }
     }
 
-    @Inject(method = "startOpen", at = @At("HEAD"), cancellable = true)
-    private void ignoreOpening(Player player, CallbackInfo ci) {
-        if (this.forced()) {
-            ci.cancel();
-        }
-
+    @Inject(method = "startOpen", at = @At("HEAD"))
+    private void bettershulkers$animateOpening(Player player, CallbackInfo ci) {
         // Item Display animation
         if (this.display != null) {
             Animation animation = new Animation(10, 0F,270F, 0F,-0.4987F, 0F, 0F);

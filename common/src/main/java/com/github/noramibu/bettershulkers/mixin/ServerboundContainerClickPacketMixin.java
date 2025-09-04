@@ -1,7 +1,7 @@
 package com.github.noramibu.bettershulkers.mixin;
 
-import com.github.noramibu.bettershulkers.BetterShulkers;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.util.ShulkerUIUtils;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.core.NonNullList;
@@ -31,7 +31,12 @@ public abstract class ServerboundContainerClickPacketMixin {
                 ShulkerUtil.hasOpenPermission(player) &&
                 slot >= 0) {
             ItemStack stack = instance.getSlot(slot).getItem();
-            ItemStack viewing = ((ShulkerViewer) this.player).getViewing();
+            ItemStack viewing;
+            if (this.player.containerMenu instanceof ShulkerViewer viewer) {
+                viewing = viewer.getViewing();
+            } else {
+                viewing = null;
+            }
 
             ItemStack held = instance.getCarried();
 
@@ -62,9 +67,12 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     ShulkerUtil.addToShulker(stack, held);
                                 }
 
-                                BetterShulkers.openShulkerMenu(stack, this.player);
+                                ShulkerUIUtils.openMenu(stack, this.player);
                             }
                         } else {
+                            if (stack.equals(viewing)) {
+                                ShulkerUtil.saveShulkerInventory(this.player.containerMenu.getItems(), viewing);
+                            }
                             return true;
                         }
                     }
@@ -80,7 +88,7 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
                                 }
                             } else {
-                                BetterShulkers.openShulkerMenu(stack, this.player);
+                                ShulkerUIUtils.openMenu(stack, this.player);
                             }
                         } else {
                             return true;

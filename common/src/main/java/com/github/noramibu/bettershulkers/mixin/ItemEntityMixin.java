@@ -1,8 +1,8 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.Config;
-import com.github.noramibu.bettershulkers.interfaces.ForceInventory;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.interfaces.SimpleContainerAccessor;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.NonNullList;
@@ -50,7 +50,7 @@ public abstract class ItemEntityMixin {
             if (ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
 
                 // Check if the shulker being checked is currently open
-                boolean isUIOpen = ((ShulkerViewer)player).getViewing() == inventoryStack && !player.level().isClientSide;
+                boolean isUIOpen = ((ShulkerViewer)player.containerMenu).getViewing() == inventoryStack && !player.level().isClientSide;
                 if (isUIOpen) {
                     ShulkerUtil.saveShulkerInventory(ShulkerUtil.getShulkerInventoryFromMenu(player.containerMenu), (ServerPlayer) player);
                 }
@@ -62,7 +62,7 @@ public abstract class ItemEntityMixin {
                 if (isUIOpen) {
                     Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)player.containerMenu).getInventory();
                     NonNullList<ItemStack> updatedList = ShulkerUtil.getInventoryFromShulker(inventoryStack);
-                    ((ForceInventory)screenInventory).setInventory(updatedList);
+                    ((SimpleContainerAccessor)screenInventory).setItems(updatedList);
                     player.containerMenu.broadcastChanges();
                 }
 
