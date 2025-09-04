@@ -7,6 +7,7 @@ import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.interfaces.SimpleContainerAccessor;
 import com.github.noramibu.bettershulkers.mixin.AbstractContainerAccessor;
 import com.github.noramibu.bettershulkers.mixin.ShulkerBoxMenuHandlerAccessor;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,8 +17,11 @@ import net.minecraft.network.chat.Component;
 /*\ <=1.21.1
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 \END */
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -261,6 +265,7 @@ public class ShulkerUtil {
         Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)player.containerMenu).getInventory();
         ((SimpleContainerAccessor)screenInventory).setItems(newInventory);
         player.containerMenu.broadcastChanges();
+        ShulkerUtil.playLocalSound(player, SoundEvents.SHULKER_BOX_OPEN);
     }
 
     /**
@@ -408,5 +413,15 @@ public class ShulkerUtil {
         return menu instanceof InventoryMenu ||
                 menu instanceof ShulkerBoxMenu ||
                 menu instanceof ChestMenu;
+    }
+
+    /**
+     * Plays a sound that only that player can hear
+     * @param player Player to play the sound for
+     * @param sound Sound to play
+     */
+    public static void playLocalSound(ServerPlayer player, SoundEvent sound) {
+        ClientboundSoundPacket packet = new ClientboundSoundPacket(Holder.direct(sound), player.getSoundSource(), player.getX(), player.getY(), player.getZ(), 1.0F, 1.0F, player.getRandom().nextLong());
+        player.connection.send(packet);
     }
 }

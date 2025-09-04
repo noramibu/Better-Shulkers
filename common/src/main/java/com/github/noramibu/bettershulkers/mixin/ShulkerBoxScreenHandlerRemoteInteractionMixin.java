@@ -55,21 +55,7 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
                 ShulkerUtil.syncHeldItem(player.inventoryMenu, serverPlayer);
                 \END */
 
-                //: >=1.21.6
-                serverPlayer.level().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
-                //: END
-
-                /*\ <=1.21.5
-                serverPlayer.serverLevel().playSound(null, player.blockPosition(), SoundEvents.SHULKER_BOX_CLOSE, player.getSoundSource(), 1.0F, 1.0F);
-                \END */
-
-                // TODO I have forgotten why I am doing this
-                if (viewedStack.isEmpty()) {
-                    ItemStack stack = this.getCarried();
-                    if (!stack.isEmpty()) {
-                        ((ShulkerViewer) serverPlayer.containerMenu).addViewing(stack);
-                    }
-                }
+                ShulkerUtil.playLocalSound(serverPlayer, SoundEvents.SHULKER_BOX_CLOSE);
             }
         }
     }

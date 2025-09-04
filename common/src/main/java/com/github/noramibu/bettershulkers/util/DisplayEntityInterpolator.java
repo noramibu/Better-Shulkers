@@ -23,12 +23,11 @@ public class DisplayEntityInterpolator {
 
     /**
      * Rotates the item display along the Z-axis
+     *
      * @param to The final rotation (must be [-Pi, Pi])
-     * @return DisplayEntityInterpolator instance
      */
-    public DisplayEntityInterpolator roll(float to) {
+    public void roll(float to) {
         this.matrix.rotateZ(to);
-        return this;
     }
 
     /**

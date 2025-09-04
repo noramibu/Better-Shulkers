@@ -5,6 +5,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * A {@link SimpleContainer} that allows for direct assigning of the inventory
+ */
 public class FilledSimpleContainer extends SimpleContainer {
     public FilledSimpleContainer(NonNullList<ItemStack> inventory) {
         ((SimpleContainerAccessor) this).setSize(27);

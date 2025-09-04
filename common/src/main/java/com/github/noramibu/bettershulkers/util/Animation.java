@@ -55,11 +55,11 @@ public class Animation {
         display.getEntityData().set(DisplayEntityAccessor.getTransInterpolationDuration(), 2);
         DisplayEntityInterpolator interpolater = new DisplayEntityInterpolator();
         if (this.ticks < this.duration) {
-            interpolater.moveVertical(startHeight + (height * ticks) - heightOffset);
-            interpolater.roll((startRotation + rotation * ticks) * Mth.DEG_TO_RAD);
+            interpolater.moveVertical(startHeight + (height * ticks) - heightOffset)
+                    .roll((startRotation + rotation * ticks) * Mth.DEG_TO_RAD);
         } else if (this.ticks == this.duration){
-            interpolater.moveVertical(startHeight + (height * ticks));
-            interpolater.roll((startRotation + rotation * ticks) * Mth.DEG_TO_RAD);
+            interpolater.moveVertical(startHeight + (height * ticks))
+                    .roll((startRotation + rotation * ticks) * Mth.DEG_TO_RAD);
         } else if (this.ticks == this.duration + 1) {
             interpolater.moveVertical(startHeight + (height * (ticks - 1)) + finalJump);
         }
