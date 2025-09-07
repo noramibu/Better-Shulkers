@@ -1,5 +1,6 @@
 package com.github.noramibu.bettershulkers.interfaces;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,5 +18,9 @@ public interface ShulkerViewer {
 
     default boolean isViewing() {
         return this.getViewing() != null;
+    }
+
+    static boolean isViewing(ServerPlayer player) {
+        return player.containerMenu instanceof ShulkerViewer shulkerViewer && shulkerViewer.isViewing();
     }
 }

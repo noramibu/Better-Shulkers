@@ -50,7 +50,7 @@ public abstract class ItemEntityMixin {
             if (ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
 
                 // Check if the shulker being checked is currently open
-                boolean isUIOpen = ((ShulkerViewer)player.containerMenu).getViewing() == inventoryStack && !player.level().isClientSide;
+                boolean isUIOpen = !player.level().isClientSide && ShulkerViewer.isViewing((ServerPlayer) player);
                 if (isUIOpen) {
                     ShulkerUtil.saveShulkerInventory(ShulkerUtil.getShulkerInventoryFromMenu(player.containerMenu), (ServerPlayer) player);
                 }
