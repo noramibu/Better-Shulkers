@@ -29,18 +29,14 @@ public abstract class ServerPlayerMixin extends Player {
     @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"))
     private void checkIfItemIsViewedShulker(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
         // Check if the dropped item is the viewed shulker
-        if (ShulkerViewer.isViewing((ServerPlayer) (Object) this) && ShulkerUtil.isShulkerBox(stack)) {
-            ItemStack viewing = ((ShulkerViewer)this.containerMenu).getViewing();
-            if (viewing.isEmpty()) {
-                viewing = this.containerMenu.getCarried();
-            }
-
-            if (stack == viewing) {
+        if (this.containerMenu instanceof ShulkerViewer shulkerViewer) {
+            ItemStack viewing = shulkerViewer.getViewing();
+            if (viewing != null && (viewing.isEmpty() || stack == viewing)) {
                 // Save the inventory before closing
                 ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), stack);
 
                 // Close the container immediately
-                ((ShulkerViewer)this.containerMenu).removeViewing();
+                shulkerViewer.removeViewing();
                 this.closeContainer();
             }
         }

@@ -20,7 +20,7 @@ public interface ShulkerViewer {
         return this.getViewing() != null;
     }
 
-    static boolean isViewing(ServerPlayer player) {
-        return player.containerMenu instanceof ShulkerViewer shulkerViewer && shulkerViewer.isViewing();
+    static boolean isViewing(ItemStack testStack, ServerPlayer player) {
+        return player.containerMenu instanceof ShulkerViewer shulkerViewer && testStack.equals(shulkerViewer.getViewing());
     }
 }

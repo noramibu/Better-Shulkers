@@ -30,7 +30,7 @@ public abstract class ItemEntityMixin {
     )
     private void onBeforeInsertStack(Player player, CallbackInfo ci, @Local(ordinal = 0) ItemStack itemStack) {
         // Pickup is disabled
-        if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.NONE)) {
+        if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.NONE) || player.level().isClientSide) {
             return;
         }
 
@@ -50,7 +50,7 @@ public abstract class ItemEntityMixin {
             if (ShulkerUtil.canBeAddedToShulker(inventoryStack, itemStack)) {
 
                 // Check if the shulker being checked is currently open
-                boolean isUIOpen = !player.level().isClientSide && ShulkerViewer.isViewing((ServerPlayer) player);
+                boolean isUIOpen = ShulkerViewer.isViewing(inventoryStack, (ServerPlayer) player);
                 if (isUIOpen) {
                     ShulkerUtil.saveShulkerInventory(ShulkerUtil.getShulkerInventoryFromMenu(player.containerMenu), (ServerPlayer) player);
                 }
