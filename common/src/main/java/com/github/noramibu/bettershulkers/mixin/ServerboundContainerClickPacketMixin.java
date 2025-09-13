@@ -26,7 +26,7 @@ public abstract class ServerboundContainerClickPacketMixin {
     @Shadow public ServerPlayer player;
 
     @WrapWithCondition(method = "handleContainerClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;clicked(IILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V"))
-    private boolean checkIfShulkerIsClicked(AbstractContainerMenu instance, int slot, int buttonNum, ClickType clickType, Player player) {
+    private boolean bettershulkers$checkIfShulkerIsClicked(AbstractContainerMenu instance, int slot, int buttonNum, ClickType clickType, Player player) {
         if (ShulkerUtil.isValidOpeningUI(instance) &&
                 ShulkerUtil.hasOpenPermission(player) &&
                 slot >= 0) {

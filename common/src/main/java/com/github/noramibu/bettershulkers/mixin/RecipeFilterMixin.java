@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class RecipeFilterMixin implements Packet<ClientGamePacketListener> {
     /*\ <=1.21.1
     @ModifyReturnValue(method = "method_55955", at = @At("TAIL"))
-    private static List<RecipeHolder<?>> filterRecipes(List<RecipeHolder<?>> recipes) {
+    private static List<RecipeHolder<?>> bettershulkers$filterRecipes(List<RecipeHolder<?>> recipes) {
         List<RecipeHolder<?>> list = new ArrayList<>();
         for (var recipe : recipes) {
             if (!(recipe.value() instanceof FakeRecipe)) {

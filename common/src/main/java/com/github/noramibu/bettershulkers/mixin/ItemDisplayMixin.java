@@ -20,7 +20,7 @@ public class ItemDisplayMixin implements UpdatingAnimation {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    private void checkAnimations(CallbackInfo ci) {
+    private void bettershulkers$checkAnimations(CallbackInfo ci) {
         this.animations.removeIf(animation -> animation.tick((Display) (Object) this));
     }
 }

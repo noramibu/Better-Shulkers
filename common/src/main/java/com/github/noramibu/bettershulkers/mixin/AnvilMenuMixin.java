@@ -34,7 +34,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     //: END
 
     @Inject(method = "createResult()V", at = @At("HEAD"), cancellable = true)
-    private void checkForShulkerMaterial(CallbackInfo ci) {
+    private void bettershulkers$checkForShulkerMaterial(CallbackInfo ci) {
         if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.ENCHANTMENT)) {
             ItemStack stack1 = this.inputSlots.getItem(0);
             ItemStack stack2 = this.inputSlots.getItem(1);
@@ -67,7 +67,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     }
 
     @Inject(method = "onTake", at = @At("HEAD"), cancellable = true)
-    private void handleResultTaken(Player player, ItemStack stack, CallbackInfo ci) {
+    private void bettershulkers$handleResultTaken(Player player, ItemStack stack, CallbackInfo ci) {
         // Check if this is our custom shulker material recipe
         if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.ENCHANTMENT)) {
             ItemStack stack1 = this.inputSlots.getItem(0);
@@ -119,7 +119,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     }
 
     @WrapOperation(method = "createResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;setEnchantments(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/enchantment/ItemEnchantments;)V"))
-    private void doNotSetShulkerEnchantments(ItemStack itemStack, ItemEnchantments itemEnchantments, Operation<Void> original) {
+    private void bettershulkers$doNotSetShulkerEnchantments(ItemStack itemStack, ItemEnchantments itemEnchantments, Operation<Void> original) {
         if (ShulkerUtil.isShulkerBox(itemStack)) {
             ShulkerUtil.setMaterialForShulker(itemStack, ItemStack.EMPTY);
         } else {

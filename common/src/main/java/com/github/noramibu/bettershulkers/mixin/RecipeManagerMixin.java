@@ -29,7 +29,7 @@ import java.util.List;
 public class RecipeManagerMixin {
     //: >=1.21.2
     @Inject(method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Lnet/minecraft/world/item/crafting/RecipeMap;", at = @At(value = "INVOKE", target = "Ljava/util/SortedMap;forEach(Ljava/util/function/BiConsumer;)V"))
-    private void addBetterShulkersRecipe(ResourceManager resourceManager, ProfilerFiller profilerFiller, CallbackInfoReturnable<RecipeMap> cir, @Local(ordinal = 0) List<RecipeHolder<?>> list) {
+    private void bettershulkers$addBetterShulkersRecipe(ResourceManager resourceManager, ProfilerFiller profilerFiller, CallbackInfoReturnable<RecipeMap> cir, @Local(ordinal = 0) List<RecipeHolder<?>> list) {
         ShulkerUpgradeRecipe recipe = new ShulkerUpgradeRecipe(CraftingBookCategory.MISC);
         ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(BetterShulkers.MOD_ID, "shulker_upgrade");
         ResourceKey<Recipe<?>> resourceKey = ResourceKey.create(Registries.RECIPE, resourceLocation);
@@ -40,7 +40,7 @@ public class RecipeManagerMixin {
 
     /*\ <=1.21.1
     @WrapOperation(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMultimap$Builder;build()Lcom/google/common/collect/ImmutableMultimap;"))
-    private <K, V> ImmutableMultimap<K, V> addBetterShulkerRecipe(ImmutableMultimap.Builder  instance, Operation<ImmutableMultimap<K, V>> original) {
+    private <K, V> ImmutableMultimap<K, V> bettershulkers$addBetterShulkerRecipe(ImmutableMultimap.Builder  instance, Operation<ImmutableMultimap<K, V>> original) {
         ShulkerUpgradeRecipe recipe = new ShulkerUpgradeRecipe(CraftingBookCategory.MISC);
         ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(BetterShulkers.MOD_ID, "shulker_upgrade");
         RecipeHolder<?> recipeHolder = new RecipeHolder<>(resourceLocation, recipe);
@@ -49,7 +49,7 @@ public class RecipeManagerMixin {
     }
 
     @WrapOperation(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()Lcom/google/common/collect/ImmutableMap;"))
-    private <K, V> ImmutableMap<K, V> addBetterShulkerRecipe(ImmutableMap.Builder instance, Operation<ImmutableMap<K, V>> original) {
+    private <K, V> ImmutableMap<K, V> bettershulkers$addBetterShulkerRecipe(ImmutableMap.Builder instance, Operation<ImmutableMap<K, V>> original) {
         ShulkerUpgradeRecipe recipe = new ShulkerUpgradeRecipe(CraftingBookCategory.MISC);
         ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(BetterShulkers.MOD_ID, "shulker_upgrade");
         RecipeHolder<?> recipeHolder = new RecipeHolder<>(resourceLocation, recipe);
