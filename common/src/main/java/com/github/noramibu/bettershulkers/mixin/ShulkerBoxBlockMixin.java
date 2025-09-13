@@ -30,7 +30,7 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
     }
 
     @ModifyReturnValue(method = "getDrops", at = @At("RETURN"))
-    private List<ItemStack> onGetDrops(List<ItemStack> original, @Local(argsOnly = true) LootParams.Builder builder) {
+    private List<ItemStack> bettershulkers$onGetDrops(List<ItemStack> original, @Local(argsOnly = true) LootParams.Builder builder) {
         if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.NONE)) {
             return original;
         }

@@ -31,7 +31,7 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
     }
 
     @WrapOperation(method = "stillValid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Container;stillValid(Lnet/minecraft/world/entity/player/Player;)Z"))
-    private boolean checkIfForced(Container instance, Player player, Operation<Boolean> original) {
+    private boolean bettershulkers$checkIfForced(Container instance, Player player, Operation<Boolean> original) {
         if (player instanceof ServerPlayer serverPlayer && ((ShulkerViewer) serverPlayer.containerMenu).isViewing()) {
             return true;
         }
@@ -39,7 +39,7 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
     }
 
     @Inject(method = "removed", at = @At("HEAD"))
-    private void checkIfShulkerIsHeld(Player player, CallbackInfo ci) {
+    private void bettershulkers$checkIfShulkerIsHeld(Player player, CallbackInfo ci) {
         if (player instanceof ServerPlayer serverPlayer) {
             ItemStack viewedStack = ((ShulkerViewer) serverPlayer.containerMenu).getViewing();
             if (viewedStack != null) {
