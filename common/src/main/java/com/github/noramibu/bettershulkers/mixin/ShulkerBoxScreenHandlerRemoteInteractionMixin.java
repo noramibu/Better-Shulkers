@@ -46,7 +46,7 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
             if (viewedStack != null) {
                 // Save the shulker inventory when closing the menu
                 ShulkerUtil.saveShulkerInventory(serverPlayer.containerMenu.getItems(), viewedStack);
-                ShulkerUtil.saveDataToShulkerItem(this.slots, viewedStack);
+                ShulkerUtil.saveDataToShulkerItem(this, viewedStack);
                 ((ShulkerViewer) serverPlayer.containerMenu).removeViewing();
 
                 // Prevent ghost items
@@ -76,7 +76,9 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
 
     @Override
     public void removeViewing() {
-        ((ViewingMarker) (Object) this.shulkerItem).setViewer(null);
+        if (this.shulkerItem != null) {
+            ((ViewingMarker) (Object) this.shulkerItem).setViewer(null);
+        }
         this.shulkerItem = null;
     }
 }

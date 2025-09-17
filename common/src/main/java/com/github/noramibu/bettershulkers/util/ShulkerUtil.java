@@ -116,15 +116,18 @@ public class ShulkerUtil {
 
     /**
      * Copies the data from the cached shulker and puts it in the original viewed shulker
-     * @param inventory Currently opened inventory
+     * @param menu The currently opened menu
      * @param shulkerCopy Cached shulker copy
      */
-    public static void saveDataToShulkerItem(NonNullList<Slot> inventory, ItemStack shulkerCopy) {
-        for (Slot slot : inventory) {
+    public static void saveDataToShulkerItem(AbstractContainerMenu menu, ItemStack shulkerCopy) {
+        for (Slot slot : menu.slots) {
             if (((ViewingMarker) (Object) slot.getItem()).isBeingViewed()) {
                 slot.set(shulkerCopy);
                 return;
             }
+        }
+        if (((ViewingMarker) (Object) menu.getCarried()).isBeingViewed()) {
+            menu.setCarried(shulkerCopy);
         }
     }
 
