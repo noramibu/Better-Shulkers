@@ -42,7 +42,7 @@ public final class ShulkerUIUtils {
     public static void openMenu(ItemStack shulkerItem, ServerPlayer player) {
         MenuProvider provider = createMenu(shulkerItem);
         player.openMenu(provider);
-        ((ShulkerViewer) player.containerMenu).addViewing(shulkerItem);
+        ((ShulkerViewer) player.containerMenu).addViewing(shulkerItem, player);
 
         ShulkerUtil.playLocalSound(player, SoundEvents.SHULKER_BOX_OPEN);
     }

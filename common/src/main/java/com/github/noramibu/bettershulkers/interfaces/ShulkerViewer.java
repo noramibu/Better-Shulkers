@@ -12,7 +12,7 @@ public interface ShulkerViewer {
     @Nullable
     ItemStack getViewing();
 
-    void addViewing(@NotNull ItemStack stack);
+    void addViewing(@NotNull ItemStack stack, @NotNull ServerPlayer player);
 
     void removeViewing();
 

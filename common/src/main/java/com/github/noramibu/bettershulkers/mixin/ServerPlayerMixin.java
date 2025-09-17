@@ -1,6 +1,7 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.interfaces.ViewingMarker;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,19 +36,16 @@ public abstract class ServerPlayerMixin extends Player {
     @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"))
     private void bettershulkers$checkIfItemIsViewedShulker(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
         // Check if the dropped item is the viewed shulker
-        if (this.containerMenu instanceof ShulkerViewer shulkerViewer) {
-            ItemStack viewing = shulkerViewer.getViewing();
-            if (viewing != null && (viewing.isEmpty() || stack == viewing)) {
-                // Save the inventory before closing
-                ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), stack);
-                // Close the container immediately
-                shulkerViewer.removeViewing();
-                // Minimal closing code
-                this.connection.send(new ClientboundContainerClosePacket(this.containerMenu.containerId));
-                this.containerMenu.setCarried(ItemStack.EMPTY);
-                this.inventoryMenu.transferState(this.containerMenu);
-                this.containerMenu = this.inventoryMenu;
-            }
+        if (this.containerMenu instanceof ShulkerViewer shulkerViewer && ((ViewingMarker) (Object) stack).isBeingViewed()) {
+            // Save the inventory before closing
+            ShulkerUtil.saveShulkerInventory(this.containerMenu.getItems(), stack);
+            // Close the container immediately
+            shulkerViewer.removeViewing();
+            // Minimal closing code
+            this.connection.send(new ClientboundContainerClosePacket(this.containerMenu.containerId));
+            this.containerMenu.setCarried(ItemStack.EMPTY);
+            this.inventoryMenu.transferState(this.containerMenu);
+            this.containerMenu = this.inventoryMenu;
         }
     }
 }

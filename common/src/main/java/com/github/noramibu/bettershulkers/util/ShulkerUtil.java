@@ -5,6 +5,7 @@ import com.github.noramibu.bettershulkers.Config;
 import com.github.noramibu.bettershulkers.abstraction.AbstractionManager;
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
 import com.github.noramibu.bettershulkers.interfaces.SimpleContainerAccessor;
+import com.github.noramibu.bettershulkers.interfaces.ViewingMarker;
 import com.github.noramibu.bettershulkers.mixin.AbstractContainerAccessor;
 import com.github.noramibu.bettershulkers.mixin.ShulkerBoxMenuHandlerAccessor;
 import net.minecraft.core.Holder;
@@ -110,6 +111,20 @@ public class ShulkerUtil {
             shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
         } else {
             shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
+        }
+    }
+
+    /**
+     * Copies the data from the cached shulker and puts it in the original viewed shulker
+     * @param inventory Currently opened inventory
+     * @param shulkerCopy Cached shulker copy
+     */
+    public static void saveDataToShulkerItem(NonNullList<Slot> inventory, ItemStack shulkerCopy) {
+        for (Slot slot : inventory) {
+            if (((ViewingMarker) (Object) slot.getItem()).isBeingViewed()) {
+                slot.set(shulkerCopy);
+                return;
+            }
         }
     }
 
@@ -260,7 +275,7 @@ public class ShulkerUtil {
     public static void seamlesslySwitchShulkerInventory(ServerPlayer player, ItemStack newShulker) {
         saveShulkerInventory(player.containerMenu.getItems(), player);
         // Keep the same block entity
-        ((ShulkerViewer) player.containerMenu).addViewing(newShulker);
+        ((ShulkerViewer) player.containerMenu).addViewing(newShulker, player);
         NonNullList<ItemStack> newInventory = getInventoryFromShulker(newShulker);
         Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)player.containerMenu).getInventory();
         ((SimpleContainerAccessor)screenInventory).setItems(newInventory);

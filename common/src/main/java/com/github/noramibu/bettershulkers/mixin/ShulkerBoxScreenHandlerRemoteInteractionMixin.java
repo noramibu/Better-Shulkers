@@ -1,6 +1,7 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.interfaces.ViewingMarker;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -45,6 +46,7 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
             if (viewedStack != null) {
                 // Save the shulker inventory when closing the menu
                 ShulkerUtil.saveShulkerInventory(serverPlayer.containerMenu.getItems(), viewedStack);
+                ShulkerUtil.saveDataToShulkerItem(this.slots, viewedStack);
                 ((ShulkerViewer) serverPlayer.containerMenu).removeViewing();
 
                 // Prevent ghost items
@@ -66,12 +68,15 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
     }
 
     @Override
-    public void addViewing(@NotNull ItemStack stack) {
-        this.shulkerItem = stack;
+    public void addViewing(@NotNull ItemStack stack, @NotNull ServerPlayer player) {
+        // TODO Test copying data
+        ((ViewingMarker) (Object) stack).setViewer(player);
+        this.shulkerItem = stack.copy();
     }
 
     @Override
     public void removeViewing() {
+        ((ViewingMarker) (Object) this.shulkerItem).setViewer(null);
         this.shulkerItem = null;
     }
 }

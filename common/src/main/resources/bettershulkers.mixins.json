@@ -14,6 +14,7 @@
     "ItemDisplayInvoker",
     "ItemDisplayMixin",
     "ItemEntityMixin",
+    "ItemStackMixin",
     "RecipeFilterMixin",
     "RecipeManagerMixin",
     "ServerboundContainerClickPacketMixin",
