@@ -1,6 +1,7 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.interfaces.ShulkerViewer;
+import com.github.noramibu.bettershulkers.interfaces.ViewingMarker;
 import com.github.noramibu.bettershulkers.util.ShulkerUIUtils;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
@@ -47,12 +48,13 @@ public abstract class ServerboundContainerClickPacketMixin {
                         if (buttonNum == 1) {
 
                             if (viewing != null) {
-                                if (viewing.equals(stack)) {
+                                if (((ViewingMarker) (Object) stack).isBeingViewed()) {
                                     // Automatically insert items
                                     if (!held.isEmpty()) {
                                         ShulkerUtil.addToShulkerInventory(instance, held, true);
                                     }
 
+                                    System.out.println("TEST1");
                                 } else {
                                     // Automatically insert items into a different shulker
                                     if (!held.isEmpty()) {
@@ -60,19 +62,18 @@ public abstract class ServerboundContainerClickPacketMixin {
                                     }
 
                                     ShulkerUtil.seamlesslySwitchShulkerInventory((ServerPlayer) player, stack);
+                                    System.out.println("TEST2");
                                 }
                             } else {
                                 // Automatically insert items
                                 if (!held.isEmpty()) {
                                     ShulkerUtil.addToShulker(stack, held);
                                 }
-
+                                
                                 ShulkerUIUtils.openMenu(stack, this.player);
+                                System.out.println("TEST3");
                             }
                         } else {
-                            if (stack.equals(viewing)) {
-                                ShulkerUtil.saveShulkerInventory(this.player.containerMenu.getItems(), viewing);
-                            }
                             return true;
                         }
                     }

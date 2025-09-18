@@ -110,7 +110,7 @@ public class ShulkerUtil {
             }
             shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(newInventory));
         } else {
-            shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of()));
+            shulker.set(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }
     }
 
@@ -122,11 +122,13 @@ public class ShulkerUtil {
     public static void saveDataToShulkerItem(AbstractContainerMenu menu, ItemStack shulkerCopy) {
         for (Slot slot : menu.slots) {
             if (((ViewingMarker) (Object) slot.getItem()).isBeingViewed()) {
+                System.out.println("SHULKER FOUND");
                 slot.set(shulkerCopy);
                 return;
             }
         }
         if (((ViewingMarker) (Object) menu.getCarried()).isBeingViewed()) {
+            System.out.println("SHULKER FOUND: Carried");
             menu.setCarried(shulkerCopy);
         }
     }
@@ -276,14 +278,20 @@ public class ShulkerUtil {
      * @param newShulker The new shulker to view
      */
     public static void seamlesslySwitchShulkerInventory(ServerPlayer player, ItemStack newShulker) {
-        saveShulkerInventory(player.containerMenu.getItems(), player);
-        // Keep the same block entity
+        // Save shulker
+        // TODO Figure out why the shulker inventory isn't being saved when taking items out, then picking up the shulker and attempting to insert it into a different shulker
+        ItemStack viewedStack = ((ShulkerViewer) player.containerMenu).getViewing();
+        saveShulkerInventory(player.containerMenu.getItems(), viewedStack);
+        saveDataToShulkerItem(player.containerMenu, viewedStack);
+
+        // Switch to new shulker
+        ((ShulkerViewer) player.containerMenu).removeViewing();
         ((ShulkerViewer) player.containerMenu).addViewing(newShulker, player);
         NonNullList<ItemStack> newInventory = getInventoryFromShulker(newShulker);
         Container screenInventory = ((ShulkerBoxMenuHandlerAccessor)player.containerMenu).getInventory();
         ((SimpleContainerAccessor)screenInventory).setItems(newInventory);
         player.containerMenu.broadcastChanges();
-        ShulkerUtil.playLocalSound(player, SoundEvents.SHULKER_BOX_OPEN);
+        playLocalSound(player, SoundEvents.SHULKER_BOX_OPEN);
     }
 
     /**

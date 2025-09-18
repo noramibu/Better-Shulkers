@@ -69,7 +69,6 @@ public abstract class ShulkerBoxScreenHandlerRemoteInteractionMixin extends Abst
 
     @Override
     public void addViewing(@NotNull ItemStack stack, @NotNull ServerPlayer player) {
-        // TODO Test copying data
         ((ViewingMarker) (Object) stack).setViewer(player);
         this.shulkerItem = stack.copy();
     }
