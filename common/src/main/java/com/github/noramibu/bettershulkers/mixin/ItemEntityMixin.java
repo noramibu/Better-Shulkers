@@ -30,7 +30,7 @@ public abstract class ItemEntityMixin {
     )
     private void bettershulkers$onBeforeInsertStack(Player player, CallbackInfo ci, @Local(ordinal = 0) ItemStack itemStack) {
         // Pickup is disabled
-        if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.NONE) || player.level().isClientSide) {
+        if (Config.ITEM_PICKUP_TYPE.equals(Config.PickupType.NONE) || player.level().isClientSide()) {
             return;
         }
 

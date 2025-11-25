@@ -8,9 +8,14 @@ import com.github.noramibu.bettershulkers.util.ItemRenderData;
 import com.github.noramibu.bettershulkers.util.ShulkerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+//: >=1.21.10
+import net.minecraft.world.entity.ContainerUser;
+//: END
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+/*\ <=1.21.8
 import net.minecraft.world.entity.player.Player;
+\END */
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -30,15 +35,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements MaterialDisplay {
-    @Unique
-    private Display.ItemDisplay display;
+   @Unique
+   private Display.ItemDisplay display;
 
-    protected ShulkerBoxBlockEntityMixin(net.minecraft.world.level.block.entity.BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
-        super(blockEntityType, blockPos, blockState);
-    }
+   protected ShulkerBoxBlockEntityMixin(net.minecraft.world.level.block.entity.BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+       super(blockEntityType, blockPos, blockState);
+   }
 
-    @Inject(method = "stopOpen", at = @At("HEAD"))
-    private void bettershulkers$animateClosing(Player player, CallbackInfo ci) {
+   @Inject(method = "stopOpen", at = @At("HEAD"))
+   /*\ <=1.21.8
+   private void bettershulkers$animateClosing(Player player, CallbackInfo ci) {
+   \END */
+    //: >=1.21.10
+    private void bettershulkers$animateClosing(ContainerUser containerUser, CallbackInfo ci) {
+    //: END
         // Item Display animation
         if (this.display != null) {
             Animation animation = new Animation(10, 270F, 0F, -0.4987F, -0.01F, 0.015F, 0.01F);
@@ -47,7 +57,12 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     }
 
     @Inject(method = "startOpen", at = @At("HEAD"))
+    /*\ <=1.21.8
     private void bettershulkers$animateOpening(Player player, CallbackInfo ci) {
+    \END */
+    //: >=1.21.10
+    private void bettershulkers$animateOpening(ContainerUser containerUser, CallbackInfo ci) {
+    //: END
         // Item Display animation
         if (this.display != null) {
             Animation animation = new Animation(10, 0F,270F, 0F,-0.4987F, 0F, 0F);

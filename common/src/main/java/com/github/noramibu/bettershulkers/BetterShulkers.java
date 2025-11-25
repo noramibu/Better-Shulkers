@@ -54,7 +54,7 @@ public final class BetterShulkers {
 
         InteractionEvent.RIGHT_CLICK_ITEM.register((player, hand) -> {
             ItemStack stack = player.getItemInHand(hand);
-            if (!player.level().isClientSide &&
+            if (!player.level().isClientSide() &&
                     ShulkerUtil.isShulkerBox(stack) &&
                     ShulkerUtil.hasOpenPermission(player)
             ) {

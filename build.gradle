@@ -15,7 +15,7 @@ buildscript() {
 }
 
 plugins {
-    id 'dev.architectury.loom' version '1.10-SNAPSHOT' apply false
+    id 'dev.architectury.loom' version '1.13-SNAPSHOT' apply false
     id 'architectury-plugin' version '3.4-SNAPSHOT'
     id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
@@ -60,7 +60,7 @@ subprojects {
 }
 
 multimc {
-    currentMinecraftVer = "1.21.8"
+    currentMinecraftVer = "1.21.10"
     outputFileOverride = "bettershulkers-{name}-{version}.jar"
     // If future Minecraft versions should be supported (default: false)
     futureCompatible = true
@@ -136,6 +136,13 @@ multimc {
             depBuilder.depCopy("fabric_permission_version", "1.21.6")
             depBuilder.dep("fabric_api_version", "0.129.0+1.21.8")
             depBuilder.dep("neoforge_version", "21.8.0-beta")
+        })
+        builder.mcVer("1.21.10", (DependencyBuilder depBuilder) -> {
+            depBuilder.dep("architectury_api_version", "18.0.6")
+            depBuilder.dep("minecraft_version", "1.21.10")
+            depBuilder.dep("fabric_permission_version", "0.5.0")
+            depBuilder.dep("fabric_api_version", "0.138.3+1.21.10")
+            depBuilder.dep("neoforge_version", "21.10.55-beta")
         })
     })
 }
