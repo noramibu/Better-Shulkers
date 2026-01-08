@@ -123,13 +123,15 @@ public class ShulkerUtil {
         for (Slot slot : menu.slots) {
             if (((ViewingMarker) (Object) slot.getItem()).isBeingViewed()) {
                 System.out.println("SHULKER FOUND");
-                slot.set(shulkerCopy);
+                slot.set(shulkerCopy.copy());
+                menu.broadcastChanges();
                 return;
             }
         }
         if (((ViewingMarker) (Object) menu.getCarried()).isBeingViewed()) {
             System.out.println("SHULKER FOUND: Carried");
-            menu.setCarried(shulkerCopy);
+            menu.setCarried(shulkerCopy.copy());
+            menu.broadcastChanges();
         }
     }
 
