@@ -20,7 +20,6 @@ public class VirtualShulkerBoxMenu extends ShulkerBoxMenu implements MoveItemLis
         for (ItemMove move : moves) {
             if (((VirtualContainer) (Object) move.stack()).isBeingViewed()) {
                 this.container.cachedViewSlot = move.targetSlot();
-                System.out.println("Viewed Stack changed to " + move.targetSlot());
             }
         }
     }

@@ -31,14 +31,15 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         this.displayName = viewing.getDisplayName();
     }
 
-    // Use this one if an inventory is already open
-    public VirtualShulkerBoxContainer(ItemStack viewing, Player player, int slot) {
-        super(27);
+    // Load a shulker when an existing UI is open
+    public void reload(ItemStack viewing, Player player, int slot) {
+        ((VirtualContainer) (Object) getViewedStack()).setViewing(null);
         ((MoreComplexContainer) this).setItems(this.fromItemStack(viewing));
         ((VirtualContainer) (Object) viewing).setViewing(player);
         this.cachedViewSlot = slot;
         this.viewer = player;
-        this.displayName = viewing.getDisplayName();
+        // Refresh UI
+        this.containerMenu.slotsChanged(this);
     }
 
     @Override
@@ -80,10 +81,5 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         } else {
             return this.containerMenu.getSlot(this.cachedViewSlot).getItem();
         }
-    }
-
-    public void syncViewedStack(int slot) {
-        System.out.println("Synced: " + slot);
-        this.cachedViewSlot = slot;
     }
 }

@@ -31,7 +31,7 @@ public abstract class ItemStackMixin implements DataComponentHolder, ItemInstanc
     @WrapOperation(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;use(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"))
     private InteractionResult bettershulkers$onUse(Item instance, Level level, Player player, InteractionHand hand, Operation<InteractionResult> original) {
         if (!level.isClientSide() && this.is(ItemTags.SHULKER_BOXES)) {
-            ShulkerBoxUtils.openInventory((ItemStack) (Object) this, player);
+            ShulkerBoxUtils.openExternalShulker((ItemStack) (Object) this, player);
         }
         return original.call(instance, level, player, hand);
     }

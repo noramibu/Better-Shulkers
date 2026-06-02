@@ -6,21 +6,36 @@ package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.ItemMove;
 import com.github.noramibu.bettershulkers.MoveItemListener;
+import com.github.noramibu.bettershulkers.ShulkerBoxUtils;
+import com.github.noramibu.bettershulkers.VirtualContainer;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import java.util.Optional;
 import java.util.function.Consumer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerMenu.class)
 public abstract class AbstractContainerMenuMixin {
+
+    @Shadow
+    public abstract ItemStack getCarried();
+
+    @Shadow
+    public abstract void setCarried(ItemStack carried);
 
     // Place item in Slot
     @WrapOperation(method = "doClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V", ordinal = 2))
@@ -33,9 +48,21 @@ public abstract class AbstractContainerMenuMixin {
 
     // Take Half
     @WrapOperation(method = "doClick", at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V", ordinal = 0))
-    private <T> void bettershulkers$checkItems2(Optional<ItemStack> instance, Consumer<? super @NotNull T> action, Operation<Void> original) {
+    private <T> void bettershulkers$checkItems2(Optional<ItemStack> instance, Consumer<? super @NotNull T> action, Operation<Void> original, @Local(name = "slot") Slot slot, @Local(name = "clickAction") ClickAction clickAction, @Local(name = "player") Player player) {
         if (instance.isPresent()) {
-            if (this instanceof MoveItemListener listener) {
+            ItemStack instanceStack = instance.get();
+
+            // Check if Shulker should be opened
+            if (clickAction == ClickAction.SECONDARY
+                    && instanceStack.is(ItemTags.SHULKER_BOXES)
+                    && !((VirtualContainer) (Object) instanceStack).isBeingViewed()) {
+                ShulkerBoxUtils.openInternalShulker(instanceStack, player, slot.index);
+                this.setCarried(ItemStack.EMPTY);
+                slot.set(instanceStack);
+                return;
+            }
+
+            if  (this instanceof MoveItemListener listener) {
                 listener.itemMoved(new ItemMove(instance.get(), -2));
             }
             original.call(instance, action);
@@ -55,9 +82,22 @@ public abstract class AbstractContainerMenuMixin {
     @WrapOperation(method = "doClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V", ordinal = 4))
     private void bettershulkers$checkItems4(AbstractContainerMenu instance, ItemStack carried, Operation<Void> original, @Local(name = "slot") Slot slot) {
         if (this instanceof MoveItemListener listener) {
-            listener.itemMoved(new ItemMove(slot.getItem(), -2), new ItemMove(carried, slot.index));
+            listener.itemMoved(new ItemMove(slot.getItem(), -2), new ItemMove(this.getCarried(), slot.index));
         }
         original.call(instance, carried);
+    }
+
+    @Inject(method = "doClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V", ordinal = 4), cancellable = true)
+    private void bettershulkers$checkToOpenMenu1(int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci, @Local(name = "slot") Slot slot, @Local(name = "clickAction") ClickAction clickAction) {
+        // Check if Shulker should be opened
+        if (clickAction == ClickAction.SECONDARY
+                && slot.getItem().is(ItemTags.SHULKER_BOXES)
+                && !((VirtualContainer) (Object) slot.getItem()).isBeingViewed()) {
+            ShulkerBoxUtils.openInternalShulker(slot.getItem(), player, slot.index);
+            slot.set(slot.getItem());
+            this.setCarried(this.getCarried());
+            ci.cancel();
+        }
     }
 
     // Fill held
