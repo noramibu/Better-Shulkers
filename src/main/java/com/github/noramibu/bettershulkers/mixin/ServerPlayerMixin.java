@@ -1,0 +1,60 @@
+/**
+ * Copyright (c) 2026 noramibu, QPCrummer
+ * This project is Licensed under <a href="https://github.com/noramibu/Better-Shulkers/blob/main/LICENSE">MIT</a>
+ */
+package com.github.noramibu.bettershulkers.mixin;
+
+import com.github.noramibu.bettershulkers.VirtualContainer;
+import com.github.noramibu.bettershulkers.VirtualContainerHolder;
+import com.github.noramibu.bettershulkers.VirtualShulkerBoxContainer;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(ServerPlayer.class)
+public abstract class ServerPlayerMixin extends Player implements VirtualContainerHolder {
+    private VirtualShulkerBoxContainer virtualContainer;
+
+    public ServerPlayerMixin(Level level, GameProfile gameProfile) {
+        super(level, gameProfile);
+    }
+
+    @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"))
+    private void bettershulkers$checkForShulkerDropped(ItemStack itemStack, boolean randomly, boolean thrownFromHand, CallbackInfoReturnable<ItemEntity> cir) {
+        if (((VirtualContainer) (Object) itemStack).isBeingViewed()) {
+            this.closeContainer();
+        }
+    }
+
+    @Inject(method = "closeContainer", at = @At("HEAD"))
+    private void bettershulkers$syncOpenContainer(CallbackInfo ci) {
+        if (this.virtualContainer != null) {
+            ((VirtualContainer) (Object)this.virtualContainer.getViewedStack()).setViewing(null);
+            this.virtualContainer = null;
+        }
+    }
+
+    @Override
+    public void setVirtualContainer(@Nullable VirtualShulkerBoxContainer container) {
+        this.virtualContainer = container;
+    }
+
+    @Override
+    public VirtualShulkerBoxContainer getVirtualContainer() {
+        return this.virtualContainer;
+    }
+
+    @Override
+    public void closeVirtualContainer() {
+        this.closeContainer();
+    }
+}

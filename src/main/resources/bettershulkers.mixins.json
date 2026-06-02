@@ -1,0 +1,18 @@
+{
+  "compatibilityLevel": "JAVA_21",
+  "required": false,
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "package": "com.github.noramibu.bettershulkers.mixin",
+  "mixins": [
+    "AbstractContainerMenuMixin",
+    "ItemContainerContentsMixin",
+    "ItemStackMixin",
+    "ServerPlayerMixin",
+    "SimpleContainerMixin"
+  ],
+  "client": [],
+  "server": []
+}
