@@ -9,6 +9,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -27,6 +28,15 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         ((MoreComplexContainer) this).setItems(this.fromItemStack(viewing));
         ((VirtualContainer) (Object) viewing).setViewing(player);
         this.cachedViewSlot = 54 + player.getInventory().getSelectedSlot();
+        this.viewer = player;
+        this.displayName = viewing.getDisplayName();
+    }
+
+    public VirtualShulkerBoxContainer(ItemStack viewing, Player player, int slot) {
+        super(27);
+        ((MoreComplexContainer) this).setItems(this.fromItemStack(viewing));
+        ((VirtualContainer) (Object) viewing).setViewing(player);
+        this.cachedViewSlot = slot;
         this.viewer = player;
         this.displayName = viewing.getDisplayName();
     }
@@ -81,5 +91,10 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         } else {
             return this.containerMenu.getSlot(this.cachedViewSlot).getItem();
         }
+    }
+
+    @Override
+    public void stopOpen(ContainerUser containerUser) {
+        ((VirtualContainer) (Object) this.getViewedStack()).setViewing(null);
     }
 }

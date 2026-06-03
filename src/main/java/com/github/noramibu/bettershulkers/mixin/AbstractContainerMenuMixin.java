@@ -13,6 +13,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import java.util.Optional;
 import java.util.function.Consumer;
+import net.minecraft.core.NonNullList;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +23,7 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,6 +38,10 @@ public abstract class AbstractContainerMenuMixin {
 
     @Shadow
     public abstract void setCarried(ItemStack carried);
+
+    @Shadow
+    @Final
+    public NonNullList<Slot> slots;
 
     // Place item in Slot
     @WrapOperation(method = "doClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V", ordinal = 2))
@@ -53,10 +59,11 @@ public abstract class AbstractContainerMenuMixin {
             ItemStack instanceStack = instance.get();
 
             // Check if Shulker should be opened
+            System.out.println(slot.index);
             if (clickAction == ClickAction.SECONDARY
                     && instanceStack.is(ItemTags.SHULKER_BOXES)
                     && !((VirtualContainer) (Object) instanceStack).isBeingViewed()) {
-                ShulkerBoxUtils.openInternalShulker(instanceStack, player, slot.index);
+                ShulkerBoxUtils.openInternalShulker(instanceStack, player, slot);
                 this.setCarried(ItemStack.EMPTY);
                 slot.set(instanceStack);
                 return;
@@ -93,7 +100,7 @@ public abstract class AbstractContainerMenuMixin {
         if (clickAction == ClickAction.SECONDARY
                 && slot.getItem().is(ItemTags.SHULKER_BOXES)
                 && !((VirtualContainer) (Object) slot.getItem()).isBeingViewed()) {
-            ShulkerBoxUtils.openInternalShulker(slot.getItem(), player, slot.index);
+            ShulkerBoxUtils.openInternalShulker(slot.getItem(), player, slot);
             slot.set(slot.getItem());
             this.setCarried(this.getCarried());
             ci.cancel();
