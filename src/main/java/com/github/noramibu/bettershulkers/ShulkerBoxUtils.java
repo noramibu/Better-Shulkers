@@ -4,6 +4,10 @@
  */
 package com.github.noramibu.bettershulkers;
 
+import com.github.noramibu.bettershulkers.container.MutableContainerContents;
+import com.github.noramibu.bettershulkers.container.VirtualContainerHolder;
+import com.github.noramibu.bettershulkers.container.VirtualShulkerBoxContainer;
+import com.github.noramibu.bettershulkers.menu.VirtualShulkerBoxMenu;
 import com.github.noramibu.bettershulkers.mixin.InventoryMixin;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +35,7 @@ public final class ShulkerBoxUtils {
             // Check if menu is already open
             if (player.containerMenu instanceof VirtualShulkerBoxMenu menu) {
                 System.out.println("Opening Shulker at " + slot.index);
-                menu.container.reload(shulkerbox, player, slot.index);
+                menu.getContainer().reload(shulkerbox, player, slot.index);
             } else {
                 // Open new menu
                 System.out.println("Opening Shulker at " + getShulkerIndex(slot));

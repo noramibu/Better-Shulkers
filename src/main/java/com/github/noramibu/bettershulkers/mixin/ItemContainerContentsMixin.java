@@ -4,7 +4,7 @@
  */
 package com.github.noramibu.bettershulkers.mixin;
 
-import com.github.noramibu.bettershulkers.MutableContainerContents;
+import com.github.noramibu.bettershulkers.container.MutableContainerContents;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

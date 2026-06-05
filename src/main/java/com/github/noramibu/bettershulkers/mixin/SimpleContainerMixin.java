@@ -4,7 +4,7 @@
  */
 package com.github.noramibu.bettershulkers.mixin;
 
-import com.github.noramibu.bettershulkers.MoreComplexContainer;
+import com.github.noramibu.bettershulkers.container.MoreComplexContainer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;

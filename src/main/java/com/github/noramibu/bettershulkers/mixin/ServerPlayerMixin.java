@@ -4,9 +4,9 @@
  */
 package com.github.noramibu.bettershulkers.mixin;
 
-import com.github.noramibu.bettershulkers.VirtualContainer;
-import com.github.noramibu.bettershulkers.VirtualContainerHolder;
-import com.github.noramibu.bettershulkers.VirtualShulkerBoxContainer;
+import com.github.noramibu.bettershulkers.container.VirtualContainer;
+import com.github.noramibu.bettershulkers.container.VirtualContainerHolder;
+import com.github.noramibu.bettershulkers.container.VirtualShulkerBoxContainer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;

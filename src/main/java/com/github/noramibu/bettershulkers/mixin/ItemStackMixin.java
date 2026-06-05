@@ -5,7 +5,7 @@
 package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.ShulkerBoxUtils;
-import com.github.noramibu.bettershulkers.VirtualContainer;
+import com.github.noramibu.bettershulkers.container.VirtualContainer;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;

@@ -2,8 +2,9 @@
  * Copyright (c) 2026 noramibu, QPCrummer
  * This project is Licensed under <a href="https://github.com/noramibu/Better-Shulkers/blob/main/LICENSE">MIT</a>
  */
-package com.github.noramibu.bettershulkers;
+package com.github.noramibu.bettershulkers.container;
 
+import com.github.noramibu.bettershulkers.menu.VirtualShulkerBoxMenu;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -102,6 +103,10 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
 
     public int getViewedSlot() {
         return this.cachedViewSlot;
+    }
+
+    public void setViewedSlot(int slot) {
+        this.cachedViewSlot = slot;
     }
 
     @Override

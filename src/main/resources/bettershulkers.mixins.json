@@ -8,6 +8,7 @@
   "package": "com.github.noramibu.bettershulkers.mixin",
   "mixins": [
     "AbstractContainerMenuMixin",
+    "InitMixin",
     "InventoryMixin",
     "ItemContainerContentsMixin",
     "ItemStackMixin",
