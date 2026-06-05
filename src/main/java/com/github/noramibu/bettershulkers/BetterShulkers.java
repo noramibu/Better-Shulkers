@@ -1,6 +1,6 @@
 package com.github.noramibu.bettershulkers;
 
-import com.github.noramibu.bettershulkers.enchantment.MaterialCollector;
+import com.github.noramibu.bettershulkers.material.enchantment.MaterialCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

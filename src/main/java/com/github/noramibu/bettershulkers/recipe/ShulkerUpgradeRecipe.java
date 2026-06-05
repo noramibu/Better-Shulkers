@@ -2,6 +2,7 @@ package com.github.noramibu.bettershulkers.recipe;
 
 import com.github.noramibu.bettershulkers.gamerules.BetterShulkersGameRules;
 import com.github.noramibu.bettershulkers.gamerules.PickupType;
+import com.github.noramibu.bettershulkers.material.ShulkerMaterialManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
@@ -63,8 +64,8 @@ public class ShulkerUpgradeRecipe extends CustomRecipe implements FakeRecipe {
         ItemStack materialItem = input.getItem(1, 0);
         // Get Shulker
         ItemStack shulkerStack = input.getItem(1, 1).copy();
-        // TODO Apply material
-        // ShulkerUtil.setMaterialForShulker(shulkerStack, materialItem);
+        // Apply material
+        ShulkerMaterialManager.setMaterial(shulkerStack, materialItem.getItem());
         return shulkerStack;
     }
 

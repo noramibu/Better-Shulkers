@@ -4,4 +4,5 @@ import net.minecraft.world.level.gamerules.GameRule;
 
 public class BetterShulkersGameRules {
     public static GameRule<PickupType> PICKUPTYPE;
+    public static GameRule<Boolean> DO_SHULKER_MATERIAL_DISPLAYS;
 }
