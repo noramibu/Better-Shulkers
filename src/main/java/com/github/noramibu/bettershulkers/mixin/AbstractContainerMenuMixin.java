@@ -4,16 +4,12 @@
  */
 package com.github.noramibu.bettershulkers.mixin;
 
-import com.github.noramibu.bettershulkers.ItemMove;
-import com.github.noramibu.bettershulkers.MoveItemListener;
-import com.github.noramibu.bettershulkers.ShulkerBoxUtils;
-import com.github.noramibu.bettershulkers.VirtualContainer;
+import com.github.noramibu.bettershulkers.*;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import java.util.Optional;
 import java.util.function.Consumer;
-import net.minecraft.core.NonNullList;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +19,6 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,10 +33,6 @@ public abstract class AbstractContainerMenuMixin {
 
     @Shadow
     public abstract void setCarried(ItemStack carried);
-
-    @Shadow
-    @Final
-    public NonNullList<Slot> slots;
 
     // Place item in Slot
     @WrapOperation(method = "doClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V", ordinal = 2))
@@ -96,14 +87,21 @@ public abstract class AbstractContainerMenuMixin {
 
     @Inject(method = "doClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V", ordinal = 4), cancellable = true)
     private void bettershulkers$checkToOpenMenu1(int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci, @Local(name = "slot") Slot slot, @Local(name = "clickAction") ClickAction clickAction) {
-        // Check if Shulker should be opened
-        if (clickAction == ClickAction.SECONDARY
-                && slot.getItem().is(ItemTags.SHULKER_BOXES)
-                && !((VirtualContainer) (Object) slot.getItem()).isBeingViewed()) {
-            ShulkerBoxUtils.openInternalShulker(slot.getItem(), player, slot);
-            slot.set(slot.getItem());
-            this.setCarried(this.getCarried());
-            ci.cancel();
+        if (ShulkerBoxUtils.isServerSide(player)) {
+            if (clickAction == ClickAction.SECONDARY
+                    && slot.getItem().is(ItemTags.SHULKER_BOXES)
+            ) {
+                this.setCarried(ShulkerBoxUtils.putIntoShulkerItem(slot.getItem(), this.getCarried()));
+
+                VirtualShulkerBoxContainer container = ((VirtualContainerHolder) player).getVirtualContainer();
+                if (container != null
+                        && container.getViewedSlot() == slotIndex) {
+                    container.refreshUI();
+                }
+
+                slot.set(slot.getItem());
+                ci.cancel();
+            }
         }
     }
 
@@ -143,5 +141,31 @@ public abstract class AbstractContainerMenuMixin {
             listener.itemMoved(new ItemMove(itemStack, instance.index), new ItemMove(instance.getItem(), buttonNum + 54));
         }
         return original.call(instance, itemStack);
+    }
+
+    // Quick Move
+    @Inject(method = "doClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;quickMoveStack(Lnet/minecraft/world/entity/player/Player;I)Lnet/minecraft/world/item/ItemStack;", ordinal = 0), cancellable = true)
+    private void bettershulkers$checkClick1(int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci, @Local(name = "clickAction") ClickAction clickAction, @Local(name = "slot") Slot slot) {
+        if (ShulkerBoxUtils.isServerSide(player)) {
+            if (clickAction == ClickAction.SECONDARY
+                    && slot.getItem().is(ItemTags.SHULKER_BOXES)
+            ) {
+                if (this.getCarried().isEmpty()) {
+                    ShulkerBoxUtils.dumpShulkerItemContents(player, slot.getItem());
+                } else {
+                    ShulkerBoxUtils.dumpInventoryIntoShulkerItem(player, slot.getItem(), this.getCarried());
+                }
+
+
+                VirtualShulkerBoxContainer container = ((VirtualContainerHolder) player).getVirtualContainer();
+                if (container != null
+                        && container.getViewedSlot() == slotIndex) {
+                    container.refreshUI();
+                }
+
+                slot.set(slot.getItem());
+                ci.cancel();
+            }
+        }
     }
 }

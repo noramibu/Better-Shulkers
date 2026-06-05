@@ -8,4 +8,5 @@ import org.jetbrains.annotations.Nullable;
 
 public interface VirtualContainerHolder {
     void setVirtualContainer(@Nullable VirtualShulkerBoxContainer container);
+    VirtualShulkerBoxContainer getVirtualContainer();
 }

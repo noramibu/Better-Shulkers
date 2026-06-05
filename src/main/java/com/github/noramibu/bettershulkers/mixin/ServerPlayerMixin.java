@@ -47,4 +47,9 @@ public abstract class ServerPlayerMixin extends Player implements VirtualContain
     public void setVirtualContainer(@Nullable VirtualShulkerBoxContainer container) {
         this.virtualContainer = container;
     }
+
+    @Override
+    public VirtualShulkerBoxContainer getVirtualContainer() {
+        return this.virtualContainer;
+    }
 }

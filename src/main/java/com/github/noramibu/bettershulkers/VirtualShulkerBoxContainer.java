@@ -52,6 +52,13 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         this.containerMenu.slotsChanged(this);
     }
 
+    // Refreshes the existing shulker box inventory
+    public void refreshUI() {
+        ((MoreComplexContainer) this).setItems(this.fromItemStack(this.getViewedStack()));
+        // Refresh UI
+        this.containerMenu.slotsChanged(this);
+    }
+
     @Override
     public Component getDisplayName() {
         return this.displayName;
@@ -91,6 +98,10 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         } else {
             return this.containerMenu.getSlot(this.cachedViewSlot).getItem();
         }
+    }
+
+    public int getViewedSlot() {
+        return this.cachedViewSlot;
     }
 
     @Override
