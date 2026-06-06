@@ -14,7 +14,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
 
 public class ShulkerMaterialManager {
-    private static final String MATERIAL_ID = "material";
+    public static final String MATERIAL_ID = "material";
     private static final String LORE_PREFIX = "Material: ";
 
     public static Item getMaterial(ItemStack shulker) {

@@ -18,6 +18,8 @@
     "ItemStackMixin",
     "RecipeManagerMixin",
     "ServerPlayerMixin",
+    "ShulkerBoxBlockEntityMixin",
+    "ShulkerBoxBlockMixin",
     "SimpleContainerMixin"
   ],
   "client": [],
