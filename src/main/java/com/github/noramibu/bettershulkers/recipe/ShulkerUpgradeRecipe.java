@@ -28,7 +28,7 @@ public class ShulkerUpgradeRecipe extends CustomRecipe implements FakeRecipe {
 
     @Override
     public boolean matches(CraftingInput input, Level world) {
-        if (world.isClientSide() || ((ServerLevel) world).getGameRules().get(BetterShulkersGameRules.PICKUPTYPE) != PickupType.RECIPE) {
+        if (world.isClientSide() || ((ServerLevel) world).getGameRules().get(BetterShulkersGameRules.SHULKER_MATERIAL_RECIPE)) {
             return false;
         }
         // Prevent OutOfBoundsException

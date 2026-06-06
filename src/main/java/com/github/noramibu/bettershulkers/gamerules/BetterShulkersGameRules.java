@@ -7,6 +7,9 @@ package com.github.noramibu.bettershulkers.gamerules;
 import net.minecraft.world.level.gamerules.GameRule;
 
 public class BetterShulkersGameRules {
-    public static GameRule<PickupType> PICKUPTYPE;
+    public static GameRule<Boolean> SHULKER_MATERIAL_ENCHANTMENT;
+    public static GameRule<Boolean> SHULKER_MATERIAL_RECIPE;
     public static GameRule<Boolean> DO_SHULKER_MATERIAL_DISPLAYS;
+    public static GameRule<Boolean> OPEN_SHULKERS_FROM_HOTBAR;
+    public static GameRule<Boolean> OPEN_SHULKERS_FROM_INVENTORY;
 }

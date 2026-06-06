@@ -39,7 +39,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     @Inject(method = "createResult()V", at = @At("HEAD"), cancellable = true)
     private void checkForShulkerMaterial(CallbackInfo ci) {
         if (ShulkerBoxUtils.isServerSide(player)
-                && ((ServerPlayer) player).level().getGameRules().get(BetterShulkersGameRules.PICKUPTYPE) == PickupType.ENCHANTMENT) {
+                && ((ServerPlayer) player).level().getGameRules().get(BetterShulkersGameRules.SHULKER_MATERIAL_ENCHANTMENT)) {
             ItemStack stack1 = this.inputSlots.getItem(0);
             ItemStack stack2 = this.inputSlots.getItem(1);
 
@@ -74,7 +74,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     private void handleResultTaken(Player player, ItemStack stack, CallbackInfo ci) {
         // Check if this is our custom shulker material recipe
         if (ShulkerBoxUtils.isServerSide(player)
-                && ((ServerPlayer) player).level().getGameRules().get(BetterShulkersGameRules.PICKUPTYPE) == PickupType.ENCHANTMENT) {
+                && ((ServerPlayer) player).level().getGameRules().get(BetterShulkersGameRules.SHULKER_MATERIAL_ENCHANTMENT)) {
             ItemStack stack1 = this.inputSlots.getItem(0);
             ItemStack stack2 = this.inputSlots.getItem(1);
 

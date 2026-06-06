@@ -10,6 +10,7 @@
     "AbstractContainerMenuMixin",
     "AnvilMenuMixin",
     "DisplayEntityAccessor",
+    "GameRuleRegistrationMixin",
     "InitMixin",
     "InventoryMixin",
     "ItemContainerContentsMixin",

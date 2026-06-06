@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player implements VirtualContainerHolder {
+
     private VirtualShulkerBoxContainer virtualContainer;
 
     public ServerPlayerMixin(Level level, GameProfile gameProfile) {

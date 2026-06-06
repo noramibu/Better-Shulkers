@@ -94,6 +94,10 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
     }
 
     public ItemStack getViewedStack() {
+        if (this.containerMenu == null) {
+            return ItemStack.EMPTY;
+        }
+
         if (this.cachedViewSlot == -2) {
             return this.containerMenu.getCarried();
         } else {

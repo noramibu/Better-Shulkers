@@ -6,10 +6,13 @@ package com.github.noramibu.bettershulkers;
 
 import com.github.noramibu.bettershulkers.container.VirtualContainerHolder;
 import com.github.noramibu.bettershulkers.container.VirtualShulkerBoxContainer;
+import com.github.noramibu.bettershulkers.gamerules.BetterShulkersGameRules;
 import com.github.noramibu.bettershulkers.menu.VirtualShulkerBoxMenu;
+
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,7 +24,8 @@ import net.minecraft.world.item.component.ItemContainerContents;
 
 public final class ShulkerBoxUtils {
     public static void openExternalShulker(ItemStack shulkerbox, Player player) {
-        if (isServerSide(player)) {
+        if (isServerSide(player)
+                && ((ServerLevel) player.level()).getGameRules().get(BetterShulkersGameRules.OPEN_SHULKERS_FROM_HOTBAR)) {
             VirtualShulkerBoxContainer container = new VirtualShulkerBoxContainer(shulkerbox, player);
             ((VirtualContainerHolder) player).setVirtualContainer(container);
             player.openMenu(container);
@@ -30,7 +34,9 @@ public final class ShulkerBoxUtils {
 
     public static void openInternalShulker(ItemStack shulkerbox, Player player, Slot slot) {
         // Check if item is in the inventory
-        if (isServerSide(player) && isSlotInInventory(slot, player)) {
+        if (isServerSide(player)
+                && ((ServerLevel) player.level()).getGameRules().get(BetterShulkersGameRules.OPEN_SHULKERS_FROM_INVENTORY)
+                && isSlotInInventory(slot, player)) {
             // Check if menu is already open
             if (player.containerMenu instanceof VirtualShulkerBoxMenu menu) {
                 menu.getContainer().reload(shulkerbox, player, slot.index);
