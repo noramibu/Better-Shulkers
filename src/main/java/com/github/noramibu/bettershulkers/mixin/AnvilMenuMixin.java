@@ -6,7 +6,6 @@ package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.ShulkerBoxUtils;
 import com.github.noramibu.bettershulkers.gamerules.BetterShulkersGameRules;
-import com.github.noramibu.bettershulkers.gamerules.PickupType;
 import com.github.noramibu.bettershulkers.material.ShulkerMaterialManager;
 import com.github.noramibu.bettershulkers.material.enchantment.MaterialCollector;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

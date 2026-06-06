@@ -5,7 +5,6 @@
 package com.github.noramibu.bettershulkers.recipe;
 
 import com.github.noramibu.bettershulkers.gamerules.BetterShulkersGameRules;
-import com.github.noramibu.bettershulkers.gamerules.PickupType;
 import com.github.noramibu.bettershulkers.material.ShulkerMaterialManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
@@ -21,16 +20,17 @@ import net.minecraft.world.level.Level;
 /**
  * The custom material-assigning recipe
  */
-public class ShulkerUpgradeRecipe extends CustomRecipe implements FakeRecipe {
+public class ShulkerUpgradeRecipe extends CustomRecipe {
     public ShulkerUpgradeRecipe() {
         super();
     }
 
     @Override
     public boolean matches(CraftingInput input, Level world) {
-        if (world.isClientSide() || ((ServerLevel) world).getGameRules().get(BetterShulkersGameRules.SHULKER_MATERIAL_RECIPE)) {
+        if (world.isClientSide() || !((ServerLevel) world).getGameRules().get(BetterShulkersGameRules.SHULKER_MATERIAL_RECIPE)) {
             return false;
         }
+
         // Prevent OutOfBoundsException
         // Also acts as a super quick escape path
         if (input.width() != 3 || input.height() != 3) {
@@ -38,7 +38,7 @@ public class ShulkerUpgradeRecipe extends CustomRecipe implements FakeRecipe {
         }
 
         // Check center for a shulker
-        if (input.getItem(1, 1).is(ItemTags.SHULKER_BOXES)) {
+        if (!input.getItem(1, 1).is(ItemTags.SHULKER_BOXES)) {
             return false;
         }
 

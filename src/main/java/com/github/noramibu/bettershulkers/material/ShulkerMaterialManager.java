@@ -4,8 +4,7 @@
  */
 package com.github.noramibu.bettershulkers.material;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -44,7 +43,7 @@ public class ShulkerMaterialManager {
             });
         }
 
-        Component line = Component.literal(LORE_PREFIX + material.toString());
+        Component line = Component.literal(LORE_PREFIX).append(getTranslatedItem(material));
         if (lore == null) {
             shulker.set(DataComponents.LORE, new ItemLore(List.of(line)));
             return;
@@ -61,6 +60,11 @@ public class ShulkerMaterialManager {
 
         // Add new lore as last effort
         shulker.set(DataComponents.LORE, lore.withLineAdded(line));
+    }
+
+    private static Component getTranslatedItem(Item item) {
+        String translationKey = item.getDescriptionId();
+        return Component.translatable(translationKey);
     }
 
     public static void removeMaterial(ItemStack shulker) {

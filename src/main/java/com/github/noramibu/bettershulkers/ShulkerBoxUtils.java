@@ -8,7 +8,6 @@ import com.github.noramibu.bettershulkers.container.VirtualContainerHolder;
 import com.github.noramibu.bettershulkers.container.VirtualShulkerBoxContainer;
 import com.github.noramibu.bettershulkers.gamerules.BetterShulkersGameRules;
 import com.github.noramibu.bettershulkers.menu.VirtualShulkerBoxMenu;
-
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;

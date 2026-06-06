@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class BetterShulkers {
     public static final Logger LOGGER = LoggerFactory.getLogger("Better Shulkers");
+    public static final String MOD_ID = "bettershulkers";
 
     public static void init() {
         MaterialCollector.initialize();

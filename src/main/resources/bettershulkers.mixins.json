@@ -15,6 +15,7 @@
     "InventoryMixin",
     "ItemContainerContentsMixin",
     "ItemStackMixin",
+    "RecipeManagerMixin",
     "ServerPlayerMixin",
     "SimpleContainerMixin"
   ],
