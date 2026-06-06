@@ -19,6 +19,10 @@ public class ShulkerMaterialManager {
 
     public static Item getMaterial(ItemStack shulker) {
         CustomData data = shulker.get(DataComponents.CUSTOM_DATA);
+        return getMaterial(data);
+    }
+
+    public static Item getMaterial(CustomData data) {
         if (data == null) {
             return null;
         } else {

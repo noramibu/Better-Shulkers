@@ -35,6 +35,7 @@ public abstract class GameRuleRegistrationMixin {
         BetterShulkersGameRules.SHULKER_MATERIAL_ENCHANTMENT = registerBoolean("shulker_material_enchantment", GameRuleCategory.MISC, true);
         BetterShulkersGameRules.SHULKER_MATERIAL_RECIPE = registerBoolean("shulker_material_recipe", GameRuleCategory.MISC, false);
         BetterShulkersGameRules.DO_SHULKER_MATERIAL_DISPLAYS = registerBoolean("shulker_material_displays", GameRuleCategory.MISC, true);
+        BetterShulkersGameRules.DO_SHULKER_DISPLAY_ANIMATIONS = registerBoolean("shulker_display_animations", GameRuleCategory.MISC, true);
         BetterShulkersGameRules.OPEN_SHULKERS_FROM_HOTBAR = registerBoolean("open_shulkers_from_hotbar", GameRuleCategory.MISC, true);
         BetterShulkersGameRules.OPEN_SHULKERS_FROM_INVENTORY = registerBoolean("open_shulkers_from_inventory", GameRuleCategory.MISC, true);
         BetterShulkersGameRules.INSERT_INTO_SHULKER_ON_PICKUP = registerBoolean("insert_into_shulker_on_pickup", GameRuleCategory.MISC, true);
