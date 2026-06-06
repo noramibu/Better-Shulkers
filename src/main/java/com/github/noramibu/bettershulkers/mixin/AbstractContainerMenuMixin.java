@@ -6,8 +6,6 @@ package com.github.noramibu.bettershulkers.mixin;
 
 import com.github.noramibu.bettershulkers.*;
 import com.github.noramibu.bettershulkers.container.VirtualContainer;
-import com.github.noramibu.bettershulkers.container.VirtualContainerHolder;
-import com.github.noramibu.bettershulkers.container.VirtualShulkerBoxContainer;
 import com.github.noramibu.bettershulkers.event.ItemMove;
 import com.github.noramibu.bettershulkers.event.MoveItemListener;
 import com.github.noramibu.bettershulkers.material.ShulkerMaterialManager;
@@ -96,17 +94,9 @@ public abstract class AbstractContainerMenuMixin {
         if (ShulkerBoxUtils.isServerSide(player)
                 && clickAction == ClickAction.SECONDARY
                 && slot.getItem().is(ItemTags.SHULKER_BOXES)
-                && ShulkerMaterialManager.matchesMaterialFilter(slot.getItem(), this.getCarried())
+                && ShulkerMaterialManager.matchesMaterialFilter(slot.getItem(), this.getCarried(), true)
         ) {
-            this.setCarried(ShulkerBoxUtils.addStackToShulker(slot.getItem(), this.getCarried()));
-            slot.setChanged();
-
-            VirtualShulkerBoxContainer container = ((VirtualContainerHolder) player).getVirtualContainer();
-            if (container != null
-                    && container.getViewedSlot() == slotIndex) {
-                container.refreshUI();
-            }
-
+            this.setCarried(ShulkerBoxUtils.addStackToShulker(slot.getItem(), this.getCarried(), slot, player));
             ci.cancel();
         }
     }
@@ -157,18 +147,11 @@ public abstract class AbstractContainerMenuMixin {
                 && slot.getItem().is(ItemTags.SHULKER_BOXES)
         ) {
             if (this.getCarried().isEmpty()) {
-                ShulkerBoxUtils.pullAllFromShulker(slot.getItem(), player);
-            } else if (ShulkerMaterialManager.matchesMaterialFilter(slot.getItem(), this.getCarried())) {
-                ShulkerBoxUtils.addAllToShulker(slot.getItem(), player, this.getCarried().getItem());
+                ShulkerBoxUtils.pullAllFromShulker(slot.getItem(), player, slot);
+            } else if (ShulkerMaterialManager.matchesMaterialFilter(slot.getItem(), this.getCarried(), true)) {
+                ShulkerBoxUtils.addAllToShulker(slot.getItem(), player, this.getCarried().getItem(), slot);
             }
 
-            VirtualShulkerBoxContainer container = ((VirtualContainerHolder) player).getVirtualContainer();
-            if (container != null
-                    && container.getViewedSlot() == slotIndex) {
-                container.refreshUI();
-            }
-
-            slot.set(slot.getItem());
             ci.cancel();
         }
     }

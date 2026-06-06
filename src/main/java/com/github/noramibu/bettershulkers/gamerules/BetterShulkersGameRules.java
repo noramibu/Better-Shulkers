@@ -12,4 +12,5 @@ public class BetterShulkersGameRules {
     public static GameRule<Boolean> DO_SHULKER_MATERIAL_DISPLAYS;
     public static GameRule<Boolean> OPEN_SHULKERS_FROM_HOTBAR;
     public static GameRule<Boolean> OPEN_SHULKERS_FROM_INVENTORY;
+    public static GameRule<Boolean> INSERT_INTO_SHULKER_ON_PICKUP;
 }

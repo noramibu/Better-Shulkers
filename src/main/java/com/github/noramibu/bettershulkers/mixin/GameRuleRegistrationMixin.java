@@ -37,5 +37,6 @@ public abstract class GameRuleRegistrationMixin {
         BetterShulkersGameRules.DO_SHULKER_MATERIAL_DISPLAYS = registerBoolean("shulker_material_displays", GameRuleCategory.MISC, true);
         BetterShulkersGameRules.OPEN_SHULKERS_FROM_HOTBAR = registerBoolean("open_shulkers_from_hotbar", GameRuleCategory.MISC, true);
         BetterShulkersGameRules.OPEN_SHULKERS_FROM_INVENTORY = registerBoolean("open_shulkers_from_inventory", GameRuleCategory.MISC, true);
+        BetterShulkersGameRules.INSERT_INTO_SHULKER_ON_PICKUP = registerBoolean("insert_into_shulker_on_pickup", GameRuleCategory.MISC, true);
     }
 }

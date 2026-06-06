@@ -4,6 +4,7 @@
  */
 package com.github.noramibu.bettershulkers;
 
+import com.github.noramibu.bettershulkers.container.VirtualContainer;
 import com.github.noramibu.bettershulkers.container.VirtualContainerHolder;
 import com.github.noramibu.bettershulkers.container.VirtualShulkerBoxContainer;
 import com.github.noramibu.bettershulkers.gamerules.BetterShulkersGameRules;
@@ -63,8 +64,18 @@ public final class ShulkerBoxUtils {
         return !player.level().isClientSide();
     }
 
+    private static void updateUI(Slot modifiedSlot, Player player) {
+        modifiedSlot.setChanged();
+
+        VirtualShulkerBoxContainer container = ((VirtualContainerHolder) player).getVirtualContainer();
+        if (container != null
+                && ((VirtualContainer) (Object) modifiedSlot.getItem()).isBeingViewed()) {
+            container.refreshUI();
+        }
+    }
+
     // Add a single stack into a shulker
-    public static ItemStack addStackToShulker(ItemStack shulker, ItemStack toAdd) {
+    public static ItemStack addStackToShulker(ItemStack shulker, ItemStack toAdd, Slot modifiedSlot, Player player) {
         if (!canFitInShulker(toAdd)) {
             return toAdd;
         }
@@ -76,12 +87,17 @@ public final class ShulkerBoxUtils {
         ItemStack leftover = tempInv.addItem(toAdd);
 
         shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(tempInv.getItems()));
+
+        updateUI(modifiedSlot, player);
+
         return leftover;
     }
 
     // Add all of a single type from player inventory to shulker
-    public static void addAllToShulker(ItemStack shulker, Player player, Item itemToPull) {
-        if (!canFitInShulker(itemToPull.getDefaultInstance())) return;
+    public static void addAllToShulker(ItemStack shulker, Player player, Item itemToPull, Slot modifiedSlot) {
+        if (!canFitInShulker(itemToPull.getDefaultInstance())) {
+            return;
+        }
 
         ItemContainerContents contents = shulker.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         SimpleContainer tempInv = new SimpleContainer(27);
@@ -121,10 +137,12 @@ public final class ShulkerBoxUtils {
             }
         }
         shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(tempInv.getItems()));
+
+        updateUI(modifiedSlot, player);
     }
 
     // Take all from shulker into player inventory
-    public static void pullAllFromShulker(ItemStack shulker, Player player) {
+    public static void pullAllFromShulker(ItemStack shulker, Player player, Slot modifiedSlot) {
         ItemContainerContents contents = shulker.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         SimpleContainer tempInv = new SimpleContainer(27);
         contents.copyInto(tempInv.getItems());
@@ -145,6 +163,8 @@ public final class ShulkerBoxUtils {
         }
 
         shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(tempInv.getItems()));
+
+        updateUI(modifiedSlot, player);
     }
 
     private static boolean canFitInShulker(ItemStack item) {

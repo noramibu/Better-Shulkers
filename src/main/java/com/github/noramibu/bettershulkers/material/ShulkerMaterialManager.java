@@ -88,8 +88,8 @@ public class ShulkerMaterialManager {
         }
     }
 
-    public static boolean matchesMaterialFilter(ItemStack shulker, ItemStack test) {
+    public static boolean matchesMaterialFilter(ItemStack shulker, ItemStack test, boolean allowNoMaterial) {
         Item material = getMaterial(shulker);
-        return material == null || test.is(material);
+        return material == null ? allowNoMaterial : test.is(material);
     }
 }
