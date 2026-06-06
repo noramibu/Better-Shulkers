@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -41,8 +42,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ShulkerBoxBlockEntity.class)
 public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBlockEntity implements ItemDataStorage {
     private static final String LORE_ID = "lore";
+    private static final String ENCHANTMENTS_ID = "enchantments";
     private CustomData data = CustomData.EMPTY;
     private ItemLore lore = ItemLore.EMPTY;
+    private ItemEnchantments enchantments = ItemEnchantments.EMPTY;
     private Display.ItemDisplay display;
 
     protected ShulkerBoxBlockEntityMixin(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
@@ -55,18 +58,28 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
                 .orElse(CustomData.EMPTY);
         this.lore = input.read(LORE_ID, ItemLore.CODEC)
                 .orElse(ItemLore.EMPTY);
+        this.enchantments = input.read(ENCHANTMENTS_ID, ItemEnchantments.CODEC)
+                .orElse(ItemEnchantments.EMPTY);
     }
 
     @Inject(method = "saveAdditional", at = @At("HEAD"))
     private void bettershulkers$saveCustomData(ValueOutput output, CallbackInfo ci) {
-        output.store(ShulkerMaterialManager.MATERIAL_ID, CustomData.CODEC, this.data);
-        output.store(LORE_ID, ItemLore.CODEC, this.lore);
+        if (this.data != null && !this.data.isEmpty()) {
+            output.store(ShulkerMaterialManager.MATERIAL_ID, CustomData.CODEC, this.data);
+        }
+        if (this.lore != null && !this.lore.lines().isEmpty()) {
+            output.store(LORE_ID, ItemLore.CODEC, this.lore);
+        }
+       if (this.enchantments != null && !this.enchantments.isEmpty()) {
+           output.store(ENCHANTMENTS_ID, ItemEnchantments.CODEC, this.enchantments);
+       }
     }
 
     @Override
     public void storeItemData(ItemStack stack) {
         this.data = stack.get(DataComponents.CUSTOM_DATA);
         this.lore = stack.get(DataComponents.LORE);
+        this.enchantments = stack.get(DataComponents.ENCHANTMENTS);
     }
 
     @Override
@@ -77,6 +90,11 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     @Override
     public ItemLore getLore() {
         return this.lore;
+    }
+
+    @Override
+    public ItemEnchantments getEnchantments() {
+        return this.enchantments;
     }
 
     @Inject(method = "stopOpen", at = @At("HEAD"))

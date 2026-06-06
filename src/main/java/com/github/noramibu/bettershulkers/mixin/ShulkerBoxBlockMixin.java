@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -54,17 +55,23 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
     @ModifyReturnValue(method = "getDrops", at = @At("RETURN"))
     private List<ItemStack> onGetDrops(List<ItemStack> original, @Local(argsOnly = true) LootParams.Builder builder) {
         BlockEntity blockEntity = builder.getParameter(LootContextParams.BLOCK_ENTITY);
-
-        CustomData data = ((ItemDataStorage) blockEntity).getData();
-
-        if (data != null
-                && !data.isEmpty()
-                && original.size() == 1) {
+        if (original.size() == 1) {
             ItemStack item = original.getFirst();
             if (item.is(ItemTags.SHULKER_BOXES)) {
+                CustomData data = ((ItemDataStorage) blockEntity).getData();
+                if (data != null && !data.isEmpty()) {
+                    item.set(DataComponents.CUSTOM_DATA, data);
+                }
+
                 ItemLore lore = ((ItemDataStorage) blockEntity).getLore();
-                item.set(DataComponents.CUSTOM_DATA, data);
-                item.set(DataComponents.LORE, lore);
+                if (lore != null && !lore.lines().isEmpty()) {
+                    item.set(DataComponents.LORE, lore);
+                }
+
+                ItemEnchantments enchantments = ((ItemDataStorage) blockEntity).getEnchantments();
+                if (enchantments != null && !enchantments.isEmpty()) {
+                    item.set(DataComponents.ENCHANTMENTS, enchantments);
+                }
             }
         }
 

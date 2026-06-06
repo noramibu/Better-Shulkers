@@ -36,34 +36,39 @@ public class ShulkerMaterialManager {
         ItemLore lore = shulker.get(DataComponents.LORE);
 
         final boolean[] hasMaterial = {false};
-        if (data == null) {
-            CompoundTag tag = new CompoundTag();
-            tag.putInt(MATERIAL_ID, Item.getId(material));
-            shulker.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+        CompoundTag tag;
+        if (data == null || data.isEmpty()) {
+            tag = new CompoundTag();
         } else {
-            data.update(tag -> {
-                hasMaterial[0] = tag.contains(MATERIAL_ID);
-                tag.putInt(MATERIAL_ID, Item.getId(material));
-            });
+            tag = data.copyTag();
+            hasMaterial[0] = tag.contains(MATERIAL_ID);
         }
+        tag.putInt(MATERIAL_ID, Item.getId(material));
+        shulker.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 
         Component line = Component.literal(LORE_PREFIX).append(getTranslatedItem(material));
-        if (lore == null) {
+        if (lore == null || lore.lines().isEmpty()) {
             shulker.set(DataComponents.LORE, new ItemLore(List.of(line)));
-            return;
         } else if (hasMaterial[0]) {
-            // Search for Lore
-            for (int i = 0; i < lore.lines().size(); i++) {
-                Component heldLine = lore.lines().get(i);
+            List<Component> newLines = new ArrayList<>(lore.lines());
+            boolean found = false;
+
+            for (int i = 0; i < newLines.size(); i++) {
+                Component heldLine = newLines.get(i);
                 if (heldLine.getString().startsWith(LORE_PREFIX)) {
-                    lore.lines().set(i, line);
-                    return;
+                    newLines.set(i, line);
+                    found = true;
+                    break;
                 }
             }
-        }
 
-        // Add new lore as last effort
-        shulker.set(DataComponents.LORE, lore.withLineAdded(line));
+            if (!found) {
+                newLines.add(line);
+            }
+
+            ItemLore newLore = new ItemLore(newLines);
+            shulker.set(DataComponents.LORE, newLore);
+        }
     }
 
     private static Component getTranslatedItem(Item item) {
@@ -81,14 +86,18 @@ public class ShulkerMaterialManager {
             shulker.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         }
 
+
         if (lore != null) {
-            for (int i = 0; i < lore.lines().size(); i++) {
-                Component heldLine = lore.lines().get(i);
+            List<Component> newLines = new ArrayList<>(lore.lines());
+            for (int i = 0; i < newLines.size(); i++) {
+                Component heldLine = newLines.get(i);
                 if (heldLine.getString().startsWith(LORE_PREFIX)) {
-                    lore.lines().remove(i);
-                    return;
+                    newLines.remove(i);
+                    break;
                 }
             }
+            ItemLore newLore = new ItemLore(newLines);
+            shulker.set(DataComponents.LORE, newLore);
         }
     }
 

@@ -7,9 +7,11 @@ package com.github.noramibu.bettershulkers.material;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 public interface ItemDataStorage {
     void storeItemData(ItemStack stack);
     CustomData getData();
     ItemLore getLore();
+    ItemEnchantments getEnchantments();
 }

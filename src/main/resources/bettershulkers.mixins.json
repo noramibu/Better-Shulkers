@@ -18,6 +18,7 @@
     "ItemDisplayInvoker",
     "ItemEntityMixin",
     "ItemStackMixin",
+    "PackRepositoryMixin",
     "RecipeManagerMixin",
     "ServerPlayerMixin",
     "ShulkerBoxBlockEntityMixin",

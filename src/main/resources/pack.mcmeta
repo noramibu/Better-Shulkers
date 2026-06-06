@@ -1,6 +1,7 @@
 {
   "pack": {
-    "description": "${mod_name}",
-    "pack_format": 8
+    "description": "BetterShulkers Internal Data",
+    "min_format": [88, 0],
+    "max_format": [999, 0]
   }
 }
