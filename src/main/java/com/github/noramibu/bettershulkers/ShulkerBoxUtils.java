@@ -4,20 +4,19 @@
  */
 package com.github.noramibu.bettershulkers;
 
-import com.github.noramibu.bettershulkers.container.MutableContainerContents;
 import com.github.noramibu.bettershulkers.container.VirtualContainerHolder;
 import com.github.noramibu.bettershulkers.container.VirtualShulkerBoxContainer;
 import com.github.noramibu.bettershulkers.menu.VirtualShulkerBoxMenu;
-import com.github.noramibu.bettershulkers.mixin.InventoryMixin;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.ItemContainerContents;
 
 public final class ShulkerBoxUtils {
@@ -34,11 +33,9 @@ public final class ShulkerBoxUtils {
         if (isServerSide(player) && isSlotInInventory(slot, player)) {
             // Check if menu is already open
             if (player.containerMenu instanceof VirtualShulkerBoxMenu menu) {
-                System.out.println("Opening Shulker at " + slot.index);
                 menu.getContainer().reload(shulkerbox, player, slot.index);
             } else {
                 // Open new menu
-                System.out.println("Opening Shulker at " + getShulkerIndex(slot));
                 VirtualShulkerBoxContainer container = new VirtualShulkerBoxContainer(shulkerbox, player, getShulkerIndex(slot));
                 ((VirtualContainerHolder) player).setVirtualContainer(container);
                 player.openMenu(container);
@@ -54,8 +51,6 @@ public final class ShulkerBoxUtils {
         int index = slot.getContainerSlot();
         int column = index % 9;
         int row = index / 9;
-
-        System.out.println("Row: " + row + ", Col: " + column);
         return 27 + ((3 - row) * 9) + column;
     }
 
@@ -63,84 +58,91 @@ public final class ShulkerBoxUtils {
         return !player.level().isClientSide();
     }
 
-    // Returns if there is any leftover that couldn't be added
-    public static ItemStack putIntoShulkerItem(ItemStack shulker, ItemStack insert) {
-        ItemContainerContents contents = shulker.get(DataComponents.CONTAINER);
-        int leftover = ((MutableContainerContents) (Object) contents).add(insert, insert.count());
-        if (leftover == 0) {
-            return ItemStack.EMPTY;
-        } else {
-            insert.setCount(leftover);
-            return insert;
+    // Add a single stack into a shulker
+    public static ItemStack addStackToShulker(ItemStack shulker, ItemStack toAdd) {
+        if (!canFitInShulker(toAdd)) {
+            return toAdd;
         }
+
+        ItemContainerContents contents = shulker.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        SimpleContainer tempInv = new SimpleContainer(27);
+        contents.copyInto(tempInv.getItems());
+
+        ItemStack leftover = tempInv.addItem(toAdd);
+
+        shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(tempInv.getItems()));
+        return leftover;
     }
 
-    // Returns if there is any leftover that couldn't be removed
-    public static int removeTypeFromShulkerItem(ItemStack shulker, ItemStack type, int amount) {
-        ItemContainerContents contents = shulker.get(DataComponents.CONTAINER);
-        return ((MutableContainerContents) (Object) contents).remove(type, amount);
-    }
+    // Add all of a single type from player inventory to shulker
+    public static void addAllToShulker(ItemStack shulker, Player player, Item itemToPull) {
+        if (!canFitInShulker(itemToPull.getDefaultInstance())) return;
 
-    private static int getAmountInInventory(Player player, ItemStack type) {
-        int count = player.containerMenu.getCarried().getCount();
+        ItemContainerContents contents = shulker.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        SimpleContainer tempInv = new SimpleContainer(27);
+        contents.copyInto(tempInv.getItems());
 
-        for (ItemStack itemStack : ((InventoryMixin) player.getInventory()).getItems()) {
-            if (ItemStack.isSameItemSameComponents(itemStack, type)) {
-                count += itemStack.getCount();
-            }
-        }
-        return count;
-    }
+        Inventory playerInv = player.getInventory();
+        List<ItemStack> allSlots = new ArrayList<>(playerInv.getNonEquipmentItems());
+        allSlots.add(player.containerMenu.getCarried());
 
-    public static void dumpShulkerItemContents(Player player, ItemStack shulker) {
-        Inventory playerInventory = player.getInventory();
+        for (int i = 0; i < allSlots.size(); i++) {
+            ItemStack stack = allSlots.get(i);
+            if (stack.isEmpty() || !stack.is(itemToPull)) continue;
 
-        ItemContainerContents contents = shulker.get(DataComponents.CONTAINER);
-        List<Optional<ItemStackTemplate>> templates = ((MutableContainerContents) (Object) contents).getItems();
+            for (int j = 0; j < tempInv.getContainerSize(); j++) {
+                if (stack.isEmpty()) break;
 
-        for (int i = 0; i < templates.size(); i++) {
-            Optional<ItemStackTemplate> possibleTemplate = templates.get(i);
+                ItemStack shulkerStack = tempInv.getItem(j);
 
-            if (possibleTemplate.isPresent()) {
-                ItemStack stackInShulker = possibleTemplate.get().create();
+                if (ItemStack.isSameItemSameComponents(shulkerStack, stack)) {
+                    int toAdd = Math.min(stack.getCount(), shulkerStack.getMaxStackSize() - shulkerStack.getCount());
+                    if (toAdd > 0) {
+                        shulkerStack.grow(toAdd);
+                        stack.shrink(toAdd);
+                    }
+                }
 
-                if (playerInventory.add(stackInShulker)) {
-                    // If anything was added to the inventory, modify the amount in the shulker
-                    ((MutableContainerContents) (Object) contents).set(i, stackInShulker);
+                if (shulkerStack.isEmpty() && !stack.isEmpty()) {
+                    tempInv.setItem(j, stack.copy());
+                    stack.setCount(0);
                 }
             }
+
+            if (i < playerInv.getNonEquipmentItems().size()) {
+                playerInv.setItem(i, stack);
+            } else {
+                player.containerMenu.setCarried(stack);
+            }
         }
+        shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(tempInv.getItems()));
     }
 
-    public static void dumpInventoryIntoShulkerItem(Player player, ItemStack shulker, ItemStack type) {
-        int amount = getAmountInInventory(player, type);
-        ItemContainerContents contents = shulker.get(DataComponents.CONTAINER);
-        int leftOver = ((MutableContainerContents) (Object) contents).add(type, amount);
-        int totalAdded = amount - leftOver;
+    // Take all from shulker into player inventory
+    public static void pullAllFromShulker(ItemStack shulker, Player player) {
+        ItemContainerContents contents = shulker.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        SimpleContainer tempInv = new SimpleContainer(27);
+        contents.copyInto(tempInv.getItems());
 
-        // Remove from inventory
-        NonNullList<ItemStack> items = ((InventoryMixin) player.getInventory()).getItems();
-        for (int i = 0; i < items.size(); i++) {
-            if (totalAdded == 0) {
-                return;
-            }
+        Inventory playerInv = player.getInventory();
+        int shulkerIndex = 0;
 
-            ItemStack stack = items.get(i);
-            if (ItemStack.isSameItemSameComponents(stack, type)) {
-                int shrinkAmount = Math.min(totalAdded, stack.count());
-                stack.shrink(shrinkAmount);
-                totalAdded -= shrinkAmount;
-                if (stack.isEmpty()) {
-                    player.getInventory().setItem(i, ItemStack.EMPTY);
+        while (shulkerIndex < 28) {
+            ItemStack shulkerStack = tempInv.getItem(shulkerIndex);
+            if (!shulkerStack.isEmpty()) {
+                playerInv.add(shulkerStack);
+
+                if (shulkerStack.isEmpty()) {
+                    tempInv.setItem(shulkerIndex, ItemStack.EMPTY);
                 }
             }
+            shulkerIndex++;
         }
 
-        // Remove from cursor last
-        int heldShrinkAmount = Math.min(player.containerMenu.getCarried().count(), totalAdded);
-        player.containerMenu.getCarried().shrink(heldShrinkAmount);
-        if (player.containerMenu.getCarried().isEmpty()) {
-            player.containerMenu.setCarried(ItemStack.EMPTY);
-        }
+        shulker.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(tempInv.getItems()));
+    }
+
+    private static boolean canFitInShulker(ItemStack item) {
+        return !item.is(ItemTags.SHULKER_BOXES);
     }
 }

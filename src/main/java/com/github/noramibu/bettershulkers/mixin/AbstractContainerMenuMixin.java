@@ -56,7 +56,6 @@ public abstract class AbstractContainerMenuMixin {
             ItemStack instanceStack = instance.get();
 
             // Check if Shulker should be opened
-            System.out.println(slot.index);
             if (clickAction == ClickAction.SECONDARY
                     && instanceStack.is(ItemTags.SHULKER_BOXES)
                     && !((VirtualContainer) (Object) instanceStack).isBeingViewed()) {
@@ -91,6 +90,7 @@ public abstract class AbstractContainerMenuMixin {
         original.call(instance, carried);
     }
 
+    // Drop 1 item
     @Inject(method = "doClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V", ordinal = 4), cancellable = true)
     private void bettershulkers$checkToOpenMenu1(int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci, @Local(name = "slot") Slot slot, @Local(name = "clickAction") ClickAction clickAction) {
         if (ShulkerBoxUtils.isServerSide(player)
@@ -98,7 +98,8 @@ public abstract class AbstractContainerMenuMixin {
                 && slot.getItem().is(ItemTags.SHULKER_BOXES)
                 && ShulkerMaterialManager.matchesMaterialFilter(slot.getItem(), this.getCarried())
         ) {
-            this.setCarried(ShulkerBoxUtils.putIntoShulkerItem(slot.getItem(), this.getCarried()));
+            this.setCarried(ShulkerBoxUtils.addStackToShulker(slot.getItem(), this.getCarried()));
+            slot.setChanged();
 
             VirtualShulkerBoxContainer container = ((VirtualContainerHolder) player).getVirtualContainer();
             if (container != null
@@ -106,7 +107,6 @@ public abstract class AbstractContainerMenuMixin {
                 container.refreshUI();
             }
 
-            slot.set(slot.getItem());
             ci.cancel();
         }
     }
@@ -157,11 +157,10 @@ public abstract class AbstractContainerMenuMixin {
                 && slot.getItem().is(ItemTags.SHULKER_BOXES)
         ) {
             if (this.getCarried().isEmpty()) {
-                ShulkerBoxUtils.dumpShulkerItemContents(player, slot.getItem());
+                ShulkerBoxUtils.pullAllFromShulker(slot.getItem(), player);
             } else if (ShulkerMaterialManager.matchesMaterialFilter(slot.getItem(), this.getCarried())) {
-                ShulkerBoxUtils.dumpInventoryIntoShulkerItem(player, slot.getItem(), this.getCarried());
+                ShulkerBoxUtils.addAllToShulker(slot.getItem(), player, this.getCarried().getItem());
             }
-
 
             VirtualShulkerBoxContainer container = ((VirtualContainerHolder) player).getVirtualContainer();
             if (container != null

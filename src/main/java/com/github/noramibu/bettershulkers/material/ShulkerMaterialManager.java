@@ -1,5 +1,11 @@
+/**
+ * Copyright (c) 2026 noramibu, QPCrummer
+ * This project is Licensed under <a href="https://github.com/noramibu/Better-Shulkers/blob/main/LICENSE">MIT</a>
+ */
 package com.github.noramibu.bettershulkers.material;
 
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -7,9 +13,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
-
-import java.util.List;
-import java.util.Optional;
 
 public class ShulkerMaterialManager {
     private static final String MATERIAL_ID = "material";
