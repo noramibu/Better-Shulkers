@@ -12,7 +12,13 @@ import com.github.noramibu.bettershulkers.menu.VirtualShulkerBoxMenu;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,6 +35,7 @@ public final class ShulkerBoxUtils {
             VirtualShulkerBoxContainer container = new VirtualShulkerBoxContainer(shulkerbox, player);
             ((VirtualContainerHolder) player).setVirtualContainer(container);
             player.openMenu(container);
+            playShulkerOpenSound((ServerPlayer) player);
         }
     }
 
@@ -46,6 +53,8 @@ public final class ShulkerBoxUtils {
                 ((VirtualContainerHolder) player).setVirtualContainer(container);
                 player.openMenu(container);
             }
+
+            playShulkerOpenSound((ServerPlayer) player);
         }
     }
 
@@ -169,5 +178,26 @@ public final class ShulkerBoxUtils {
 
     private static boolean canFitInShulker(ItemStack item) {
         return !item.is(ItemTags.SHULKER_BOXES);
+    }
+
+    private static void playSoundToPlayer(ServerPlayer player, SoundEvent sound, float volume, float pitch) {
+        player.connection.send(new ClientboundSoundPacket(
+                BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound),
+                SoundSource.PLAYERS,
+                player.getX(),
+                player.getY(),
+                player.getZ(),
+                volume,
+                pitch,
+                player.getRandom().nextLong()
+        ));
+    }
+
+    public static void playShulkerOpenSound(ServerPlayer player) {
+        playSoundToPlayer(player, SoundEvents.SHULKER_BOX_OPEN, 1.0F, 1.0F);
+    }
+
+    public static void playShulkerCloseSound(ServerPlayer player) {
+        playSoundToPlayer(player, SoundEvents.SHULKER_BOX_CLOSE, 1.0F, 1.0F);
     }
 }

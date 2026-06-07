@@ -4,6 +4,7 @@
  */
 package com.github.noramibu.bettershulkers.mixin;
 
+import com.github.noramibu.bettershulkers.ShulkerBoxUtils;
 import com.github.noramibu.bettershulkers.container.VirtualContainer;
 import com.github.noramibu.bettershulkers.container.VirtualContainerHolder;
 import com.github.noramibu.bettershulkers.container.VirtualShulkerBoxContainer;
@@ -41,6 +42,7 @@ public abstract class ServerPlayerMixin extends Player implements VirtualContain
         if (this.virtualContainer != null) {
             ((VirtualContainer) (Object)this.virtualContainer.getViewedStack()).setViewing(null);
             this.virtualContainer = null;
+            ShulkerBoxUtils.playShulkerCloseSound((ServerPlayer) (Object) this);
         }
     }
 
