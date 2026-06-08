@@ -4,10 +4,12 @@
  */
 package com.github.noramibu.bettershulkers.container;
 
+import com.github.noramibu.bettershulkers.ShulkerBoxUtils;
 import com.github.noramibu.bettershulkers.menu.VirtualShulkerBoxMenu;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.ContainerUser;
@@ -105,10 +107,6 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         }
     }
 
-    public int getViewedSlot() {
-        return this.cachedViewSlot;
-    }
-
     public void setViewedSlot(int slot) {
         this.cachedViewSlot = slot;
     }
@@ -116,5 +114,6 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
     @Override
     public void stopOpen(ContainerUser containerUser) {
         ((VirtualContainer) (Object) this.getViewedStack()).setViewing(null);
+        ShulkerBoxUtils.playShulkerCloseSound(((ServerPlayer) containerUser.getLivingEntity()));
     }
 }
