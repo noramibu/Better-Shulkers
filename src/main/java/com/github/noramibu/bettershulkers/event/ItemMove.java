@@ -6,5 +6,4 @@ package com.github.noramibu.bettershulkers.event;
 
 import net.minecraft.world.item.ItemStack;
 
-public record ItemMove(ItemStack stack, int targetSlot) {
-}
+public record ItemMove(ItemStack stack, int targetSlot) {}

@@ -70,43 +70,11 @@ public class ItemContainerContentsMixin implements MutableContainerContents {
     }
 
     @Override
-    public int remove(ItemStack type, int amount) {
-        for (int i = 0; i < this.items.size(); i++) {
-            if (amount == 0) {
-                break;
-            }
-
-            Optional<ItemStackTemplate> template = this.items.get(i);
-            if (template.isPresent()) {
-                ItemStackTemplate item = template.get();
-                ItemStack stored = item.create();
-                if (ItemStack.isSameItemSameComponents(stored, type)) {
-                    int shrinkBy = Math.min(amount, item.count());
-                    stored.shrink(shrinkBy);
-                    if (stored.isEmpty()) {
-                        this.items.set(i, Optional.empty());
-                    } else {
-                        this.items.set(i, Optional.of(ItemStackTemplate.fromNonEmptyStack(stored)));
-                    }
-                    amount -= shrinkBy;
-                }
-            }
-        }
-
-        return amount;
-    }
-
-    @Override
     public void set(int i, ItemStack stack) {
         if (stack.isEmpty()) {
             this.items.set(i, Optional.empty());
         } else {
             this.items.set(i, Optional.of(ItemStackTemplate.fromNonEmptyStack(stack)));
         }
-    }
-
-    @Override
-    public List<Optional<ItemStackTemplate>> getItems() {
-        return this.items;
     }
 }

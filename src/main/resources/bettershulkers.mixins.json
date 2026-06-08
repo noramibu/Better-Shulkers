@@ -13,7 +13,6 @@
     "DisplayMixin",
     "GameRuleRegistrationMixin",
     "InitMixin",
-    "InventoryMixin",
     "ItemContainerContentsMixin",
     "ItemDisplayInvoker",
     "ItemEntityMixin",

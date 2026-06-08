@@ -77,5 +77,4 @@ public abstract class ShulkerBoxBlockMixin extends BaseEntityBlock {
 
         return original;
     }
-
 }

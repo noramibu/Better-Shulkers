@@ -4,16 +4,10 @@
  */
 package com.github.noramibu.bettershulkers.container;
 
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 
 public interface MutableContainerContents {
     // Returns if there was any overflow
     int add(ItemStack type, int amount);
-    // Returns the number of elements NOT removed
-    int remove(ItemStack type, int amount);
     void set(int i, ItemStack stack);
-    List<Optional<ItemStackTemplate>> getItems();
 }

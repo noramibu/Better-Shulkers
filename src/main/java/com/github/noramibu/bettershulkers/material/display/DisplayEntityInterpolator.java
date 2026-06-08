@@ -17,22 +17,20 @@ public class DisplayEntityInterpolator {
 
     /**
      * Moves the item display along the Z-axis
+     *
      * @param to The final destination
-     * @return DisplayEntityInterpolator instance
      */
-    public DisplayEntityInterpolator moveVertical(float to) {
+    public void moveVertical(float to) {
         this.matrix.translate(0, 0, to);
-        return this;
     }
 
     /**
      * Rotates the item display along the Z-axis
+     *
      * @param to The final rotation (must be [-Pi, Pi])
-     * @return DisplayEntityInterpolator instance
      */
-    public DisplayEntityInterpolator roll(float to) {
+    public void roll(float to) {
         this.matrix.rotateZ(to);
-        return this;
     }
 
     /**

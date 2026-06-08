@@ -8,7 +8,6 @@ import com.github.noramibu.bettershulkers.mixin.DisplayEntityAccessor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Display;
 
-// TODO Reduce the amount of packets being sent
 public class Animation {
     private int ticks = 1;
     private final int duration;
