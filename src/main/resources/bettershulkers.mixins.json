@@ -1,0 +1,29 @@
+{
+  "compatibilityLevel": "JAVA_21",
+  "required": false,
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "package": "com.github.noramibu.bettershulkers.mixin",
+  "mixins": [
+    "AbstractContainerMenuMixin",
+    "AnvilMenuMixin",
+    "DisplayEntityAccessor",
+    "DisplayMixin",
+    "GameRuleRegistrationMixin",
+    "InitMixin",
+    "ItemContainerContentsMixin",
+    "ItemDisplayInvoker",
+    "ItemEntityMixin",
+    "ItemStackMixin",
+    "PackRepositoryMixin",
+    "RecipeManagerMixin",
+    "ServerPlayerMixin",
+    "ShulkerBoxBlockEntityMixin",
+    "ShulkerBoxBlockMixin",
+    "SimpleContainerMixin"
+  ],
+  "client": [],
+  "server": []
+}
