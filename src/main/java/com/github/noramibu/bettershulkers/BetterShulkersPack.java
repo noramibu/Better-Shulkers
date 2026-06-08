@@ -28,6 +28,10 @@ import net.minecraft.util.FileUtil;
 import org.jspecify.annotations.Nullable;
 
 // TODO Make this its own separate cross-plat library mod
+
+/**
+ * Super fancy custom Data loader for all mod loaders
+ */
 public class BetterShulkersPack extends AbstractPackResources {
     private static final Set<String> KNOWN_SERVER_NAMESPACES = Set.of("minecraft", BetterShulkers.MOD_ID);
 

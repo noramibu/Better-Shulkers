@@ -21,17 +21,15 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import org.jspecify.annotations.Nullable;
 
 public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuProvider {
-    int cachedViewSlot;
-    VirtualShulkerBoxMenu containerMenu;
-    Player viewer;
-    Component displayName;
+    private int cachedViewSlot;
+    private VirtualShulkerBoxMenu containerMenu;
+    private final Component displayName;
 
     public VirtualShulkerBoxContainer(ItemStack viewing, Player player) {
         super(27);
         ((MoreComplexContainer) this).setItems(this.fromItemStack(viewing));
         ((VirtualContainer) (Object) viewing).setViewing(player);
         this.cachedViewSlot = 54 + player.getInventory().getSelectedSlot();
-        this.viewer = player;
         this.displayName = viewing.getDisplayName();
     }
 
@@ -40,22 +38,27 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         ((MoreComplexContainer) this).setItems(this.fromItemStack(viewing));
         ((VirtualContainer) (Object) viewing).setViewing(player);
         this.cachedViewSlot = slot;
-        this.viewer = player;
         this.displayName = viewing.getDisplayName();
     }
 
-    // Load a shulker when an existing UI is open
+    /**
+     * Loads a new shulker when an existing UI is open
+     * @param viewing The new shulker to view
+     * @param player Player viewing
+     * @param slot The inventory slot the shulker is in
+     */
     public void reload(ItemStack viewing, Player player, int slot) {
         ((VirtualContainer) (Object) getViewedStack()).setViewing(null);
         ((MoreComplexContainer) this).setItems(this.fromItemStack(viewing));
         ((VirtualContainer) (Object) viewing).setViewing(player);
         this.cachedViewSlot = slot;
-        this.viewer = player;
         // Refresh UI
         this.containerMenu.slotsChanged(this);
     }
 
-    // Refreshes the existing shulker box inventory
+    /**
+     * Refreshes the existing shulker box inventory
+     */
     public void refreshUI() {
         ((MoreComplexContainer) this).setItems(this.fromItemStack(this.getViewedStack()));
         // Refresh UI
@@ -95,6 +98,10 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         this.getViewedStack().set(DataComponents.CONTAINER, containerContents);
     }
 
+    /**
+     * Gets the cached Virtual Container ItemStack cache
+     * @return Virtual Container ItemStack
+     */
     public ItemStack getViewedStack() {
         if (this.containerMenu == null) {
             return ItemStack.EMPTY;
@@ -107,6 +114,10 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         }
     }
 
+    /**
+     * Sets what slot the Viewed Stack is in
+     * @param slot Slot index containing the Stack
+     */
     public void setViewedSlot(int slot) {
         this.cachedViewSlot = slot;
     }

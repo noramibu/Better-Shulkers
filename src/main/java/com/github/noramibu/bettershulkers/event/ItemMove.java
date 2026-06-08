@@ -6,4 +6,9 @@ package com.github.noramibu.bettershulkers.event;
 
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Represents an ItemStack moving between Slots
+ * @param stack ItemStack being moved
+ * @param targetSlot The destination Slot index
+ */
 public record ItemMove(ItemStack stack, int targetSlot) {}

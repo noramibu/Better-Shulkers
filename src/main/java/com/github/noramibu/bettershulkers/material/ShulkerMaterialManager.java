@@ -13,15 +13,31 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
 
+/**
+ * Contains all methods for interfacing with Shulker materials
+ */
 public class ShulkerMaterialManager {
+    /**
+     * The ID for storing materials in Components
+     */
     public static final String MATERIAL_ID = "material";
     private static final String LORE_PREFIX = "Material: ";
 
+    /**
+     * Gets the material from a Shulker Box item
+     * @param shulker Shulker Box ItemStack
+     * @return The type of material as an Item
+     */
     public static Item getMaterial(ItemStack shulker) {
         CustomData data = shulker.get(DataComponents.CUSTOM_DATA);
         return getMaterial(data);
     }
 
+    /**
+     * Gets the material from ItemStack data
+     * @param data CustomData from an ItemStack (typically stored in a BlockEntity)
+     * @return The type of material as an Item
+     */
     public static Item getMaterial(CustomData data) {
         if (data == null) {
             return null;
@@ -31,6 +47,11 @@ public class ShulkerMaterialManager {
         }
     }
 
+    /**
+     * Sets the material for a Shulker Box item
+     * @param shulker Shulker Box ItemStack
+     * @param material The type of material to set
+     */
     public static void setMaterial(ItemStack shulker, Item material) {
         CustomData data = shulker.get(DataComponents.CUSTOM_DATA);
         ItemLore lore = shulker.get(DataComponents.LORE);
@@ -76,6 +97,10 @@ public class ShulkerMaterialManager {
         return Component.translatable(translationKey);
     }
 
+    /**
+     * Removes a material from a Shulker Box item
+     * @param shulker Shulker Box ItemStack
+     */
     public static void removeMaterial(ItemStack shulker) {
         CustomData data = shulker.get(DataComponents.CUSTOM_DATA);
         ItemLore lore = shulker.get(DataComponents.LORE);
@@ -101,6 +126,13 @@ public class ShulkerMaterialManager {
         }
     }
 
+    /**
+     * If the given ItemStack is the same as the Shulker Box's material item
+     * @param shulker Shulker Box ItemStack with the Material filter
+     * @param test The ItemStack being tested
+     * @param allowNoMaterial If a Shulker Box with no material set should always return true
+     * @return True if it passes through the filter
+     */
     public static boolean matchesMaterialFilter(ItemStack shulker, ItemStack test, boolean allowNoMaterial) {
         Item material = getMaterial(shulker);
         return material == null ? allowNoMaterial : test.is(material);

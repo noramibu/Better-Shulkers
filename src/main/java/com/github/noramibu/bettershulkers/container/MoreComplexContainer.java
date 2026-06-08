@@ -7,6 +7,13 @@ package com.github.noramibu.bettershulkers.container;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
+/**
+ * Allows interfacing directly with the items in a Container
+ */
 public interface MoreComplexContainer {
+    /**
+     * Sets the items inside a Container
+     * @param items List of items
+     */
     void setItems(NonNullList<ItemStack> items);
 }

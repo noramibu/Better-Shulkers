@@ -4,6 +4,13 @@
  */
 package com.github.noramibu.bettershulkers.event;
 
+/**
+ * Called when an ItemStack moves between Slots
+ */
 public interface MoveItemListener {
+    /**
+     * Called when an ItemStack(s) move Slots
+     * @param moves The ItemMoves that occurred
+     */
     void itemMoved(ItemMove... moves);
 }

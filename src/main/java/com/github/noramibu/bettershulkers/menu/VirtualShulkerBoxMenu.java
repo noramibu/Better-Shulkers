@@ -12,8 +12,11 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ShulkerBoxMenu;
 
+/**
+ * The Menu for the Shulker Boxes opened from an Inventory
+ */
 public class VirtualShulkerBoxMenu extends ShulkerBoxMenu implements MoveItemListener {
-    VirtualShulkerBoxContainer container;
+    private final VirtualShulkerBoxContainer container;
     public VirtualShulkerBoxMenu(int containerId, Inventory inventory, Container container) {
         super(containerId, inventory, container);
         this.container = (VirtualShulkerBoxContainer) container;
@@ -28,6 +31,10 @@ public class VirtualShulkerBoxMenu extends ShulkerBoxMenu implements MoveItemLis
         }
     }
 
+    /**
+     * Gets the Virtual Container attached to this Menu
+     * @return Virtual Container attached to the Menu
+     */
     public VirtualShulkerBoxContainer getContainer() {
         return this.container;
     }

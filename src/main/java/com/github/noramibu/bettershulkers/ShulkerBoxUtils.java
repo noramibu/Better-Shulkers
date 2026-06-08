@@ -28,7 +28,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 
+/**
+ * Miscellaneous utilities for Better Shulkers
+ */
 public final class ShulkerBoxUtils {
+    /**
+     * Opens a Shulker Box item from the hotbar
+     * @param shulkerbox Shulker Box ItemStack to open
+     * @param player Player opening it
+     */
     public static void openExternalShulker(ItemStack shulkerbox, Player player) {
         if (isServerSide(player)
                 && ((ServerLevel) player.level()).getGameRules().get(BetterShulkersGameRules.OPEN_SHULKERS_FROM_HOTBAR)) {
@@ -39,6 +47,12 @@ public final class ShulkerBoxUtils {
         }
     }
 
+    /**
+     * Opens a Shulker Box item from the Inventory
+     * @param shulkerbox Shulker Box ItemStack to open
+     * @param player Player opening it
+     * @param slot Slot where it was opened from
+     */
     public static void openInternalShulker(ItemStack shulkerbox, Player player, Slot slot) {
         // Check if item is in the inventory
         if (isServerSide(player)
@@ -69,6 +83,11 @@ public final class ShulkerBoxUtils {
         return 27 + ((3 - row) * 9) + column;
     }
 
+    /**
+     * If the mod is running on the server
+     * @param player Player reference
+     * @return If the mod is running on the server thread
+     */
     public static boolean isServerSide(Player player) {
         return !player.level().isClientSide();
     }
@@ -82,8 +101,14 @@ public final class ShulkerBoxUtils {
             container.refreshUI();
         }
     }
-
-    // Add a single stack into a shulker
+    /**
+     * Adds a single ItemStack into a Shulker item
+     * @param shulker Shulker ItemStack to add the item into
+     * @param toAdd ItemStack to add into the Shulker Box
+     * @param modifiedSlot The Slot with the Shulker box
+     * @param player Player moving the ItemStack
+     * @return Any overflow
+     */
     public static ItemStack addStackToShulker(ItemStack shulker, ItemStack toAdd, Slot modifiedSlot, Player player) {
         if (!canFitInShulker(toAdd)) {
             return toAdd;
@@ -102,7 +127,13 @@ public final class ShulkerBoxUtils {
         return leftover;
     }
 
-    // Add all of a single type from player inventory to shulker
+    /**
+     * Adds all of a single type of Item from the Player's Inventory to the Shulker
+     * @param shulker Shulker ItemStack that Items are added to
+     * @param player Player who owns the Inventory
+     * @param itemToPull The type of item being pulled out of the Player's Inventory
+     * @param modifiedSlot The Shulker's Slot
+     */
     public static void addAllToShulker(ItemStack shulker, Player player, Item itemToPull, Slot modifiedSlot) {
         if (!canFitInShulker(itemToPull.getDefaultInstance())) {
             return;
@@ -151,6 +182,13 @@ public final class ShulkerBoxUtils {
     }
 
     // Take all from shulker into player inventory
+
+    /**
+     * Takes all Items out of the Shulker and into the Player's Inventory
+     * @param shulker The Shulker ItemStack being emptied
+     * @param player The Player who owns the Inventory
+     * @param modifiedSlot The Shulker's Slot
+     */
     public static void pullAllFromShulker(ItemStack shulker, Player player, Slot modifiedSlot) {
         ItemContainerContents contents = shulker.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         SimpleContainer tempInv = new SimpleContainer(27);
@@ -193,10 +231,18 @@ public final class ShulkerBoxUtils {
         ));
     }
 
+    /**
+     * Plays a Shulker opening sound that only the Player can hear
+     * @param player Player getting the sound
+     */
     public static void playShulkerOpenSound(ServerPlayer player) {
         playSoundToPlayer(player, SoundEvents.SHULKER_BOX_OPEN, 1.0F, 1.0F);
     }
 
+    /**
+     * Plays a Shulker closing sound that only the Player can hear
+     * @param player Player getting the sound
+     */
     public static void playShulkerCloseSound(ServerPlayer player) {
         playSoundToPlayer(player, SoundEvents.SHULKER_BOX_CLOSE, 1.0F, 1.0F);
     }

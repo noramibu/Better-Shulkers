@@ -9,9 +9,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BetterShulkers {
+    /**
+     * Global logger for Better Shulkers
+     */
     public static final Logger LOGGER = LoggerFactory.getLogger("Better Shulkers");
+
+    /**
+     * Mod ID for Better Shulkers
+     */
     public static final String MOD_ID = "bettershulkers";
 
+    /**
+     * Main initializer
+     */
     public static void init() {
         MaterialCollector.initialize();
     }
