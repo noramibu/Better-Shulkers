@@ -14,10 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.ContainerUser;
-import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -140,8 +137,8 @@ public abstract class ShulkerBoxBlockEntityMixin extends RandomizableContainerBl
     private void createDisplay(Item material) {
         if (((ServerLevel) this.level).getGameRules().get(BetterShulkersGameRules.DO_SHULKER_MATERIAL_DISPLAYS)
                 && material != null) {
-            this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, this.getLevel());
-            Vec3 positionOfShulker = this.worldPosition.getCenter();
+            this.display = new Display.ItemDisplay(EntityTypes.ITEM_DISPLAY, this.getLevel());
+            Vec3 positionOfShulker = Vec3.atCenterOf(this.worldPosition);
             Direction rotation = this.getBlockState().getValue(BlockStateProperties.FACING);
 
             ItemRenderData renderData = ItemRenderData.getRenderData(this.display);
