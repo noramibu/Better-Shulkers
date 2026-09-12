@@ -20,9 +20,9 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.util.FileUtil;
 import org.jspecify.annotations.Nullable;
@@ -32,14 +32,14 @@ import org.jspecify.annotations.Nullable;
 /**
  * Super fancy custom Data loader for all mod loaders
  */
-public class BetterShulkersPack extends AbstractPackResources {
+public class BetterShulkersPack extends PathPackResources {
     private static final Set<String> KNOWN_SERVER_NAMESPACES = Set.of("minecraft", BetterShulkers.MOD_ID);
 
     private final ClassLoader classLoader;
     private final @Nullable Path codeSource;
 
     public BetterShulkersPack(PackLocationInfo locationInfo) {
-        super(locationInfo);
+        super(locationInfo, Path.of(".")); // We don't need the "root" cause we have our own code for it
         this.classLoader = BetterShulkers.class.getClassLoader();
         this.codeSource = findCodeSource();
     }

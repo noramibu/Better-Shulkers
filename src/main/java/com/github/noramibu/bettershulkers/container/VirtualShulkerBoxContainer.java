@@ -86,7 +86,7 @@ public class VirtualShulkerBoxContainer extends SimpleContainer implements MenuP
         NonNullList<ItemStack> list = NonNullList.withSize(27, ItemStack.EMPTY);
 
         int index = 0;
-        var iterator = contents.allItemsCopyStream().iterator();
+        var iterator = contents.nonEmptyItemCopyStream().iterator();
         while (iterator.hasNext() && index < list.size()) {
             list.set(index++, iterator.next());
         }

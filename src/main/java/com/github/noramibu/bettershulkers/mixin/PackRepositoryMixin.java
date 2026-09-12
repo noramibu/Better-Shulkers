@@ -9,11 +9,10 @@ import com.github.noramibu.bettershulkers.BetterShulkersPack;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Stream;
+
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackSelectionConfig;
-import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.*;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.PackSource;
@@ -35,13 +34,13 @@ public class PackRepositoryMixin {
 
     private static final Pack.ResourcesSupplier BETTERSHULKERS_PACK_SUPPLIER = new Pack.ResourcesSupplier() {
         @Override
-        public PackResources openPrimary(PackLocationInfo info) {
-            return new BetterShulkersPack(info);
+        public PackMetadataResources openMetadata(PackLocationInfo location) {
+            return new BetterShulkersPack(location);
         }
 
         @Override
-        public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
-            return new BetterShulkersPack(info);
+        public Stream<PackResources> openResources(PackLocationInfo location, Pack.Metadata metadata) {
+            return Stream.of(new BetterShulkersPack(location));
         }
     };
 

@@ -12,6 +12,7 @@ import java.util.OptionalInt;
 import net.minecraft.network.protocol.game.ClientboundSetCursorItemPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,8 +37,8 @@ public abstract class ServerPlayerMixin extends Player implements VirtualContain
         super(level, gameProfile);
     }
 
-    @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"))
-    private void bettershulkers$checkForShulkerDropped(ItemStack itemStack, boolean randomly, boolean thrownFromHand, CallbackInfoReturnable<ItemEntity> cir) {
+    @Inject(method = "drop(Lnet/minecraft/world/item/ItemStack;ZLnet/minecraft/util/Prediction;)Lnet/minecraft/world/entity/item/ItemEntity;", at = @At("HEAD"))
+    private void bettershulkers$checkForShulkerDropped(ItemStack itemStack, boolean thrownFromHand, Prediction prediction, CallbackInfoReturnable<ItemEntity> cir) {
         if (((VirtualContainer) (Object) itemStack).isBeingViewed()) {
             this.closeContainer();
         }
